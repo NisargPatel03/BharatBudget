@@ -180,7 +180,7 @@ export default function App() {
           </div>
 
           {/* Interactive Fiscal Timeline Pills */}
-          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.02)', padding: '4px', borderRadius: '10px', border: '1px solid var(--border-glass)', gap: '4px' }}>
+          <div className="header-timeline-pills">
             {timelineOptions.map((opt) => {
               const isActive = activeYearIndex === opt.index;
               return (

@@ -246,7 +246,7 @@ export default function MinistryDashboard() {
         </div>
 
         {/* 3 mini KIs */}
-        <div style={{ display: 'flex', gap: '24px' }}>
+        <div className="ministry-kpi-row">
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>BUDGET ALLOCATED (BE)</span>
             <h4 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--saffron)' }}>₹ {formatCrores(data.allocation)} Cr</h4>

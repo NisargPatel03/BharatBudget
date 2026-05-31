@@ -477,17 +477,56 @@ body {
     overflow: hidden;
   }
 
-  /* Stack flex containers vertically on mobile for statistics rows and selectors */
-  div[style*="display: flex"]:not(.glossary-tooltip-container):not(.hamburger-btn):not(.app-sidebar nav a):not(.glossary-tooltip-box div) {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 12px !important;
+  /* Safe responsive stacking layout classes */
+  .flex-responsive-stack {
+    display: flex;
+    flex-direction: row;
+  }
+  @media (max-width: 768px) {
+    .flex-responsive-stack {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 12px !important;
+    }
   }
 
-  /* Override internal items so they don't force side-by-side inside stacked elements */
-  div[style*="display: flex"] > div[style*="display: flex"] {
-    flex-direction: column !important;
-    align-items: stretch !important;
+  /* Interactive Fiscal Timeline pills adjustments */
+  .header-timeline-pills {
+    display: flex;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border-glass);
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  @media (max-width: 768px) {
+    .header-timeline-pills {
+      padding: 2px !important;
+      gap: 2px !important;
+    }
+    .header-timeline-pills button {
+      padding: 4px 8px !important;
+      font-size: 10px !important;
+    }
+  }
+
+  /* Ministrywise top KPI statistics rows adjustments */
+  .ministry-kpi-row {
+    display: flex;
+    gap: 24px;
+    flex-shrink: 0;
+  }
+  @media (max-width: 600px) {
+    .ministry-kpi-row {
+      flex-wrap: wrap !important;
+      gap: 14px !important;
+      justify-content: flex-start !important;
+    }
+    .ministry-kpi-row > div {
+      text-align: left !important;
+      min-width: 110px;
+    }
   }
 
   /* Make header and action bars fit perfectly */
