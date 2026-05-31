@@ -442,3 +442,120 @@ body {
   }
 }
 
+/* ==========================================
+   PREMIUM MOBILE RESPONSIVENESS OVERRIDES
+   ========================================== */
+@media (max-width: 1024px) {
+  /* Override minmax grids that cause horizontal overflows */
+  div[style*="display: grid"],
+  div[style*="display:grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  /* Ensure flex containers stack or wrap cleanly */
+  .glass-panel > div[style*="display: flex"],
+  .glass-panel > div[style*="display:flex"] {
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+  }
+
+  .deficit-container {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* General page padding adjustments */
+  .app-main {
+    padding: 16px 12px !important;
+  }
+
+  .glass-panel {
+    padding: 16px !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+
+  /* Stack flex containers vertically on mobile for statistics rows and selectors */
+  div[style*="display: flex"]:not(.glossary-tooltip-container):not(.hamburger-btn):not(.app-sidebar nav a):not(.glossary-tooltip-box div) {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  /* Override internal items so they don't force side-by-side inside stacked elements */
+  div[style*="display: flex"] > div[style*="display: flex"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* Make header and action bars fit perfectly */
+  .app-header {
+    height: 60px !important;
+    padding: 0 12px !important;
+  }
+
+  /* Allow inputs in sandbox calculators to stack cleanly */
+  div[style*="grid-template-columns: 1fr 1fr 1fr"],
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Handle responsive list items (e.g., scheme and DBT lists) */
+  div[style*="justify-content: space-between"] {
+    flex-direction: row !important; /* Keep key-value lines horizontal if short */
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  /* Ensure table/list cards wrap values properly */
+  div[style*="justify-content: space-between"] > div[style*="display: flex"] {
+    flex-direction: row !important;
+    gap: 8px !important;
+    justify-content: flex-end !important;
+  }
+
+  /* Ensure Recharts charts adapt beautifully in limited viewport width */
+  .recharts-wrapper {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  
+  .recharts-surface {
+    max-width: 100% !important;
+  }
+
+  /* Reset layout for specific complex layout pages */
+  .deficit-container,
+  .scheme-outlay-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Adjust typography headers for smaller screens */
+  h1 { font-size: 20px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 15px !important; }
+  h4 { font-size: 13.5px !important; }
+  p { font-size: 12px !important; }
+}
+
+@media (max-width: 480px) {
+  /* Ultra-small phone display tweaks */
+  .glass-panel {
+    padding: 12px !important;
+  }
+  
+  /* Make key values stand out and align nicely */
+  strong, span {
+    font-size: 11.5px !important;
+  }
+  
+  /* Ensure print dialog is scaled */
+  div[style*="max-width: 600px"] {
+    max-width: 95vw !important;
+    margin: 10px !important;
+  }
+}
+
