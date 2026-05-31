@@ -253,176 +253,184 @@ export default function StateDashboard({ masterData }) {
         </div>
       </div>
 
-      {/* 3. NEW Devolution Simulation Sandbox (Finance Commission) */}
-      <div className="glass-panel col-12" style={{ marginTop: '8px', display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px' }} className="deficit-container">
-        {/* Sliders Panel */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Sliders size={18} color="var(--saffron)" />
+      {/* 3. NEW Devolution Simulation Sandbox (Finance Commission) - GORGEOUS RESPONSIVE GRID */}
+      <div className="glass-panel col-12" style={{ marginTop: '16px', padding: '24px' }}>
+        {/* Full-width Sandbox Header Row */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '16px', marginBottom: '20px' }}>
+          <div>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
+              <Sliders size={20} color="var(--saffron)" />
               16th Finance Commission Tax Devolution Sandbox
             </h3>
-            <button 
-              onClick={handleResetDevolution}
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid var(--border-glass)',
-                borderRadius: '6px',
-                color: 'var(--text-secondary)',
-                fontSize: '11px',
-                fontWeight: 600,
-                padding: '6px 12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
-            >
-              <RefreshCw size={12} />
-              Reset baseline
-            </button>
-          </div>
-          <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
-            Adjust the formula sliders to modify how the Central Government devolves shared tax pools to India's states. Sliders dynamically auto-balance to sum to 100%.
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px', marginTop: '4px' }}>
-            {/* Slider 1 */}
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
-                <span>Income Distance (Eq)</span>
-                <span style={{ color: 'var(--saffron)' }}>{normIncome.toFixed(1)}%</span>
-              </div>
-              <input 
-                type="range" min="0" max="100" step="0.5" value={incomeWeight} 
-                onChange={(e) => setIncomeWeight(parseFloat(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--saffron)' }}
-              />
-            </div>
-
-            {/* Slider 2 */}
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
-                <span>Population Weight</span>
-                <span style={{ color: 'var(--emerald)' }}>{normPop.toFixed(1)}%</span>
-              </div>
-              <input 
-                type="range" min="0" max="50" step="0.5" value={popWeight} 
-                onChange={(e) => setPopWeight(parseFloat(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--emerald)' }}
-              />
-            </div>
-
-            {/* Slider 3 */}
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
-                <span>Geographic Area</span>
-                <span style={{ color: 'var(--ashoka-blue)' }}>{normArea.toFixed(1)}%</span>
-              </div>
-              <input 
-                type="range" min="0" max="40" step="0.5" value={areaWeight} 
-                onChange={(e) => setAreaWeight(parseFloat(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--ashoka-blue)' }}
-              />
-            </div>
-
-            {/* Slider 4 */}
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
-                <span>Forest & Ecology</span>
-                <span style={{ color: 'var(--saffron)' }}>{normForest.toFixed(1)}%</span>
-              </div>
-              <input 
-                type="range" min="0" max="30" step="0.5" value={forestWeight} 
-                onChange={(e) => setForestWeight(parseFloat(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--saffron)' }}
-              />
-            </div>
-
-            {/* Slider 5 */}
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
-                <span>Demographic Perf</span>
-                <span style={{ color: 'var(--emerald)' }}>{normDemo.toFixed(1)}%</span>
-              </div>
-              <input 
-                type="range" min="0" max="30" step="0.5" value={demoWeight} 
-                onChange={(e) => setDemoWeight(parseFloat(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--emerald)' }}
-              />
-            </div>
-
-            {/* Slider 6 */}
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
-                <span>Tax & Fiscal Effort</span>
-                <span style={{ color: 'var(--ashoka-blue)' }}>{normTax.toFixed(1)}%</span>
-              </div>
-              <input 
-                type="range" min="0" max="20" step="0.5" value={taxWeight} 
-                onChange={(e) => setTaxWeight(parseFloat(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--ashoka-blue)' }}
-              />
-            </div>
-          </div>
-
-          <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '8px', border: '1px solid var(--border-glass)', marginTop: '8px' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600, letterSpacing: '0.5px' }}>DYNAMIC SIMULATION FEEDBACK</span>
-            <p style={{ fontSize: '12.5px', color: '#fff', marginTop: '6px', fontWeight: 500, lineHeight: '1.4' }}>
-              {getDynamicFeedback()}
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
+              Adjust the formula sliders to modify how the Central Government devolves shared tax pools to India's states. Sliders dynamically auto-balance to sum to 100%.
             </p>
           </div>
+          <button 
+            onClick={handleResetDevolution}
+            style={{
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid var(--border-glass)',
+              borderRadius: '6px',
+              color: 'var(--text-secondary)',
+              fontSize: '12px',
+              fontWeight: 600,
+              padding: '8px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              flexShrink: 0
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
+            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+          >
+            <RefreshCw size={13} />
+            Reset Baseline
+          </button>
         </div>
 
-        {/* Visual Recharts Devolution Bar Chart */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <BarChart2 size={18} color="var(--emerald)" />
-              Sovereign Tax Devolution Share (%)
-            </h3>
-            
-            {/* Comparator select states */}
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <select 
-                value={compStateA} 
-                onChange={(e) => setCompStateA(e.target.value)}
-                style={{ padding: '4px 8px', fontSize: '11px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '4px' }}
-              >
-                {Object.keys(baseDevolutionShares).map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-              <select 
-                value={compStateB} 
-                onChange={(e) => setCompStateB(e.target.value)}
-                style={{ padding: '4px 8px', fontSize: '11px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '4px' }}
-              >
-                {Object.keys(baseDevolutionShares).map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
+        {/* Content Row: Sliders side-by-side with Recharts Visual */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '32px' }}>
+          {/* Column 1: Devolution Criteria Sliders */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 24px' }}>
+              {/* Slider 1 */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', fontWeight: 600, marginBottom: '6px' }}>
+                  <span>Income Distance (Eq)</span>
+                  <span style={{ color: 'var(--saffron)' }}>{normIncome.toFixed(1)}%</span>
+                </div>
+                <input 
+                  type="range" min="0" max="100" step="0.5" value={incomeWeight} 
+                  onChange={(e) => setIncomeWeight(parseFloat(e.target.value))}
+                  style={{ width: '100%', accentColor: 'var(--saffron)' }}
+                />
+              </div>
+
+              {/* Slider 2 */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', fontWeight: 600, marginBottom: '6px' }}>
+                  <span>Population Weight</span>
+                  <span style={{ color: 'var(--emerald)' }}>{normPop.toFixed(1)}%</span>
+                </div>
+                <input 
+                  type="range" min="0" max="50" step="0.5" value={popWeight} 
+                  onChange={(e) => setPopWeight(parseFloat(e.target.value))}
+                  style={{ width: '100%', accentColor: 'var(--emerald)' }}
+                />
+              </div>
+
+              {/* Slider 3 */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', fontWeight: 600, marginBottom: '6px' }}>
+                  <span>Geographic Area</span>
+                  <span style={{ color: 'var(--ashoka-blue)' }}>{normArea.toFixed(1)}%</span>
+                </div>
+                <input 
+                  type="range" min="0" max="40" step="0.5" value={areaWeight} 
+                  onChange={(e) => setAreaWeight(parseFloat(e.target.value))}
+                  style={{ width: '100%', accentColor: 'var(--ashoka-blue)' }}
+                />
+              </div>
+
+              {/* Slider 4 */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', fontWeight: 600, marginBottom: '6px' }}>
+                  <span>Forest & Ecology</span>
+                  <span style={{ color: 'var(--saffron)' }}>{normForest.toFixed(1)}%</span>
+                </div>
+                <input 
+                  type="range" min="0" max="30" step="0.5" value={forestWeight} 
+                  onChange={(e) => setForestWeight(parseFloat(e.target.value))}
+                  style={{ width: '100%', accentColor: 'var(--saffron)' }}
+                />
+              </div>
+
+              {/* Slider 5 */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', fontWeight: 600, marginBottom: '6px' }}>
+                  <span>Demographic Perf</span>
+                  <span style={{ color: 'var(--emerald)' }}>{normDemo.toFixed(1)}%</span>
+                </div>
+                <input 
+                  type="range" min="0" max="30" step="0.5" value={demoWeight} 
+                  onChange={(e) => setDemoWeight(parseFloat(e.target.value))}
+                  style={{ width: '100%', accentColor: 'var(--emerald)' }}
+                />
+              </div>
+
+              {/* Slider 6 */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', fontWeight: 600, marginBottom: '6px' }}>
+                  <span>Tax & Fiscal Effort</span>
+                  <span style={{ color: 'var(--ashoka-blue)' }}>{normTax.toFixed(1)}%</span>
+                </div>
+                <input 
+                  type="range" min="0" max="20" step="0.5" value={taxWeight} 
+                  onChange={(e) => setTaxWeight(parseFloat(e.target.value))}
+                  style={{ width: '100%', accentColor: 'var(--ashoka-blue)' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-glass)', marginTop: '4px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600, letterSpacing: '0.5px' }}>DYNAMIC SIMULATION FEEDBACK</span>
+              <p style={{ fontSize: '13px', color: '#fff', marginTop: '8px', fontWeight: 500, lineHeight: '1.5' }}>
+                {getDynamicFeedback()}
+              </p>
             </div>
           </div>
 
-          <div style={{ flex: 1, minHeight: '260px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" stroke="var(--text-secondary)" fontSize={11} />
-                <YAxis stroke="var(--text-secondary)" fontSize={11} unit="%" />
-                <Tooltip 
-                  contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
-                  formatter={(value) => [`${value}%`, '']}
-                />
-                <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11.5px' }} />
-                <Bar name="Official 16th FC Share" dataKey="Official 16th FC Share" fill="var(--ashoka-blue)" radius={[4, 4, 0, 0]} />
-                <Bar name="Your Custom Share" dataKey="Your Custom Share" fill="var(--saffron)" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          {/* Column 2: Sovereign Devolution Chart */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+              <h4 style={{ fontSize: '15px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--emerald)' }}>
+                <BarChart2 size={18} />
+                Sovereign Tax Devolution Share (%)
+              </h4>
+              
+              {/* Comparator Select Dropdowns */}
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <select 
+                  value={compStateA} 
+                  onChange={(e) => setCompStateA(e.target.value)}
+                  style={{ padding: '6px 10px', fontSize: '12px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
+                >
+                  {Object.keys(baseDevolutionShares).map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+                <select 
+                  value={compStateB} 
+                  onChange={(e) => setCompStateB(e.target.value)}
+                  style={{ padding: '6px 10px', fontSize: '12px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
+                >
+                  {Object.keys(baseDevolutionShares).map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Recharts Graphical Panel */}
+            <div style={{ flex: 1, minHeight: '260px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="name" stroke="var(--text-secondary)" fontSize={11} />
+                  <YAxis stroke="var(--text-secondary)" fontSize={11} unit="%" />
+                  <Tooltip 
+                    contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                    formatter={(value) => [`${value}%`, '']}
+                  />
+                  <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11.5px' }} />
+                  <Bar name="Official 16th FC Share" dataKey="Official 16th FC Share" fill="var(--ashoka-blue)" radius={[4, 4, 0, 0]} />
+                  <Bar name="Your Custom Share" dataKey="Your Custom Share" fill="var(--saffron)" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>
