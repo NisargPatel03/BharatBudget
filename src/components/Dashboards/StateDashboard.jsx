@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import IndiaMap from '../IndiaMap';
 import { ShieldCheck, TrendingUp, HelpCircle, Map, RefreshCw, Sliders, BarChart2, Download } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { exportToCsv } from '../../utils/exportCsv';
+import ChartContainer from '../ChartContainer';
 import GlossaryTooltip from '../GlossaryTooltip';
 
 export default function StateDashboard({ masterData }) {
@@ -489,8 +490,7 @@ export default function StateDashboard({ masterData }) {
             </div>
 
             {/* Recharts Graphical Panel */}
-            <div style={{ flex: 1, minHeight: '260px' }}>
-              <ResponsiveContainer width="100%" height={260}>
+            <ChartContainer height={260} style={{ flex: 1 }}>
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                   <XAxis dataKey="name" stroke="var(--text-secondary)" fontSize={11} />
@@ -503,8 +503,7 @@ export default function StateDashboard({ masterData }) {
                   <Bar name="Official 16th FC Share" dataKey="Official 16th FC Share" fill="var(--ashoka-blue)" radius={[4, 4, 0, 0]} />
                   <Bar name="Your Custom Share" dataKey="Your Custom Share" fill="var(--saffron)" radius={[4, 4, 0, 0]} />
                 </BarChart>
-              </ResponsiveContainer>
-            </div>
+            </ChartContainer>
           </div>
         </div>
       </div>
@@ -572,8 +571,7 @@ export default function StateDashboard({ masterData }) {
             </div>
 
             {/* Horizontal Bar Chart comparison */}
-            <div style={{ height: '300px' }}>
-              <ResponsiveContainer width="100%" height={280}>
+            <ChartContainer height={280}>
                 <BarChart 
                   layout="vertical" 
                   data={Object.keys(rbiStateFinances).map(stateName => ({
@@ -595,8 +593,7 @@ export default function StateDashboard({ masterData }) {
                     radius={[0, 4, 4, 0]}
                   />
                 </BarChart>
-              </ResponsiveContainer>
-            </div>
+            </ChartContainer>
           </div>
 
           {/* Column 2: State DBT Efficiency Scoreboard */}

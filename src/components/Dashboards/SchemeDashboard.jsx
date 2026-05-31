@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useBudgetStore } from '../../store/useBudgetStore';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { Search, TrendingUp, TrendingDown, Award, ShieldCheck, FileSpreadsheet } from 'lucide-react';
+import ChartContainer from '../ChartContainer';
 
 export default function SchemeDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
@@ -199,8 +200,7 @@ export default function SchemeDashboard({ masterData }) {
         </div>
 
         {/* Recharts Area Chart */}
-        <div style={{ flex: 1, minHeight: '200px', marginBottom: '16px' }}>
-          <ResponsiveContainer width="100%" height={240}>
+        <ChartContainer height={240} style={{ flex: 1, marginBottom: '16px' }}>
             <AreaChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 0 }}>
               <defs>
                 <linearGradient id="schemeGrad" x1="0" y1="0" x2="0" y2="1">
@@ -217,8 +217,7 @@ export default function SchemeDashboard({ masterData }) {
               />
               <Area type="monotone" dataKey="Outlay (₹ Cr)" stroke="var(--saffron)" fillOpacity={1} fill="url(#schemeGrad)" strokeWidth={2.5} />
             </AreaChart>
-          </ResponsiveContainer>
-        </div>
+        </ChartContainer>
 
         {/* Outlay quick analysis breakdown */}
         <div className="scheme-outlay-grid" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px', fontSize: '12px' }}>

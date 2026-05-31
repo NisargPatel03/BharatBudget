@@ -1,6 +1,7 @@
 import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { CalendarRange, Activity, Sparkles } from 'lucide-react';
+import ChartContainer from '../ChartContainer';
 
 export default function MonthlyDashboard({ masterData }) {
   const rawMonthly = masterData.monthly_tax_collections || [];
@@ -49,8 +50,7 @@ export default function MonthlyDashboard({ masterData }) {
           Month-by-month cumulative ledger outlays mapping actual inflows against target trajectories (₹ in Crores).
         </p>
 
-        <div style={{ flex: 1, minHeight: '250px' }}>
-          <ResponsiveContainer width="100%" height={250}>
+        <ChartContainer height={250} style={{ flex: 1 }}>
             <AreaChart data={processedMonthly}>
               <defs>
                 <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
@@ -73,8 +73,7 @@ export default function MonthlyDashboard({ masterData }) {
               <Area name="Actual Inflows (CGA)" type="monotone" dataKey="cumulativeTax" stroke="var(--saffron)" strokeWidth={2.5} fillOpacity={1} fill="url(#colorActual)" />
               <Area name="Target Path (BE)" type="monotone" dataKey="targetTax" stroke="var(--ashoka-blue)" strokeWidth={2} strokeDasharray="5 5" fillOpacity={1} fill="url(#colorTarget)" />
             </AreaChart>
-          </ResponsiveContainer>
-        </div>
+        </ChartContainer>
       </div>
 
       {/* 2. Right Side: Burn rate projection card */}
@@ -189,8 +188,7 @@ export default function MonthlyDashboard({ masterData }) {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px', alignItems: 'center' }}>
               {/* Recharts Bar Chart */}
-              <div style={{ height: '240px' }}>
-                <ResponsiveContainer width="100%" height={240}>
+              <ChartContainer height={240}>
                   <AreaChart data={marchRushData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
                     <XAxis dataKey="month" stroke="var(--text-secondary)" fontSize={10} />
@@ -201,8 +199,7 @@ export default function MonthlyDashboard({ masterData }) {
                     />
                     <Area type="monotone" dataKey="spend" stroke="var(--crimson)" fill="rgba(239, 68, 68, 0.1)" strokeWidth={2.5} />
                   </AreaChart>
-                </ResponsiveContainer>
-              </div>
+              </ChartContainer>
 
               {/* Warning / Explanation banner */}
               <div style={{ background: 'rgba(239, 68, 68, 0.03)', border: '1px solid rgba(239, 68, 68, 0.15)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>

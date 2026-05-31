@@ -181,10 +181,43 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   padding: 0 32px;
   position: sticky;
   top: 0;
   z-index: 90;
+  min-width: 0;
+}
+
+.app-header-start {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.app-header-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.header-timeline-pills {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  border-radius: 10px;
 }
 
 .app-main {
@@ -256,6 +289,31 @@ body {
   gap: 12px;
 }
 
+/* Recharts: allow shrinking inside flex/grid (numeric height set via ChartContainer) */
+.chart-container {
+  width: 100%;
+  min-width: 0;
+}
+
+.chart-container .recharts-responsive-container {
+  min-width: 0 !important;
+}
+
+/* Pie + legend side-by-side rows */
+.chart-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.chart-pie-slot {
+  flex-shrink: 0;
+  width: 150px;
+  min-width: 0;
+}
+
 /* Sidebar responsive overrides */
 @media (max-width: 1024px) {
   .app-sidebar {
@@ -285,8 +343,49 @@ body {
 
 @media (max-width: 768px) {
   .app-header {
-    padding: 0 16px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    height: auto !important;
+    min-height: 56px;
+    padding: 10px 12px !important;
+    gap: 10px;
   }
+
+  .app-header-start {
+    width: 100%;
+    flex: none;
+  }
+
+  .app-header-title {
+    font-size: 15px !important;
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+
+  .hamburger-btn {
+    flex-shrink: 0;
+    margin-right: 0 !important;
+  }
+
+  .header-timeline-pills {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .header-timeline-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .header-timeline-pills button {
+    flex-shrink: 0;
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+  }
+
   .app-main {
     padding: 16px;
   }
@@ -453,9 +552,9 @@ body {
     gap: 20px !important;
   }
   
-  /* Ensure flex containers stack or wrap cleanly */
-  .glass-panel > div[style*="display: flex"],
-  .glass-panel > div[style*="display:flex"] {
+  /* Ensure flex containers stack or wrap cleanly (exclude chart rows) */
+  .glass-panel > div[style*="display: flex"]:not(.chart-row),
+  .glass-panel > div[style*="display:flex"]:not(.chart-row) {
     flex-wrap: wrap !important;
     gap: 16px !important;
   }
@@ -474,7 +573,19 @@ body {
   .glass-panel {
     padding: 16px !important;
     border-radius: 12px !important;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  .chart-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .chart-pie-slot {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   /* Safe responsive stacking layout classes */
@@ -487,27 +598,6 @@ body {
       flex-direction: column !important;
       align-items: stretch !important;
       gap: 12px !important;
-    }
-  }
-
-  /* Interactive Fiscal Timeline pills adjustments */
-  .header-timeline-pills {
-    display: flex;
-    background: rgba(255, 255, 255, 0.02);
-    padding: 4px;
-    border-radius: 10px;
-    border: 1px solid var(--border-glass);
-    gap: 4px;
-    flex-shrink: 0;
-  }
-  @media (max-width: 768px) {
-    .header-timeline-pills {
-      padding: 2px !important;
-      gap: 2px !important;
-    }
-    .header-timeline-pills button {
-      padding: 4px 8px !important;
-      font-size: 10px !important;
     }
   }
 
@@ -527,12 +617,6 @@ body {
       text-align: left !important;
       min-width: 110px;
     }
-  }
-
-  /* Make header and action bars fit perfectly */
-  .app-header {
-    height: 60px !important;
-    padding: 0 12px !important;
   }
 
   /* Allow inputs in sandbox calculators to stack cleanly */
@@ -556,14 +640,15 @@ body {
     justify-content: flex-end !important;
   }
 
-  /* Ensure Recharts charts adapt beautifully in limited viewport width */
-  .recharts-wrapper {
+  /* Let Recharts control wrapper dimensions; only constrain overflow */
+  .chart-container .recharts-wrapper {
     max-width: 100% !important;
-    width: 100% !important;
   }
-  
-  .recharts-surface {
-    max-width: 100% !important;
+
+  .dashboard-grid .glass-panel > div[style*="minHeight"],
+  .dashboard-grid .glass-panel .chart-container {
+    width: 100% !important;
+    min-width: 0 !important;
   }
 
   /* Reset layout for specific complex layout pages */
@@ -572,9 +657,10 @@ body {
     grid-template-columns: 1fr !important;
   }
 
-  /* Adjust typography headers for smaller screens */
+  /* Adjust typography headers for smaller screens (exclude app header title) */
   h1 { font-size: 20px !important; }
-  h2 { font-size: 18px !important; }
+  .glass-panel h2,
+  .dashboard-grid h2 { font-size: 18px !important; }
   h3 { font-size: 15px !important; }
   h4 { font-size: 13.5px !important; }
   p { font-size: 12px !important; }

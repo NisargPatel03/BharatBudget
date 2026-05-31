@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useBudgetStore } from '../../store/useBudgetStore';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { IndianRupee, ShieldAlert, Award, FileSpreadsheet, Activity, ChevronRight, FileText } from 'lucide-react';
 import GlossaryTooltip from '../GlossaryTooltip';
+import ChartContainer from '../ChartContainer';
 
 export default function OverviewDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
@@ -194,8 +195,7 @@ export default function OverviewDashboard({ masterData }) {
           <FileSpreadsheet size={18} color="var(--emerald)" />
           Operational Spending vs. Asset Creation Outlay
         </h3>
-        <div style={{ flex: 1, minHeight: '230px' }}>
-          <ResponsiveContainer width="100%" height={230}>
+        <ChartContainer height={230} style={{ flex: 1 }}>
             <PieChart>
               <Pie
                 data={spendingSplit}
@@ -215,8 +215,7 @@ export default function OverviewDashboard({ masterData }) {
                 contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
               />
             </PieChart>
-          </ResponsiveContainer>
-        </div>
+        </ChartContainer>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '12px' }}>
           {spendingSplit.map((entry, index) => (
             <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -294,8 +293,7 @@ export default function OverviewDashboard({ masterData }) {
 
         <div className="deficit-container">
           {/* Main Recharts Spline Area Chart */}
-          <div style={{ height: '280px' }}>
-            <ResponsiveContainer width="100%" height={280}>
+          <ChartContainer height={280}>
               <AreaChart data={deficitTimeline} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorFiscal" x1="0" y1="0" x2="0" y2="1">
@@ -319,8 +317,7 @@ export default function OverviewDashboard({ masterData }) {
                 <Area type="monotone" name="Revenue Deficit (Lakh Cr)" dataKey="revenue" stroke="var(--ashoka-blue)" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={1.5} />
                 <Area type="monotone" name="Primary Deficit (Lakh Cr)" dataKey="primary" stroke="var(--emerald)" fill="none" strokeWidth={1.5} strokeDasharray="4 4" />
               </AreaChart>
-            </ResponsiveContainer>
-          </div>
+          </ChartContainer>
 
           {/* GDP Percentage Indicators */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', justifyContent: 'center' }}>

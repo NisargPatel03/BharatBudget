@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ShieldAlert, Trash2, Award, ClipboardCheck, ArrowDownRight, ArrowRight, Download } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { exportToCsv } from '../../utils/exportCsv';
+import ChartContainer from '../ChartContainer';
 import GlossaryTooltip from '../GlossaryTooltip';
 
 export default function AuditDashboard({ masterData }) {
@@ -216,8 +217,7 @@ export default function AuditDashboard({ masterData }) {
             <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
               CAG flags massive capital balances remaining unspent at fiscal year-end, pointing to baseline planning inefficiencies.
             </p>
-            <div style={{ height: '240px' }}>
-              <ResponsiveContainer width="100%" height={240}>
+            <ChartContainer height={240}>
                 <BarChart 
                   data={[
                     { name: "Communications", unspent: 85240 },
@@ -237,8 +237,7 @@ export default function AuditDashboard({ masterData }) {
                   />
                   <Bar dataKey="unspent" fill="var(--crimson)" radius={[4, 4, 0, 0]} />
                 </BarChart>
-              </ResponsiveContainer>
-            </div>
+            </ChartContainer>
           </div>
 
           {/* Column 2: Systemic Compliance Objections Ledger */}

@@ -170,11 +170,11 @@ export default function App() {
         {/* Top Header Ticker Bar */}
         <header className="app-header">
           {/* Active section title with Mobile Hamburger Button */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
+          <div className="app-header-start">
+            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
               <Menu size={22} />
             </button>
-            <h2 style={{ fontSize: '17px', fontWeight: 700, textTransform: 'capitalize', color: 'var(--text-primary)' }}>
+            <h2 className="app-header-title">
               {navItems.find(n => n.id === activeTab)?.name} View
             </h2>
           </div>

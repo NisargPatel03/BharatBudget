@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line, Legend } from 'recharts';
 import { Landmark, TrendingUp, AlertTriangle, CalendarRange } from 'lucide-react';
+import ChartContainer from '../ChartContainer';
 
 const ministryData = {
   jal_shakti: {
@@ -316,8 +317,7 @@ export default function MinistryDashboard() {
           <Landmark size={18} color="var(--ashoka-blue)" />
           Budget Targets (BE) vs Actual Drawn Expenditure (CGA)
         </h3>
-        <div style={{ flex: 1, minHeight: '230px' }}>
-          <ResponsiveContainer width="100%" height={240}>
+        <ChartContainer height={240} style={{ flex: 1 }}>
             <BarChart data={data.timeline}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={12} />
@@ -330,8 +330,7 @@ export default function MinistryDashboard() {
               <Bar name="Budget Estimate (BE)" dataKey="budget" fill="var(--saffron)" radius={[4, 4, 0, 0]} />
               <Bar name="CGA Spend (Actual)" dataKey="actual" fill="var(--emerald)" radius={[4, 4, 0, 0]} />
             </BarChart>
-          </ResponsiveContainer>
-        </div>
+        </ChartContainer>
       </div>
 
       {/* Physical Outcome Accountability Indicators & Cost-per-Unit Benchmarks */}
@@ -388,8 +387,7 @@ export default function MinistryDashboard() {
           <TrendingUp size={18} color="var(--emerald)" />
           Historical Allocation Trajectory Timeline
         </h3>
-        <div style={{ flex: 1, minHeight: '210px' }}>
-          <ResponsiveContainer width="100%" height={240}>
+        <ChartContainer height={240} style={{ flex: 1 }}>
             <LineChart data={data.timeline}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={12} />
@@ -400,8 +398,7 @@ export default function MinistryDashboard() {
               />
               <Line name="Allocation Path" type="monotone" dataKey="budget" stroke="var(--emerald)" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} />
             </LineChart>
-          </ResponsiveContainer>
-        </div>
+        </ChartContainer>
       </div>
  
       {/* 3. Cross-Ministry spending Correlation Matrix */}
@@ -442,8 +439,7 @@ export default function MinistryDashboard() {
  
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
           {/* Comparative Multi-Line Chart */}
-          <div style={{ height: '240px' }}>
-            <ResponsiveContainer width="100%" height={240}>
+          <ChartContainer height={240}>
               <LineChart data={comparisonData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
                 <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={10} />
@@ -453,8 +449,7 @@ export default function MinistryDashboard() {
                 <Line name={`${ministryData[compMinistryA]?.name} (BE)`} type="monotone" dataKey={`${ministryData[compMinistryA]?.name} (BE)`} stroke="var(--saffron)" strokeWidth={2.5} dot={{ r: 4 }} />
                 <Line name={`${ministryData[compMinistryB]?.name} (BE)`} type="monotone" dataKey={`${ministryData[compMinistryB]?.name} (BE)`} stroke="var(--ashoka-blue)" strokeWidth={2.5} dot={{ r: 4 }} />
               </LineChart>
-            </ResponsiveContainer>
-          </div>
+          </ChartContainer>
 
           {/* YoY Growth Divergence Insights */}
           <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '10px', padding: '16px', fontSize: '12px', display: 'flex', flexDirection: 'column', justifyGap: '12px' }}>
