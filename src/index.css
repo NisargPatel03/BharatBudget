@@ -353,3 +353,62 @@ body {
   border-color: rgba(13, 17, 23, 0.95) transparent transparent transparent;
 }
 
+/* High-Contrast Single Page Print Layout for Scorecard */
+@media print {
+  /* Hide the sidebar, headers, and all unselected content panels */
+  body *, 
+  #root > div > aside, 
+  #root > div > main > div:not(.animate-fade-in),
+  .dashboard-grid,
+  .glass-panel {
+    visibility: hidden !important;
+  }
+
+  /* Expose ONLY the printable area container */
+  #printable-area, 
+  #printable-area * {
+    visibility: visible !important;
+  }
+
+  /* Convert the viewport to pure clean white for paper output */
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Position the scorecard absolutely at the top-left of the paper page */
+  #printable-area {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Force all print-specific typographic contrast */
+  #printable-area * {
+    color: #000000 !important;
+    background: transparent !important;
+    border-color: #000000 !important;
+    box-shadow: none !important;
+  }
+
+  /* Hide active buttons and actions from printing on paper */
+  button, 
+  button *,
+  div[style*="border-top: 2px dashed"],
+  div[style*="border-top: 2px dashed"] * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
