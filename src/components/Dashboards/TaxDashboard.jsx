@@ -5,6 +5,22 @@ import { IndianRupee, Landmark, TrendingUp, Download, Receipt } from 'lucide-rea
 import { exportToCsv } from '../../utils/exportCsv';
 import ChartContainer from '../ChartContainer';
 
+function PieLegendList({ items, renderValue }) {
+  return (
+    <ul className="pie-legend-list">
+      {items.map((item, index) => (
+        <li key={index} className="pie-legend-item">
+          <span className="pie-legend-label">
+            <span className="pie-legend-swatch" style={{ background: item.color }} aria-hidden />
+            <span>{item.name}</span>
+          </span>
+          <strong className="pie-legend-value">{renderValue(item)}</strong>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function TaxDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
   const rawMonthly = masterData.monthly_tax_collections || [];
@@ -139,6 +155,24 @@ export default function TaxDashboard({ masterData }) {
     return val.toLocaleString('en-IN');
   };
 
+  const nonTaxPieData = [
+    { name: 'RBI Surplus Transfers', value: 210000, color: '#a855f7' },
+    { name: 'Telecom Spectrum Fees', value: 120000, color: '#3b82f6' },
+    { name: 'Public Disinvestment', value: 50000, color: '#f43f5e' },
+    { name: 'Sovereign Service Fees', value: 286228, color: '#10b981' },
+  ];
+  const nonTaxPieTotal = nonTaxPieData.reduce((sum, item) => sum + item.value, 0);
+
+  const taxProgressivityTimeline = [
+    { year: '2010', direct: 378000, indirect: 312000 },
+    { year: '2014', direct: 638000, indirect: 521000 },
+    { year: '2018', direct: 1002000, indirect: 912000 },
+    { year: '2022', direct: 1412000, indirect: 1284000 },
+    { year: '2026 BE', direct: 2697000, indirect: 1679130 },
+  ];
+
+  const pieSliceLabel = ({ percent }) => (percent >= 0.06 ? `${Math.round(percent * 100)}%` : '');
+
   return (
     <div className="animate-fade-in dashboard-grid col-12" style={{ gap: '16px' }}>
       {/* 1. Spline Area Chart: Direct Tax trajectory */}
@@ -184,41 +218,39 @@ export default function TaxDashboard({ masterData }) {
           Percentage breakdown of every 100 Paise of national treasury income ({activeYearLabel}).
         </p>
  
-        <div className="chart-row" style={{ flex: 1, minHeight: '200px' }}>
-          <ChartContainer height={180} className="chart-pie-slot">
-              <PieChart>
-                <Pie
-                  data={inflowDistribution}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={45}
-                  outerRadius={65}
-                  paddingAngle={2}
-                  dataKey="value"
-                >
-                  {inflowDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value) => [`${value}% (${value} Paise)`, 'Inflow Portion']}
-                  contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
-                />
-              </PieChart>
+        <div className="pie-with-legend" style={{ flex: 1 }}>
+          <ChartContainer height={200} className="chart-pie-slot">
+            <PieChart>
+              <Pie
+                data={inflowDistribution}
+                cx="50%"
+                cy="50%"
+                innerRadius={48}
+                outerRadius={72}
+                paddingAngle={2}
+                dataKey="value"
+                label={pieSliceLabel}
+                labelLine={false}
+              >
+                {inflowDistribution.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip
+                formatter={(value) => [`${value}% (${value} Paise)`, 'Inflow Portion']}
+                contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+              />
+            </PieChart>
           </ChartContainer>
-          
-          {/* Scrollable Pie legends */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', overflowY: 'auto', maxHeight: '180px', fontSize: '11.5px', paddingRight: '4px' }}>
-            {inflowDistribution.map((item, index) => (
-              <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '4px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color }}></span>
-                  <span style={{ color: 'var(--text-secondary)' }}>{item.name}</span>
-                </div>
-                <span style={{ fontWeight: 700, color: 'var(--text-primary)', marginLeft: '8px' }}>{item.value}%</span>
-              </div>
-            ))}
-          </div>
+          <PieLegendList
+            items={inflowDistribution}
+            renderValue={(item) => (
+              <>
+                {item.value}%
+                <span className="pie-legend-pct">{item.value} Paise per ₹1</span>
+              </>
+            )}
+          />
         </div>
       </div>
 
@@ -391,97 +423,83 @@ export default function TaxDashboard({ masterData }) {
 
       {/* 4. Non-Tax Receipts Concentric Donut & Direct/Indirect Progressivity Timeline */}
       <div className="glass-panel col-12" style={{ marginTop: '16px', padding: '24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '32px' }}>
-          
+        <div className="tax-dual-panel-grid">
           {/* Column 1: Non-Tax Inflows Breakdown */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="tax-dual-panel">
             <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: '#a855f7' }}>
               📊 Concentric Split of Non-Tax Inflows (₹ in Crores)
             </h4>
             <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
               Non-Tax revenues are anchored by the central sovereign surplus dividend transfers along with strategic disinvestment targets.
             </p>
-            <div className="chart-row" style={{ flex: 1, minHeight: '240px' }}>
-              <ChartContainer height={180} className="chart-pie-slot">
-                  <PieChart>
-                    <Pie
-                      data={[
-                        { name: "RBI Surplus Transfers", value: 210000, color: "#a855f7" },
-                        { name: "Telecom Spectrum Fees", value: 120000, color: "#3b82f6" },
-                        { name: "Public Disinvestment", value: 50000, color: "#f43f5e" },
-                        { name: "Sovereign Service Fees", value: 286228, color: "#10b981" }
-                      ]}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={45}
-                      outerRadius={65}
-                      paddingAngle={2}
-                      dataKey="value"
-                    >
-                      {[
-                        { name: "RBI Surplus Transfers", value: 210000, color: "#a855f7" },
-                        { name: "Telecom Spectrum Fees", value: 120000, color: "#3b82f6" },
-                        { name: "Public Disinvestment", value: 50000, color: "#f43f5e" },
-                        { name: "Sovereign Service Fees", value: 286228, color: "#10b981" }
-                      ].map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      formatter={(value) => [`₹ ${value.toLocaleString('en-IN')} Cr`, 'Receipts']}
-                      contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
-                    />
-                  </PieChart>
+            <div className="pie-with-legend">
+              <ChartContainer height={200} className="chart-pie-slot">
+                <PieChart>
+                  <Pie
+                    data={nonTaxPieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={48}
+                    outerRadius={72}
+                    paddingAngle={2}
+                    dataKey="value"
+                    label={pieSliceLabel}
+                    labelLine={false}
+                  >
+                    {nonTaxPieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value, name) => [
+                      `₹ ${Number(value).toLocaleString('en-IN')} Cr (${Math.round((value / nonTaxPieTotal) * 100)}%)`,
+                      name,
+                    ]}
+                    contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                  />
+                </PieChart>
               </ChartContainer>
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '11.5px' }}>
-                {[
-                  { name: "RBI Surplus Transfers", value: 210000, color: "#a855f7" },
-                  { name: "Telecom Spectrum Fees", value: 120000, color: "#3b82f6" },
-                  { name: "Public Disinvestment", value: 50000, color: "#f43f5e" },
-                  { name: "Sovereign Service Fees", value: 286228, color: "#10b981" }
-                ].map((item, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '4px' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)' }}>
-                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color }} />
-                      {item.name}
-                    </span>
-                    <strong style={{ color: 'var(--text-primary)' }}>₹ {item.value.toLocaleString('en-IN')} Cr</strong>
-                  </div>
-                ))}
-              </div>
+              <PieLegendList
+                items={nonTaxPieData}
+                renderValue={(item) => (
+                  <>
+                    ₹ {formatCrores(item.value)} Cr
+                    <span className="pie-legend-pct">{Math.round((item.value / nonTaxPieTotal) * 100)}% of non-tax pool</span>
+                  </>
+                )}
+              />
             </div>
           </div>
- 
+
           {/* Column 2: Direct vs. Indirect Tax Timeline */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="tax-dual-panel">
             <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--saffron)' }}>
               📈 Progressive Tax Balance Timeline (15-Year Area Chart)
             </h4>
             <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
               Direct Taxes (Progressive Corporate/Income Tax) vs Indirect Taxes (Regressive Customs/Excise/GST) in ₹ Crores.
             </p>
-            <ChartContainer height={180}>
-                <AreaChart 
-                  data={[
-                    { year: '2010', direct: 378000, indirect: 312000 },
-                    { year: '2014', direct: 638000, indirect: 521000 },
-                    { year: '2018', direct: 1002000, indirect: 912000 },
-                    { year: '2022', direct: 1412000, indirect: 1284000 },
-                    { year: '2026 BE', direct: 2697000, indirect: 1679130 }
-                  ]} 
-                  margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
-                  <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={10} />
-                  <YAxis stroke="var(--text-secondary)" fontSize={10} />
-                  <Tooltip 
-                    contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
-                    formatter={(value) => [`₹ ${value.toLocaleString('en-IN')} Cr`, '']}
-                  />
-                  <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11.5px' }} />
-                  <Area name="Progressive Direct Taxes" type="monotone" dataKey="direct" stroke="var(--saffron)" fill="var(--saffron)" fillOpacity={0.06} />
-                  <Area name="Regressive Indirect Taxes" type="monotone" dataKey="indirect" stroke="var(--ashoka-blue)" fill="var(--ashoka-blue)" fillOpacity={0.03} />
-                </AreaChart>
+            <ChartContainer height={240}>
+              <AreaChart
+                data={taxProgressivityTimeline}
+                margin={{ top: 36, right: 12, left: 4, bottom: 4 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+                <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={10} />
+                <YAxis
+                  stroke="var(--text-secondary)"
+                  fontSize={10}
+                  width={52}
+                  tickFormatter={(v) => `${(v / 100000).toFixed(1)}L`}
+                />
+                <Tooltip
+                  contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                  formatter={(value) => [`₹ ${Number(value).toLocaleString('en-IN')} Cr`, '']}
+                />
+                <Legend verticalAlign="top" height={32} wrapperStyle={{ fontSize: '11px', paddingBottom: '4px' }} />
+                <Area name="Progressive Direct Taxes" type="monotone" dataKey="direct" stroke="var(--saffron)" fill="var(--saffron)" fillOpacity={0.12} />
+                <Area name="Regressive Indirect Taxes" type="monotone" dataKey="indirect" stroke="var(--ashoka-blue)" fill="var(--ashoka-blue)" fillOpacity={0.08} />
+              </AreaChart>
             </ChartContainer>
           </div>
         </div>
