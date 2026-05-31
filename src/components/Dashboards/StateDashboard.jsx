@@ -1,57 +1,143 @@
 import React, { useState } from 'react';
 import IndiaMap from '../IndiaMap';
-import { ShieldCheck, TrendingUp, HelpCircle, Map } from 'lucide-react';
+import { ShieldCheck, TrendingUp, HelpCircle, Map, RefreshCw, Sliders, BarChart2 } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function StateDashboard({ masterData }) {
   const [activeStateId, setActiveStateId] = useState("gj");
   const [compStateA, setCompStateA] = useState("Gujarat");
   const [compStateB, setCompStateB] = useState("Haryana");
 
+  // Finance Commission Sandbox Weights
+  const [popWeight, setPopWeight] = useState(15.0);
+  const [areaWeight, setAreaWeight] = useState(15.0);
+  const [forestWeight, setForestWeight] = useState(10.0);
+  const [incomeWeight, setIncomeWeight] = useState(45.0);
+  const [demoWeight, setDemoWeight] = useState(12.5);
+  const [taxWeight, setTaxWeight] = useState(2.5);
+
   const stateScores = masterData.state_dbt_scores || [];
 
+  // Reset to 16th Finance Commission baseline
+  const handleResetDevolution = () => {
+    setPopWeight(15.0);
+    setAreaWeight(15.0);
+    setForestWeight(10.0);
+    setIncomeWeight(45.0);
+    setDemoWeight(12.5);
+    setTaxWeight(2.5);
+  };
+
+  // Base tax devolution shares from baseline 16th FC allocations
+  const baseDevolutionShares = {
+    "Uttar Pradesh": 17.9,
+    "Bihar": 10.0,
+    "Madhya Pradesh": 7.8,
+    "West Bengal": 7.5,
+    "Maharashtra": 6.3,
+    "Rajasthan": 6.0,
+    "Tamil Nadu": 4.1,
+    "Karnataka": 3.6,
+    "Gujarat": 3.5,
+    "Jharkhand": 3.3,
+    "Punjab": 1.8,
+    "Haryana": 1.1,
+    "Uttarakhand": 1.1,
+    "Tripura": 0.7,
+    "Goa": 0.4
+  };
+
+  // Hardcoded demographic/structural biases to recalculate custom devolution
+  const stateFCBiases = {
+    "Uttar Pradesh": { pop: 22.0, area: 12.0, forest: 5.0, income: 20.0, demo: 8.0, tax: 6.0 },
+    "Bihar": { pop: 18.0, area: 6.0, forest: 2.0, income: 25.0, demo: 4.0, tax: 3.0 },
+    "Madhya Pradesh": { pop: 9.0, area: 15.0, forest: 18.0, income: 8.0, demo: 7.0, tax: 6.0 },
+    "West Bengal": { pop: 10.0, area: 5.0, forest: 4.0, income: 10.0, demo: 8.0, tax: 5.0 },
+    "Maharashtra": { pop: 7.0, area: 15.0, forest: 8.0, income: 3.0, demo: 10.0, tax: 12.0 },
+    "Rajasthan": { pop: 7.0, area: 18.0, forest: 6.0, income: 6.0, demo: 6.0, tax: 6.0 },
+    "Tamil Nadu": { pop: 4.0, area: 6.0, forest: 5.0, income: 2.0, demo: 15.0, tax: 15.0 },
+    "Karnataka": { pop: 3.0, area: 9.0, forest: 6.0, income: 2.0, demo: 12.0, tax: 14.0 },
+    "Gujarat": { pop: 3.0, area: 9.0, forest: 4.0, income: 2.0, demo: 10.0, tax: 18.0 },
+    "Jharkhand": { pop: 4.0, area: 5.0, forest: 10.0, income: 8.0, demo: 5.0, tax: 4.0 },
+    "Punjab": { pop: 2.0, area: 3.0, forest: 2.0, income: 1.5, demo: 5.0, tax: 6.0 },
+    "Haryana": { pop: 1.2, area: 2.0, forest: 1.0, income: 0.8, demo: 4.0, tax: 8.0 },
+    "Uttarakhand": { pop: 0.8, area: 2.5, forest: 12.0, income: 1.0, demo: 4.0, tax: 3.0 },
+    "Tripura": { pop: 0.5, area: 0.5, forest: 6.0, income: 1.2, demo: 3.0, tax: 2.0 },
+    "Goa": { pop: 0.2, area: 0.2, forest: 1.5, income: 0.2, demo: 3.0, tax: 4.0 }
+  };
+
+  // Perform dynamic normalization of devolution criteria
+  const sumWeights = popWeight + areaWeight + forestWeight + incomeWeight + demoWeight + taxWeight;
+  const normPop = sumWeights > 0 ? (popWeight / sumWeights) * 100 : 0;
+  const normArea = sumWeights > 0 ? (areaWeight / sumWeights) * 100 : 0;
+  const normForest = sumWeights > 0 ? (forestWeight / sumWeights) * 100 : 0;
+  const normIncome = sumWeights > 0 ? (incomeWeight / sumWeights) * 100 : 0;
+  const normDemo = sumWeights > 0 ? (demoWeight / sumWeights) * 100 : 0;
+  const normTax = sumWeights > 0 ? (taxWeight / sumWeights) * 100 : 0;
+
+  // Calculate dynamic simulated shares for all states
+  const rawScores = {};
+  let totalRawScore = 0;
+  Object.keys(stateFCBiases).forEach(state => {
+    rawScores[state] = (
+      stateFCBiases[state].pop * (normPop / 15.0) +
+      stateFCBiases[state].area * (normArea / 15.0) +
+      stateFCBiases[state].forest * (normForest / 10.0) +
+      stateFCBiases[state].income * (normIncome / 45.0) +
+      stateFCBiases[state].demo * (normDemo / 12.5) +
+      stateFCBiases[state].tax * (normTax / 2.5)
+    );
+    totalRawScore += rawScores[state];
+  });
+
+  const simulatedShares = {};
+  Object.keys(stateFCBiases).forEach(state => {
+    simulatedShares[state] = totalRawScore > 0 ? (rawScores[state] / totalRawScore) * 100 : (baseDevolutionShares[state] || 0.0);
+  });
+
   // Fetch meta for active state ID
+  const idMap = {
+    an: "Andaman and Nicobar Islands",
+    ap: "Andhra Pradesh",
+    ar: "Arunachal Pradesh",
+    as: "Assam",
+    br: "Bihar",
+    ch: "Chandigarh",
+    ct: "Chhattisgarh",
+    dn: "Dadra and Nagar Haveli",
+    dd: "Daman and Diu",
+    dl: "Delhi",
+    ga: "Goa",
+    gj: "Gujarat",
+    hr: "Haryana",
+    hp: "Himachal Pradesh",
+    jk: "Jammu and Kashmir",
+    jh: "Jharkhand",
+    ka: "Karnataka",
+    kl: "Kerala",
+    ld: "Lakshadweep",
+    mp: "Madhya Pradesh",
+    mh: "Maharashtra",
+    mn: "Manipur",
+    ml: "Meghalaya",
+    mz: "Mizoram",
+    nl: "Nagaland",
+    or: "Odisha",
+    py: "Puducherry",
+    pb: "Punjab",
+    rj: "Rajasthan",
+    sk: "Sikkim",
+    tn: "Tamil Nadu",
+    tg: "Telangana",
+    tr: "Tripura",
+    up: "Uttar Pradesh",
+    ut: "Uttarakhand",
+    wb: "West Bengal"
+  };
+
   const getActiveStateMeta = () => {
-    // Map ISO 2-letter code to state name
-    const idMap = {
-      an: "Andaman and Nicobar Islands",
-      ap: "Andhra Pradesh",
-      ar: "Arunachal Pradesh",
-      as: "Assam",
-      br: "Bihar",
-      ch: "Chandigarh",
-      ct: "Chhattisgarh",
-      dn: "Dadra and Nagar Haveli",
-      dd: "Daman and Diu",
-      dl: "Delhi",
-      ga: "Goa",
-      gj: "Gujarat",
-      hr: "Haryana",
-      hp: "Himachal Pradesh",
-      jk: "Jammu and Kashmir",
-      jh: "Jharkhand",
-      ka: "Karnataka",
-      kl: "Kerala",
-      ld: "Lakshadweep",
-      mp: "Madhya Pradesh",
-      mh: "Maharashtra",
-      mn: "Manipur",
-      ml: "Meghalaya",
-      mz: "Mizoram",
-      nl: "Nagaland",
-      or: "Odisha",
-      py: "Puducherry",
-      pb: "Punjab",
-      rj: "Rajasthan",
-      sk: "Sikkim",
-      tn: "Tamil Nadu",
-      tg: "Telangana",
-      tr: "Tripura",
-      up: "Uttar Pradesh",
-      ut: "Uttarakhand",
-      wb: "West Bengal"
-    };
     const name = idMap[activeStateId] || "Gujarat";
-    return stateScores.find(s => s.state.toLowerCase() === name.toLowerCase()) || stateScores[3]; // Fallback to Gujarat
+    return stateScores.find(s => s.state.toLowerCase() === name.toLowerCase()) || stateScores.find(s => s.state === "Gujarat");
   };
 
   const activeMeta = getActiveStateMeta();
@@ -60,59 +146,54 @@ export default function StateDashboard({ masterData }) {
 
   const handleSelectStateFromMap = (id) => {
     setActiveStateId(id);
-    // Auto-update comparison state A to match selected state
-    const idMap = {
-      an: "Andaman and Nicobar Islands",
-      ap: "Andhra Pradesh",
-      ar: "Arunachal Pradesh",
-      as: "Assam",
-      br: "Bihar",
-      ch: "Chandigarh",
-      ct: "Chhattisgarh",
-      dn: "Dadra and Nagar Haveli",
-      dd: "Daman and Diu",
-      dl: "Delhi",
-      ga: "Goa",
-      gj: "Gujarat",
-      hr: "Haryana",
-      hp: "Himachal Pradesh",
-      jk: "Jammu and Kashmir",
-      jh: "Jharkhand",
-      ka: "Karnataka",
-      kl: "Kerala",
-      ld: "Lakshadweep",
-      mp: "Madhya Pradesh",
-      mh: "Maharashtra",
-      mn: "Manipur",
-      ml: "Meghalaya",
-      mz: "Mizoram",
-      nl: "Nagaland",
-      or: "Odisha",
-      py: "Puducherry",
-      pb: "Punjab",
-      rj: "Rajasthan",
-      sk: "Sikkim",
-      tn: "Tamil Nadu",
-      tg: "Telangana",
-      tr: "Tripura",
-      up: "Uttar Pradesh",
-      ut: "Uttarakhand",
-      wb: "West Bengal"
-    };
     if (idMap[id]) {
       setCompStateA(idMap[id]);
     }
+  };
+
+  // Data for the Recharts devolution comparison chart
+  const activeStateName = activeMeta.state;
+  const chartData = [
+    {
+      name: activeStateName,
+      "Official 16th FC Share": Number((baseDevolutionShares[activeStateName] || 0).toFixed(2)),
+      "Your Custom Share": Number((simulatedShares[activeStateName] || 0).toFixed(2))
+    },
+    {
+      name: compStateA,
+      "Official 16th FC Share": Number((baseDevolutionShares[compStateA] || 0).toFixed(2)),
+      "Your Custom Share": Number((simulatedShares[compStateA] || 0).toFixed(2))
+    },
+    {
+      name: compStateB,
+      "Official 16th FC Share": Number((baseDevolutionShares[compStateB] || 0).toFixed(2)),
+      "Your Custom Share": Number((simulatedShares[compStateB] || 0).toFixed(2))
+    }
+  ];
+
+  // Dynamic feedback statement based on slider allocations
+  const getDynamicFeedback = () => {
+    if (forestWeight > 20) {
+      return `With your high emphasis on Forest & Ecology (${normForest.toFixed(1)}%), ecologically rich states like Madhya Pradesh and Uttarakhand receive a massive relative boost in tax devolution shares!`;
+    }
+    if (incomeWeight > 60) {
+      return `By setting Income Distance to ${normIncome.toFixed(1)}%, your custom formula heavily prioritizes fiscal equalisation, channeling maximum support to states like Bihar and Uttar Pradesh.`;
+    }
+    if (taxWeight > 10 || demoWeight > 25) {
+      return `Prioritizing Tax Efforts & Demographic Performance (${(normTax + normDemo).toFixed(1)}%) heavily rewards highly compliant, high-performing states like Gujarat, Tamil Nadu, and Karnataka.`;
+    }
+    return "Your devolution sliders closely match the constitutional baseline recommendations of the 16th Finance Commission.";
   };
 
   return (
     <div className="animate-fade-in dashboard-grid col-12">
       {/* 1. Map Panel (Visual Centerpiece) */}
       <div className="glass-panel col-6" style={{ minHeight: '450px', display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-          <Map size={20} color="var(--ashoka-blue)" />
+        <h3 style={{ fontSize: '17px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+          <Map size={19} color="var(--ashoka-blue)" />
           Interactive Welfare Performance Map (DBT Scores)
         </h3>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+        <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
           Click on any highlighted state in the vector map to view its detailed budget execution indicators.
         </p>
         <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'rgba(255,255,255,0.01)', borderRadius: '12px' }}>
@@ -125,41 +206,41 @@ export default function StateDashboard({ masterData }) {
       </div>
 
       {/* 2. Detailed State Card Info */}
-      <div className="glass-panel col-6" style={{ display: 'flex', flexDirection: 'column', justifyGap: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '12px', marginBottom: '16px' }}>
+      <div className="glass-panel col-6" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '12px', marginBottom: '4px' }}>
           <div>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>ACTIVE STATE OUTLAY</span>
-            <h2 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--saffron)' }}>{activeMeta.state}</h2>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>ACTIVE STATE SUMMARY</span>
+            <h2 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--saffron)' }}>{activeMeta.state}</h2>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>NATIONAL RANK</span>
-            <h3 style={{ fontSize: '28px', fontWeight: 800, color: 'var(--emerald)' }}>#{activeMeta.rank}</h3>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>NATIONAL RANK</span>
+            <h3 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--emerald)' }}>#{activeMeta.rank}</h3>
           </div>
         </div>
 
         {/* 4 circular/card metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>Aadhaar Link Saturation</span>
-            <h4 style={{ fontSize: '18px', fontWeight: 700, marginTop: '4px' }}>{activeMeta.aadhaar_saturation}%</h4>
+            <h4 style={{ fontSize: '17px', fontWeight: 700, marginTop: '4px' }}>{activeMeta.aadhaar_saturation}%</h4>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>DBT Score (Out of 100)</span>
-            <h4 style={{ fontSize: '18px', fontWeight: 700, marginTop: '4px', color: 'var(--ashoka-blue)' }}>{activeMeta.overall_score}</h4>
+            <h4 style={{ fontSize: '17px', fontWeight: 700, marginTop: '4px', color: 'var(--ashoka-blue)' }}>{activeMeta.overall_score}</h4>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>Monthly DBT Per Capita</span>
-            <h4 style={{ fontSize: '18px', fontWeight: 700, marginTop: '4px', color: 'var(--emerald)' }}>₹ {activeMeta.dbt_per_capita}</h4>
+            <h4 style={{ fontSize: '17px', fontWeight: 700, marginTop: '4px', color: 'var(--emerald)' }}>₹ {activeMeta.dbt_per_capita}</h4>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>Savings Expenditure Ratio</span>
-            <h4 style={{ fontSize: '18px', fontWeight: 700, marginTop: '4px' }}>{activeMeta.savings_ratio}%</h4>
+            <h4 style={{ fontSize: '17px', fontWeight: 700, marginTop: '4px' }}>{activeMeta.savings_ratio}%</h4>
           </div>
         </div>
 
         {/* State Devotion Info */}
         <div style={{ background: 'var(--bg-secondary)', padding: '16px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
-          <h4 style={{ fontSize: '14px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+          <h4 style={{ fontSize: '13.5px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
             <ShieldCheck size={16} color="var(--emerald)" />
             Verified Compliance Insights
           </h4>
@@ -172,70 +253,176 @@ export default function StateDashboard({ masterData }) {
         </div>
       </div>
 
-      {/* 3. State-vs-State Side-by-Side Comparison Engine */}
-      <div className="glass-panel col-12" style={{ marginTop: '12px' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-          <TrendingUp size={20} color="var(--emerald)" />
-          Executive State-vs-State Comparative Matrix
-        </h3>
-
-        {/* State A and B selectors */}
-        <div style={{ display: 'flex', gap: '24px', marginBottom: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary)' }}>Compare State A:</span>
-            <select 
-              value={compStateA} 
-              onChange={(e) => setCompStateA(e.target.value)}
-              style={{ padding: '8px 12px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
+      {/* 3. NEW Devolution Simulation Sandbox (Finance Commission) */}
+      <div className="glass-panel col-12" style={{ marginTop: '8px', display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px' }} className="deficit-container">
+        {/* Sliders Panel */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Sliders size={18} color="var(--saffron)" />
+              16th Finance Commission Tax Devolution Sandbox
+            </h3>
+            <button 
+              onClick={handleResetDevolution}
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid var(--border-glass)',
+                borderRadius: '6px',
+                color: 'var(--text-secondary)',
+                fontSize: '11px',
+                fontWeight: 600,
+                padding: '6px 12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
             >
-              {stateScores.map((s) => (
-                <option key={s.state} value={s.state}>{s.state}</option>
-              ))}
-            </select>
+              <RefreshCw size={12} />
+              Reset baseline
+            </button>
+          </div>
+          <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
+            Adjust the formula sliders to modify how the Central Government devolves shared tax pools to India's states. Sliders dynamically auto-balance to sum to 100%.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px', marginTop: '4px' }}>
+            {/* Slider 1 */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
+                <span>Income Distance (Eq)</span>
+                <span style={{ color: 'var(--saffron)' }}>{normIncome.toFixed(1)}%</span>
+              </div>
+              <input 
+                type="range" min="0" max="100" step="0.5" value={incomeWeight} 
+                onChange={(e) => setIncomeWeight(parseFloat(e.target.value))}
+                style={{ width: '100%', accentColor: 'var(--saffron)' }}
+              />
+            </div>
+
+            {/* Slider 2 */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
+                <span>Population Weight</span>
+                <span style={{ color: 'var(--emerald)' }}>{normPop.toFixed(1)}%</span>
+              </div>
+              <input 
+                type="range" min="0" max="50" step="0.5" value={popWeight} 
+                onChange={(e) => setPopWeight(parseFloat(e.target.value))}
+                style={{ width: '100%', accentColor: 'var(--emerald)' }}
+              />
+            </div>
+
+            {/* Slider 3 */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
+                <span>Geographic Area</span>
+                <span style={{ color: 'var(--ashoka-blue)' }}>{normArea.toFixed(1)}%</span>
+              </div>
+              <input 
+                type="range" min="0" max="40" step="0.5" value={areaWeight} 
+                onChange={(e) => setAreaWeight(parseFloat(e.target.value))}
+                style={{ width: '100%', accentColor: 'var(--ashoka-blue)' }}
+              />
+            </div>
+
+            {/* Slider 4 */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
+                <span>Forest & Ecology</span>
+                <span style={{ color: 'var(--saffron)' }}>{normForest.toFixed(1)}%</span>
+              </div>
+              <input 
+                type="range" min="0" max="30" step="0.5" value={forestWeight} 
+                onChange={(e) => setForestWeight(parseFloat(e.target.value))}
+                style={{ width: '100%', accentColor: 'var(--saffron)' }}
+              />
+            </div>
+
+            {/* Slider 5 */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
+                <span>Demographic Perf</span>
+                <span style={{ color: 'var(--emerald)' }}>{normDemo.toFixed(1)}%</span>
+              </div>
+              <input 
+                type="range" min="0" max="30" step="0.5" value={demoWeight} 
+                onChange={(e) => setDemoWeight(parseFloat(e.target.value))}
+                style={{ width: '100%', accentColor: 'var(--emerald)' }}
+              />
+            </div>
+
+            {/* Slider 6 */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>
+                <span>Tax & Fiscal Effort</span>
+                <span style={{ color: 'var(--ashoka-blue)' }}>{normTax.toFixed(1)}%</span>
+              </div>
+              <input 
+                type="range" min="0" max="20" step="0.5" value={taxWeight} 
+                onChange={(e) => setTaxWeight(parseFloat(e.target.value))}
+                style={{ width: '100%', accentColor: 'var(--ashoka-blue)' }}
+              />
+            </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary)' }}>With State B:</span>
-            <select 
-              value={compStateB} 
-              onChange={(e) => setCompStateB(e.target.value)}
-              style={{ padding: '8px 12px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
-            >
-              {stateScores.map((s) => (
-                <option key={s.state} value={s.state}>{s.state}</option>
-              ))}
-            </select>
+          <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '8px', border: '1px solid var(--border-glass)', marginTop: '8px' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600, letterSpacing: '0.5px' }}>DYNAMIC SIMULATION FEEDBACK</span>
+            <p style={{ fontSize: '12.5px', color: '#fff', marginTop: '6px', fontWeight: 500, lineHeight: '1.4' }}>
+              {getDynamicFeedback()}
+            </p>
           </div>
         </div>
 
-        {/* Comparison Row Matrices */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {/* Row 1: Rank */}
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '12px' }}>
-            <span style={{ fontSize: '14px', fontWeight: 500 }}>National DBT Rank</span>
-            <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--saffron)' }}>#{stateAMeta.rank}</span>
-            <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ashoka-blue)' }}>#{stateBMeta.rank}</span>
+        {/* Visual Recharts Devolution Bar Chart */}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <BarChart2 size={18} color="var(--emerald)" />
+              Sovereign Tax Devolution Share (%)
+            </h3>
+            
+            {/* Comparator select states */}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <select 
+                value={compStateA} 
+                onChange={(e) => setCompStateA(e.target.value)}
+                style={{ padding: '4px 8px', fontSize: '11px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '4px' }}
+              >
+                {Object.keys(baseDevolutionShares).map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+              <select 
+                value={compStateB} 
+                onChange={(e) => setCompStateB(e.target.value)}
+                style={{ padding: '4px 8px', fontSize: '11px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '4px' }}
+              >
+                {Object.keys(baseDevolutionShares).map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {/* Row 2: Score */}
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '12px' }}>
-            <span style={{ fontSize: '14px', fontWeight: 500 }}>Overall Score (Out of 100)</span>
-            <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--saffron)' }}>{stateAMeta.overall_score}</span>
-            <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ashoka-blue)' }}>{stateBMeta.overall_score}</span>
-          </div>
-
-          {/* Row 3: Per capita */}
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '12px' }}>
-            <span style={{ fontSize: '14px', fontWeight: 500 }}>Monthly DBT Per Capita Transfer</span>
-            <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--saffron)' }}>₹ {stateAMeta.dbt_per_capita}</span>
-            <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ashoka-blue)' }}>₹ {stateBMeta.dbt_per_capita}</span>
-          </div>
-
-          {/* Row 4: Aadhaar Saturation */}
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '12px' }}>
-            <span style={{ fontSize: '14px', fontWeight: 500 }}>Aadhaar Link Saturation Rate</span>
-            <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--saffron)' }}>{stateAMeta.aadhaar_saturation}%</span>
-            <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ashoka-blue)' }}>{stateBMeta.aadhaar_saturation}%</span>
+          <div style={{ flex: 1, minHeight: '260px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="name" stroke="var(--text-secondary)" fontSize={11} />
+                <YAxis stroke="var(--text-secondary)" fontSize={11} unit="%" />
+                <Tooltip 
+                  contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                  formatter={(value) => [`${value}%`, '']}
+                />
+                <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11.5px' }} />
+                <Bar name="Official 16th FC Share" dataKey="Official 16th FC Share" fill="var(--ashoka-blue)" radius={[4, 4, 0, 0]} />
+                <Bar name="Your Custom Share" dataKey="Your Custom Share" fill="var(--saffron)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>

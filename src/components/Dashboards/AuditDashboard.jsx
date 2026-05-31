@@ -1,118 +1,252 @@
-import React from 'react';
-import { ShieldAlert, Trash2, Award, ClipboardCheck, ArrowDownRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShieldAlert, Trash2, Award, ClipboardCheck, ArrowDownRight, ArrowRight, CheckCircle, AlertTriangle } from 'lucide-react';
 
 export default function AuditDashboard({ masterData }) {
   const auditLogs = masterData.cag_audit_logs || [];
+  const [activeMinistry, setActiveMinistry] = useState("telecom");
+  const [dispatchedQuery, setDispatchedQuery] = useState(null);
 
-  // Return to Treasury unspent fund details
-  const returnedFunds = [
-    { department: "Ministry of Finance (Dept of Economic Affairs)", unspent: 85240, reason: "Saving in debt redemption outlays due to interest fluctuations." },
-    { department: "Ministry of Social Justice & Empowerment", unspent: 12410, reason: "Delays in implementing Aadhaar DBT linkages for minor scholarships." },
-    { department: "Ministry of Food & Public Distribution", unspent: 9812, reason: "Lower uptake of direct cash-in-lieu-of-rations in select UTs." },
-    { department: "Ministry of Power & Renewable Energy", unspent: 8490, reason: "Slower-than-expected project completions under grid schemes." },
-    { department: "Ministry of Education (School Education)", unspent: 4540, reason: "Non-release of capital building matching grants by partner states." }
-  ];
+  // Dynamic Department dataset for the Interactive Flow
+  const ministries = {
+    telecom: {
+      name: "Ministry of Communications (Telecomm Sector)",
+      risk: "9.2 / 10",
+      allocation: 98400,
+      released: 91200,
+      audited: 85000,
+      unspent: 85240,
+      objections: [
+        { title: "Non-Realisation of AGR Dues from TSPs", val: 85240, desc: "Savings in debt redemption outlays due to spectrum license fee disputes.", risk: "CRITICAL" },
+        { title: "SDR Fund Under-Utilisation in Rural Areas", val: 1240, desc: "Delays in direct cash disbursements under state broadband schemes.", risk: "MEDIUM" }
+      ]
+    },
+    highways: {
+      name: "Ministry of Road Transport & Highways",
+      risk: "7.8 / 10",
+      allocation: 278000,
+      released: 265000,
+      audited: 240000,
+      unspent: 14210,
+      objections: [
+        { title: "Project Cost Overruns & NHAI Land Disputes", val: 12410, desc: "Escalated engineering contract fees resulting from delayed acquisitions.", risk: "HIGH" },
+        { title: "Unauthorised Toll Collection on Unfinished Sectors", val: 1800, desc: "Flagged toll charges collected prior to official completion certificates.", risk: "LOW" }
+      ]
+    },
+    defence: {
+      name: "Ministry of Defence",
+      risk: "5.4 / 10",
+      allocation: 162000,
+      released: 154000,
+      audited: 130000,
+      unspent: 9812,
+      objections: [
+        { title: "Delayed Offset Deliveries by Foreign Vendors", val: 9812, desc: "Foreign direct investment liabilities unmet under tactical fighter contracts.", risk: "HIGH" },
+        { title: "Idle Capital under Strategic Spare Reserves", val: 2400, desc: "Excessive capital tied in non-moving defence equipment inventories.", risk: "MEDIUM" }
+      ]
+    },
+    food: {
+      name: "Ministry of Consumer Affairs, Food & Public Distribution",
+      risk: "4.8 / 10",
+      allocation: 205000,
+      released: 198000,
+      audited: 185000,
+      unspent: 4540,
+      objections: [
+        { title: "Duplicate Ration Cards & Leakage in DBT-Cash", val: 4540, desc: "Non-release of matching grants due to duplicate biometric accounts.", risk: "MEDIUM" },
+        { title: "Silo Storage Capacity Construction Delays", val: 1210, desc: "Delayed construction of grain silos by private concessionaires.", risk: "LOW" }
+      ]
+    }
+  };
+
+  const selectedData = ministries[activeMinistry] || ministries.telecom;
 
   const formatCrores = (val) => {
     return val.toLocaleString('en-IN');
   };
 
+  const handleDispatchQuery = (objectionTitle, value) => {
+    setDispatchedQuery({ title: objectionTitle, val: value });
+    setTimeout(() => {
+      setDispatchedQuery(null);
+    }, 4500); // Dynamic notification disappears after 4.5s
+  };
+
   return (
     <div className="animate-fade-in dashboard-grid col-12">
-      {/* 1. Unspent returned Ledger */}
+      {/* Dynamic Action Notification Banner */}
+      {dispatchedQuery && (
+        <div 
+          className="col-12"
+          style={{
+            background: 'rgba(0, 210, 133, 0.15)',
+            border: '1px solid var(--emerald)',
+            borderRadius: '10px',
+            padding: '14px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            boxShadow: '0 0 15px rgba(0, 210, 133, 0.2)',
+            animation: 'slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            marginBottom: '4px'
+          }}
+        >
+          <CheckCircle color="var(--emerald)" size={20} />
+          <div>
+            <strong style={{ color: '#fff', fontSize: '13px' }}>Reconciliation Request Dispatched!</strong>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px' }}>
+              Official CAG discrepancy query regarding <strong>"{dispatchedQuery.title}"</strong> (₹{formatCrores(dispatchedQuery.val)} Cr) successfully transmitted to {selectedData.name}.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* 1. Risk Selection Heatmap (Left Column) */}
       <div className="glass-panel col-6" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)', marginBottom: '4px' }}>
-          <Trash2 size={20} />
-          "Return to Treasury" Ledger (FY 2024-25 Audit)
+        <h3 style={{ fontSize: '17px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crimson)', marginBottom: '4px' }}>
+          <ShieldAlert size={19} />
+          CAG Compliance Audit Risk Heatmap
         </h3>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
-          Visual count of allocated budgets that remained unspent and reverted to the Consolidated Fund of India at year-end.
+        <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+          Click on any ministry card to drill down and review its dynamic fund-flow pipeline and unresolved CAG red-flags.
         </p>
 
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px', overflowY: 'auto' }}>
-          {returnedFunds.map((item, idx) => (
-            <div 
-              key={idx}
-              style={{ 
-                background: 'rgba(255,255,255,0.01)', 
-                border: '1px solid var(--border-glass)', 
-                borderRadius: '10px', 
-                padding: '12px 16px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-            >
-              <div>
-                <h4 style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.department}</h4>
-                <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>{item.reason}</p>
-              </div>
-              <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                <div>
-                  <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--saffron)' }}>₹ {formatCrores(item.unspent)} Cr</h4>
-                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>SURRENDERED</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', flex: 1 }}>
+          {Object.keys(ministries).map((key) => {
+            const min = ministries[key];
+            const isActive = activeMinistry === key;
+            return (
+              <div 
+                key={key}
+                onClick={() => setActiveMinistry(key)}
+                style={{
+                  background: isActive ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.01)',
+                  border: '1px solid',
+                  borderColor: isActive ? 'var(--border-glass-active)' : 'var(--border-glass)',
+                  borderRadius: '10px',
+                  padding: '14px 16px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  transform: isActive ? 'translateY(-2px)' : 'none'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
+                  <span style={{ color: isActive ? 'var(--saffron)' : 'var(--text-primary)' }}>{min.name}</span>
+                  <span style={{ color: min.risk.includes('9.2') || min.risk.includes('7.8') ? 'var(--crimson)' : 'var(--ashoka-blue)' }}>
+                    {min.risk} Risk
+                  </span>
                 </div>
-                <ArrowDownRight size={18} color="var(--saffron)" />
+                <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px' }}>
+                  <div 
+                    style={{ 
+                      width: min.risk.includes('9.2') ? '92%' : min.risk.includes('7.8') ? '78%' : min.risk.includes('5.4') ? '54%' : '48%', 
+                      height: '100%', 
+                      background: min.risk.includes('9.2') || min.risk.includes('7.8') ? 'var(--crimson)' : 'var(--ashoka-blue)', 
+                      borderRadius: '3px',
+                      boxShadow: min.risk.includes('9.2') ? '0 0 8px var(--crimson)' : 'none'
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
-      {/* 2. Compliance heatmap risk matrix */}
-      <div className="glass-panel col-6" style={{ minHeight: '380px' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crimson)', marginBottom: '4px' }}>
-          <ShieldAlert size={20} />
-          CAG Compliance Audit Risk Heatmap
+      {/* 2. Interactive Fund Flow Diagram (Right Column) */}
+      <div className="glass-panel col-6" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
+        <h3 style={{ fontSize: '17px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)', marginBottom: '4px' }}>
+          <Trash2 size={19} />
+          Executive Audit Flow & Discrepancy Ledger
         </h3>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
-          Risk score rating of ministries based on outstanding unresolved compliance audit objections.
+        <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+          Real-time capital flow from Central allocations down to unresolved, audited objections.
         </p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {/* Row 1 */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
-              <span>Telecomm Sector (Adjusted Gross Revenues)</span>
-              <span style={{ color: 'var(--crimson)' }}>9.2 / 10 Risk Factor</span>
-            </div>
-            <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}>
-              <div style={{ width: '92%', height: '100%', background: 'var(--crimson)', borderRadius: '4px', boxShadow: '0 0 10px var(--crimson-glow)' }}></div>
-            </div>
+        {/* CSS Fund-Flow Pipeline */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
+          <div style={{ flex: 1, textAlign: 'center' }}>
+            <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block' }}>ALLOCATION</span>
+            <strong style={{ fontSize: '14px', color: 'var(--text-primary)' }}>₹{formatCrores(selectedData.allocation)} Cr</strong>
           </div>
+          <ArrowRight size={14} color="var(--text-muted)" />
+          <div style={{ flex: 1, textAlign: 'center' }}>
+            <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block' }}>RELEASED</span>
+            <strong style={{ fontSize: '14px', color: 'var(--ashoka-blue)' }}>₹{formatCrores(selectedData.released)} Cr</strong>
+          </div>
+          <ArrowRight size={14} color="var(--text-muted)" />
+          <div style={{ flex: 1, textAlign: 'center' }}>
+            <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block' }}>CAG AUDITED</span>
+            <strong style={{ fontSize: '14px', color: 'var(--emerald)' }}>₹{formatCrores(selectedData.audited)} Cr</strong>
+          </div>
+          <ArrowRight size={14} color="var(--text-muted)" />
+          <div style={{ flex: 1, textAlign: 'center' }}>
+            <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block' }}>DISCREPANT</span>
+            <strong style={{ fontSize: '14px', color: 'var(--crimson)' }}>₹{formatCrores(selectedData.unspent)} Cr</strong>
+          </div>
+        </div>
 
-          {/* Row 2 */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
-              <span>Highways Infrastructure (Project Cost Overruns)</span>
-              <span style={{ color: 'var(--saffron)' }}>7.8 / 10 Risk Factor</span>
+        {/* Drill-down Objection Cards */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', overflowY: 'auto' }}>
+          {selectedData.objections.map((obj, idx) => (
+            <div 
+              key={idx}
+              style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-glass)',
+                borderRadius: '8px',
+                padding: '12px 14px'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <span 
+                  style={{ 
+                    fontSize: '9.5px', 
+                    fontWeight: 800, 
+                    padding: '2px 6px', 
+                    borderRadius: '4px',
+                    background: obj.risk === 'CRITICAL' ? 'rgba(255, 59, 48, 0.15)' : obj.risk === 'HIGH' ? 'rgba(255, 107, 0, 0.15)' : 'rgba(0, 136, 255, 0.15)',
+                    color: obj.risk === 'CRITICAL' ? 'var(--crimson)' : obj.risk === 'HIGH' ? 'var(--saffron)' : 'var(--ashoka-blue)'
+                  }}
+                >
+                  {obj.risk} RISK
+                </span>
+                <strong style={{ fontSize: '13.5px', color: 'var(--saffron)' }}>₹{formatCrores(obj.val)} Cr</strong>
+              </div>
+              <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>{obj.title}</h4>
+              <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4', marginBottom: '10px' }}>{obj.desc}</p>
+              
+              <button 
+                onClick={() => handleDispatchQuery(obj.title, obj.val)}
+                style={{
+                  width: '100%',
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  border: '1px solid var(--border-glass)',
+                  borderRadius: '6px',
+                  padding: '6px 10px',
+                  color: 'var(--text-primary)',
+                  fontSize: '11.5px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.currentTarget.style.borderColor = 'var(--border-glass-active)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                  e.currentTarget.style.borderColor = 'var(--border-glass)';
+                }}
+              >
+                <AlertTriangle size={12} color="var(--saffron)" />
+                Initiate Executive Reconciliation Query
+              </button>
             </div>
-            <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}>
-              <div style={{ width: '78%', height: '100%', background: 'var(--saffron)', borderRadius: '4px', boxShadow: '0 0 10px var(--saffron-glow)' }}></div>
-            </div>
-          </div>
-
-          {/* Row 3 */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
-              <span>Defence Procurement (Delayed Capital Deliveries)</span>
-              <span style={{ color: 'var(--ashoka-blue)' }}>5.4 / 10 Risk Factor</span>
-            </div>
-            <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}>
-              <div style={{ width: '54%', height: '100%', background: 'var(--ashoka-blue)', borderRadius: '4px', boxShadow: '0 0 10px var(--ashoka-glow)' }}></div>
-            </div>
-          </div>
-
-          {/* Row 4 */}
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
-              <span>Food Ration Distribution (Beneficiary Dupes)</span>
-              <span style={{ color: 'var(--ashoka-blue)' }}>4.8 / 10 Risk Factor</span>
-            </div>
-            <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}>
-              <div style={{ width: '48%', height: '100%', background: 'var(--ashoka-blue)', borderRadius: '4px', boxShadow: '0 0 10px var(--ashoka-glow)' }}></div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
