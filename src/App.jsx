@@ -9,12 +9,13 @@ const SchemeDashboard = lazy(() => import('./components/Dashboards/SchemeDashboa
 const MonthlyDashboard = lazy(() => import('./components/Dashboards/MonthlyDashboard'));
 const AuditDashboard = lazy(() => import('./components/Dashboards/AuditDashboard'));
 const TaxDashboard = lazy(() => import('./components/Dashboards/TaxDashboard'));
+const AdminDashboard = lazy(() => import('./components/Dashboards/AdminDashboard'));
 
 // Import compiled data
 import budgetMaster from './data/budget_master.json';
 
 // Core icons from lucide
-import { Home, Landmark, Map, Calendar, AlertOctagon, IndianRupee, FileText, ChevronRight, Menu, X } from 'lucide-react';
+import { Home, Landmark, Map, Calendar, AlertOctagon, IndianRupee, FileText, ChevronRight, Menu, X, Shield } from 'lucide-react';
 
 // Premium Loading Spinner fallback component
 function LoadingSpinner() {
@@ -46,6 +47,7 @@ export default function App() {
     activeTab,
     sidebarOpen,
     activeYearIndex,
+    masterData,
     setActiveTab,
     setSidebarOpen,
     setActiveYearIndex
@@ -66,7 +68,8 @@ export default function App() {
     { id: 'schemes', name: 'Scheme DBT Tracker', icon: FileText, color: 'var(--saffron)' },
     { id: 'monthly', name: 'Monthly Burn Matrix', icon: Calendar, color: 'var(--ashoka-blue)' },
     { id: 'audit', name: 'CAG Audit Objections', icon: AlertOctagon, color: 'var(--crimson)' },
-    { id: 'tax', name: 'Tax Inflow Receipts', icon: IndianRupee, color: 'var(--emerald)' }
+    { id: 'tax', name: 'Tax Inflow Receipts', icon: IndianRupee, color: 'var(--emerald)' },
+    { id: 'admin', name: 'Admin Portal', icon: Shield, color: 'var(--saffron)' }
   ];
 
   const handleTabClick = (tabId) => {
@@ -298,13 +301,14 @@ export default function App() {
         {/* Scrollable Dashboard Viewport */}
         <main className="app-main">
           <Suspense fallback={<LoadingSpinner />}>
-            {activeTab === 'overview' && <OverviewDashboard masterData={budgetMaster} />}
+            {activeTab === 'overview' && <OverviewDashboard masterData={masterData} />}
             {activeTab === 'ministry' && <MinistryDashboard />}
-            {activeTab === 'states' && <StateDashboard masterData={budgetMaster} />}
-            {activeTab === 'schemes' && <SchemeDashboard masterData={budgetMaster} />}
-            {activeTab === 'monthly' && <MonthlyDashboard masterData={budgetMaster} />}
-            {activeTab === 'audit' && <AuditDashboard masterData={budgetMaster} />}
-            {activeTab === 'tax' && <TaxDashboard masterData={budgetMaster} />}
+            {activeTab === 'states' && <StateDashboard masterData={masterData} />}
+            {activeTab === 'schemes' && <SchemeDashboard masterData={masterData} />}
+            {activeTab === 'monthly' && <MonthlyDashboard masterData={masterData} />}
+            {activeTab === 'audit' && <AuditDashboard masterData={masterData} />}
+            {activeTab === 'tax' && <TaxDashboard masterData={masterData} />}
+            {activeTab === 'admin' && <AdminDashboard />}
           </Suspense>
         </main>
       </div>
