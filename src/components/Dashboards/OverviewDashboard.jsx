@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useBudgetStore } from '../../store/useBudgetStore';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
-import { IndianRupee, ShieldAlert, Award, FileSpreadsheet, Activity, ChevronRight } from 'lucide-react';
+import { IndianRupee, ShieldAlert, Award, FileSpreadsheet, Activity, ChevronRight, FileText } from 'lucide-react';
 
 export default function OverviewDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
@@ -258,6 +258,86 @@ export default function OverviewDashboard({ masterData }) {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* 5. Official Parliament Budget Papers Repository */}
+      <div className="glass-panel col-12" style={{ marginTop: '8px', border: '1px dashed var(--saffron-glow)' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <FileText size={18} color="var(--saffron)" />
+          Official Union Parliament Budget Papers Repository
+        </h3>
+        <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+          Verify and cross-reference portal charts with the official PDF ledger reports tabled in Parliament by the Ministry of Finance. Click to download or view:
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
+          <a 
+            href="/Expenditure Budget (Full).pdf" 
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '14px', 
+              padding: '16px', 
+              background: 'rgba(255,255,255,0.01)', 
+              border: '1px solid var(--border-glass)', 
+              borderRadius: '10px', 
+              textDecoration: 'none', 
+              color: 'inherit',
+              transition: 'all 0.25s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--saffron)';
+              e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-glass)';
+              e.currentTarget.style.background = 'rgba(255,255,255,0.01)';
+            }}
+          >
+            <div style={{ background: 'var(--saffron-glow)', padding: '12px', borderRadius: '8px', color: 'var(--saffron)', display: 'flex', alignItems: 'center' }}>
+              <FileText size={24} />
+            </div>
+            <div>
+              <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Expenditure Budget (Full Report)</h4>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Constitutional Demands for Grants (7.27 MB PDF)</p>
+            </div>
+          </a>
+
+          <a 
+            href="/Expenditure Profile Full.pdf" 
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '14px', 
+              padding: '16px', 
+              background: 'rgba(255,255,255,0.01)', 
+              border: '1px solid var(--border-glass)', 
+              borderRadius: '10px', 
+              textDecoration: 'none', 
+              color: 'inherit',
+              transition: 'all 0.25s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--emerald)';
+              e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-glass)';
+              e.currentTarget.style.background = 'rgba(255,255,255,0.01)';
+            }}
+          >
+            <div style={{ background: 'var(--emerald-glow)', padding: '12px', borderRadius: '8px', color: 'var(--emerald)', display: 'flex', alignItems: 'center' }}>
+              <FileText size={24} />
+            </div>
+            <div>
+              <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Expenditure Profile (Annexes & DBT)</h4>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Special Welfare & Gender Annexes (13.53 MB PDF)</p>
+            </div>
+          </a>
         </div>
       </div>
     </div>
