@@ -156,10 +156,8 @@ export default function TaxDashboard({ masterData }) {
         </div>
         <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
           10-year comparative spline timeline plotting corporate tax earnings vs personal income tax receipts (₹ in Crores).
-        </p>
-
-        <div style={{ flex: 1, minHeight: '250px' }}>
-          <ResponsiveContainer width="100%" height="100%">
+        </p>        <div style={{ flex: 1, minHeight: '250px' }}>
+          <ResponsiveContainer width="100%" height={250}>
             <AreaChart data={taxTimeline} margin={{ top: 10, right: 10, left: 35, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={11} />
@@ -175,7 +173,7 @@ export default function TaxDashboard({ masterData }) {
           </ResponsiveContainer>
         </div>
       </div>
-
+ 
       {/* 2. Concentric Pie of Inflows (Rupee Comes From) */}
       <div className="glass-panel col-5" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
         <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
@@ -185,10 +183,10 @@ export default function TaxDashboard({ masterData }) {
         <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
           Percentage breakdown of every 100 Paise of national treasury income ({activeYearLabel}).
         </p>
-
+ 
         <div style={{ flex: 1, minHeight: '200px', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '150px', height: '100%' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={180}>
               <PieChart>
                 <Pie
                   data={inflowDistribution}
@@ -403,11 +401,11 @@ export default function TaxDashboard({ masterData }) {
               📊 Concentric Split of Non-Tax Inflows (₹ in Crores)
             </h4>
             <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-              Non-Tax revenues are anchored by the central sovereign surplus dividend transfers along with strategic telecom auctions.
+              Non-Tax revenues are anchored by the central sovereign surplus dividend transfers along with strategic disinvestment targets.
             </p>
             <div style={{ flex: 1, minHeight: '240px', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '150px', height: '100%' }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={180}>
                   <PieChart>
                     <Pie
                       data={[
@@ -457,7 +455,7 @@ export default function TaxDashboard({ masterData }) {
               </div>
             </div>
           </div>
-
+ 
           {/* Column 2: Direct vs. Indirect Tax Timeline */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--saffron)' }}>
@@ -467,7 +465,7 @@ export default function TaxDashboard({ masterData }) {
               Direct Taxes (Progressive Corporate/Income Tax) vs Indirect Taxes (Regressive Customs/Excise/GST) in ₹ Crores.
             </p>
             <div style={{ height: '240px' }}>
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={180}>
                 <AreaChart 
                   data={[
                     { year: '2010', direct: 378000, indirect: 312000 },

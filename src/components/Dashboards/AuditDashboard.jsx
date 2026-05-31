@@ -217,7 +217,7 @@ export default function AuditDashboard({ masterData }) {
               CAG flags massive capital balances remaining unspent at fiscal year-end, pointing to baseline planning inefficiencies.
             </p>
             <div style={{ height: '240px' }}>
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={240}>
                 <BarChart 
                   data={[
                     { name: "Communications", unspent: 85240 },

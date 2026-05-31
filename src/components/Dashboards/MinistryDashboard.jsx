@@ -317,7 +317,7 @@ export default function MinistryDashboard() {
           Budget Targets (BE) vs Actual Drawn Expenditure (CGA)
         </h3>
         <div style={{ flex: 1, minHeight: '230px' }}>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={240}>
             <BarChart data={data.timeline}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={12} />
@@ -389,7 +389,7 @@ export default function MinistryDashboard() {
           Historical Allocation Trajectory Timeline
         </h3>
         <div style={{ flex: 1, minHeight: '210px' }}>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={240}>
             <LineChart data={data.timeline}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={12} />
@@ -403,7 +403,7 @@ export default function MinistryDashboard() {
           </ResponsiveContainer>
         </div>
       </div>
-
+ 
       {/* 3. Cross-Ministry spending Correlation Matrix */}
       <div className="glass-panel col-12" style={{ marginTop: '12px', padding: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
@@ -439,11 +439,11 @@ export default function MinistryDashboard() {
             </select>
           </div>
         </div>
-
+ 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
           {/* Comparative Multi-Line Chart */}
           <div style={{ height: '240px' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={240}>
               <LineChart data={comparisonData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
                 <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={10} />

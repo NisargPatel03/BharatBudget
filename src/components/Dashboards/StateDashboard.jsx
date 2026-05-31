@@ -490,7 +490,7 @@ export default function StateDashboard({ masterData }) {
 
             {/* Recharts Graphical Panel */}
             <div style={{ flex: 1, minHeight: '260px' }}>
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                   <XAxis dataKey="name" stroke="var(--text-secondary)" fontSize={11} />
@@ -573,7 +573,7 @@ export default function StateDashboard({ masterData }) {
 
             {/* Horizontal Bar Chart comparison */}
             <div style={{ height: '300px' }}>
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={280}>
                 <BarChart 
                   layout="vertical" 
                   data={Object.keys(rbiStateFinances).map(stateName => ({
