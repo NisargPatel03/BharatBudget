@@ -144,6 +144,26 @@ body {
   height: 100vh;
   flex-shrink: 0;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden; /* Lock brand header and footer */
+}
+
+.app-sidebar nav {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none; /* Hide default for Firefox */
+}
+
+.app-sidebar nav::-webkit-scrollbar {
+  width: 3px;
+}
+
+.app-sidebar nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+}
+
+.app-sidebar nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .app-main-content {
