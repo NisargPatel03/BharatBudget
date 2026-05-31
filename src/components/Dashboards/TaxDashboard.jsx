@@ -13,19 +13,39 @@ export default function TaxDashboard({ masterData }) {
     { year: "2021", corpTax: 457719, incomeTax: 487139 },
     { year: "2023", corpTax: 825834, incomeTax: 833307 },
     { year: "2024", corpTax: 922140, incomeTax: 902890 },
-    { year: "2025 BE", corpTax: 1020000, incomeTax: 1150000 }
+    { year: "2025 BE", corpTax: 1020000, incomeTax: 1150000 },
+    { year: "2026 BE", corpTax: 1231000, incomeTax: 1466000 }
   ];
 
-  // Rupee Comes From inflow distribution (100 Paise of government income)
+  // Live Rupee Comes From inflow distribution (100 Paise of government income)
+  const corpVal = masterData.receipt_stats?.corporation_tax?.[3] || 1231000;
+  const incVal = masterData.receipt_stats?.income_tax?.[3] || 1466000;
+  const gstVal = masterData.receipt_stats?.gst?.[3] || 1019020;
+  const exciseVal = masterData.receipt_stats?.excise?.[3] || 388910;
+  const custVal = masterData.receipt_stats?.customs?.[3] || 271200;
+  const nonTaxVal = masterData.receipt_stats?.non_tax?.[3] || 666228;
+  const totalVal = masterData.receipt_stats?.total_receipts?.[3] || 5347315;
+
+  const calculatePct = (val) => Math.max(1, Math.round((val / totalVal) * 100));
+
+  const pCorp = calculatePct(corpVal);
+  const pInc = calculatePct(incVal);
+  const pGst = calculatePct(gstVal);
+  const pExcise = calculatePct(exciseVal);
+  const pCust = calculatePct(custVal);
+  const pNonTax = calculatePct(nonTaxVal);
+  
+  // Calculate remaining portion to constitute the sovereign borrowings
+  const pBorrowings = Math.max(1, 100 - (pCorp + pInc + pGst + pExcise + pCust + pNonTax));
+
   const inflowDistribution = [
-    { name: "Borrowings (Consolidated Debt)", value: 27, color: "var(--crimson)" },
-    { name: "Personal Income Tax", value: 19, color: "var(--saffron)" },
-    { name: "GST & Indirect Taxes", value: 18, color: "var(--emerald)" },
-    { name: "Corporate Income Tax", value: 17, color: "var(--ashoka-blue)" },
-    { name: "Non-Tax Revenues (Dividends)", value: 9, color: "#a855f7" },
-    { name: "Union Excise Duties", value: 5, color: "#eab308" },
-    { name: "Customs Tariffs", value: 4, color: "#ec4899" },
-    { name: "Non-Debt Capital Receipts", value: 1, color: "#64748b" }
+    { name: "Sovereign Borrowings & Liabilities", value: pBorrowings, color: "var(--crimson)" },
+    { name: "Personal Income Tax", value: pInc, color: "var(--saffron)" },
+    { name: "GST & Indirect Service Taxes", value: pGst, color: "var(--emerald)" },
+    { name: "Corporate Income Tax", value: pCorp, color: "var(--ashoka-blue)" },
+    { name: "Non-Tax Revenues (Dividends & Fees)", value: pNonTax, color: "#a855f7" },
+    { name: "Union Excise Duties", value: pExcise, color: "#eab308" },
+    { name: "Customs Tariffs & Duties", value: pCust, color: "#ec4899" }
   ];
 
   // Top state GST rankings (State of State Finances 2025)
@@ -43,14 +63,14 @@ export default function TaxDashboard({ masterData }) {
   };
 
   return (
-    <div className="animate-fade-in dashboard-grid col-12">
+    <div className="animate-fade-in dashboard-grid col-12" style={{ gap: '16px' }}>
       {/* 1. Spline Area Chart: Direct Tax trajectory */}
       <div className="glass-panel col-7" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
           <TrendingUp size={20} color="var(--emerald)" />
           Direct Tax Growth Trajectory (Corporate vs. Personal Income Tax)
         </h3>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+        <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
           10-year comparative spline timeline plotting corporate tax earnings vs personal income tax receipts (₹ in Crores).
         </p>
 
@@ -64,7 +84,7 @@ export default function TaxDashboard({ masterData }) {
                 contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
                 formatter={(value) => [`₹ ${formatCrores(value)} Cr`, '']}
               />
-              <Legend verticalAlign="top" height={36} />
+              <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
               <Area name="Corporate Income Tax" type="monotone" dataKey="corpTax" stroke="var(--ashoka-blue)" strokeWidth={2.5} fillOpacity={0.05} fill="var(--ashoka-blue)" />
               <Area name="Personal Income Tax" type="monotone" dataKey="incomeTax" stroke="var(--saffron)" strokeWidth={2.5} fillOpacity={0.05} fill="var(--saffron)" />
             </AreaChart>
@@ -74,11 +94,11 @@ export default function TaxDashboard({ masterData }) {
 
       {/* 2. Concentric Pie of Inflows (Rupee Comes From) */}
       <div className="glass-panel col-5" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
           <Landmark size={20} color="var(--saffron)" />
           "Rupee Comes From" Inflow Receipt Split
         </h3>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+        <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
           Percentage breakdown of every 100 Paise of national treasury income (FY 2026-27).
         </p>
 
@@ -110,7 +130,7 @@ export default function TaxDashboard({ masterData }) {
           {/* Scrollable Pie legends */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', overflowY: 'auto', maxHeight: '180px', fontSize: '11.5px', paddingRight: '4px' }}>
             {inflowDistribution.map((item, index) => (
-              <div key={index} style={{ display: 'flex', justifyGap: 'between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '4px' }}>
+              <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '4px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color }}></span>
                   <span style={{ color: 'var(--text-secondary)' }}>{item.name}</span>
@@ -124,7 +144,7 @@ export default function TaxDashboard({ masterData }) {
 
       {/* 3. Bottom Row: SGST Ranking */}
       <div className="glass-panel col-12" style={{ marginTop: '12px' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
           <IndianRupee size={20} color="var(--ashoka-blue)" />
           Top State-wise GST Contributions (State of State Finances 2025)
         </h3>
@@ -142,7 +162,7 @@ export default function TaxDashboard({ masterData }) {
               }}
             >
               <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', textTransform: 'uppercase' }}>STATE CONTRIBUTION</span>
-              <h4 style={{ fontSize: '16px', fontWeight: 700, marginTop: '4px', color: 'var(--text-primary)' }}>{item.state}</h4>
+              <h4 style={{ fontSize: '14px', fontWeight: 700, marginTop: '4px', color: 'var(--text-primary)' }}>{item.state}</h4>
               <h3 style={{ fontSize: '20px', fontWeight: 800, marginTop: '8px', color: 'var(--emerald)' }}>₹ {formatCrores(item.gst)} Cr</h3>
               <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)', marginTop: '4px' }}>SGST RECEIPT POOL</span>
             </div>

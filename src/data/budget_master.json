@@ -1200,6 +1200,771 @@
       "excise": 29800
     }
   ],
+  "deficit_stats": {
+    "fiscal_deficit": {
+      "values": [
+        1574431,
+        1568936,
+        1558492,
+        1695768
+      ],
+      "gdp_pct": [
+        4.8,
+        4.4,
+        4.4,
+        4.3
+      ]
+    },
+    "revenue_deficit": {
+      "values": [
+        564296,
+        523846,
+        526764,
+        592344
+      ],
+      "gdp_pct": [
+        1.7,
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    "effective_revenue_deficit": {
+      "values": [
+        291640,
+        96654,
+        218613,
+        99642
+      ],
+      "gdp_pct": [
+        0.9,
+        0.3,
+        0.6,
+        0.3
+      ]
+    },
+    "primary_deficit": {
+      "values": [
+        458856,
+        292598,
+        284154,
+        291796
+      ],
+      "gdp_pct": [
+        1.4,
+        0.8,
+        0.8,
+        0.7
+      ]
+    }
+  },
+  "receipt_stats": {
+    "gross_tax": [
+      3796382,
+      4270233,
+      4077772,
+      4404086
+    ],
+    "corporation_tax": [
+      986767,
+      1082000,
+      1109000,
+      1231000
+    ],
+    "income_tax": [
+      1235171,
+      1438000,
+      1312000,
+      1466000
+    ],
+    "customs": [
+      233201,
+      240000,
+      258290,
+      271200
+    ],
+    "excise": [
+      300253,
+      317000,
+      336550,
+      388910
+    ],
+    "gst": [
+      1027041,
+      1178000,
+      1046480,
+      1019020
+    ],
+    "non_tax": [
+      536580,
+      583000,
+      667662,
+      666228
+    ],
+    "total_receipts": [
+      4652867,
+      5065345,
+      4964842,
+      5347315
+    ]
+  },
+  "expenditure_stats": {
+    "establishment": [
+      829423,
+      868096,
+      782701,
+      824114
+    ],
+    "schemes_projects": [
+      1494392,
+      1621899,
+      1637156,
+      1771928
+    ],
+    "other_spending": [
+      1420966,
+      1526008,
+      1699445,
+      1761387
+    ],
+    "interest_payments": [
+      1115575,
+      1276338,
+      1274338,
+      1403972
+    ],
+    "fc_grants": [
+      120858,
+      132767,
+      152953,
+      129397
+    ],
+    "capital_exp": [
+      1051953,
+      1121090,
+      1095755,
+      1221821
+    ],
+    "grand_total": [
+      4652867,
+      5065345,
+      4964842,
+      5347315
+    ]
+  },
+  "transfer_stats": {
+    "devolution": [
+      1286885,
+      1392971,
+      1526255
+    ],
+    "fc_grants": [
+      120858,
+      152953,
+      129397
+    ],
+    "sponsored_schemes": [
+      382336,
+      399854,
+      520333
+    ],
+    "sector_schemes": [
+      19167,
+      67889,
+      77371
+    ],
+    "total_transfers": [
+      2225513,
+      2336144,
+      2620769
+    ]
+  },
+  "all_schemes": [
+    {
+      "id": "1",
+      "name": "Rashtriya Krishi Vikas Yojna",
+      "val_24_25": 7228,
+      "val_25_26_be": 8500,
+      "val_25_26_re": 7000,
+      "val_26_27_be": 8550
+    },
+    {
+      "id": "2",
+      "name": "Krishionnati Yojana",
+      "val_24_25": 5514,
+      "val_25_26_be": 8000,
+      "val_25_26_re": 6800,
+      "val_26_27_be": 11200
+    },
+    {
+      "id": "3",
+      "name": "National AYUSH Mission",
+      "val_24_25": 1082,
+      "val_25_26_be": 1275,
+      "val_25_26_re": 781,
+      "val_26_27_be": 1300
+    },
+    {
+      "id": "5",
+      "name": "Samagra Shiksha",
+      "val_24_25": 36288,
+      "val_25_26_be": 41250,
+      "val_25_26_re": 38000,
+      "val_26_27_be": 42100
+    },
+    {
+      "id": "11",
+      "name": "Development Programmes",
+      "val_24_25": 450,
+      "val_25_26_be": 1050,
+      "val_25_26_re": 909,
+      "val_26_27_be": 1043
+    },
+    {
+      "id": "14",
+      "name": "Infrastructure Maintenance",
+      "val_24_25": 6998,
+      "val_25_26_be": 7000,
+      "val_25_26_re": 7000,
+      "val_26_27_be": 7350
+    },
+    {
+      "id": "18",
+      "name": "Modernisation of Police Forces",
+      "val_24_25": 2860,
+      "val_25_26_be": 4069,
+      "val_25_26_re": 3280,
+      "val_26_27_be": 4061
+    },
+    {
+      "id": "19",
+      "name": "PMAY-Urban",
+      "val_24_25": 5815,
+      "val_25_26_be": 19794,
+      "val_25_26_re": 7500,
+      "val_26_27_be": 18625
+    },
+    {
+      "id": "23",
+      "name": "Urban Challenge Fund",
+      "val_24_25": 0,
+      "val_25_26_be": 10000,
+      "val_25_26_re": 1000,
+      "val_26_27_be": 10000
+    },
+    {
+      "id": "24",
+      "name": "Pradhan Mantri Krishi Sinchai Yojna",
+      "val_24_25": 6498,
+      "val_25_26_be": 8260,
+      "val_25_26_re": 6372,
+      "val_26_27_be": 6587
+    },
+    {
+      "id": "25",
+      "name": "Interlinking of Rivers",
+      "val_24_25": 2000,
+      "val_25_26_be": 2400,
+      "val_25_26_re": 1808,
+      "val_26_27_be": 1906
+    },
+    {
+      "id": "28",
+      "name": "SBM-Grameen",
+      "val_24_25": 3211,
+      "val_25_26_be": 7192,
+      "val_25_26_re": 6000,
+      "val_26_27_be": 7192
+    },
+    {
+      "id": "29",
+      "name": "Pradhan Mantri Jan Vikas Karyakaram",
+      "val_24_25": 938,
+      "val_25_26_be": 1914,
+      "val_25_26_re": 1565,
+      "val_26_27_be": 2000
+    },
+    {
+      "id": "31",
+      "name": "National Social Assistance Progamme",
+      "val_24_25": 9652,
+      "val_25_26_be": 9652,
+      "val_25_26_re": 9197,
+      "val_26_27_be": 9671
+    },
+    {
+      "id": "33",
+      "name": "MGNREGA-Programme Component",
+      "val_24_25": 85834,
+      "val_25_26_be": 86000,
+      "val_25_26_re": 88000,
+      "val_26_27_be": 30000
+    },
+    {
+      "id": "34",
+      "name": "Pradhan Mantri Gram Sadak Yojna",
+      "val_24_25": 17871,
+      "val_25_26_be": 19000,
+      "val_25_26_re": 11000,
+      "val_26_27_be": 19000
+    },
+    {
+      "id": "39",
+      "name": "Post Matric Scholarship for SCs",
+      "val_24_25": 5581,
+      "val_25_26_be": 6360,
+      "val_25_26_re": 6000,
+      "val_26_27_be": 6360
+    },
+    {
+      "id": "46",
+      "name": "Crop Insurance Scheme",
+      "val_24_25": 14473,
+      "val_25_26_be": 12242,
+      "val_25_26_re": 12267,
+      "val_26_27_be": 12200
+    },
+    {
+      "id": "50",
+      "name": "Bharat-VISTAAR",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 150
+    },
+    {
+      "id": "51",
+      "name": "Support for High Value Agriculture",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 350
+    },
+    {
+      "id": "53",
+      "name": "Nuclear Power Projects",
+      "val_24_25": 2244,
+      "val_25_26_be": 2086,
+      "val_25_26_re": 1333,
+      "val_26_27_be": 2500
+    },
+    {
+      "id": "55",
+      "name": "Urea Subsidy",
+      "val_24_25": 117879,
+      "val_25_26_be": 118900,
+      "val_25_26_re": 126475,
+      "val_26_27_be": 116805
+    },
+    {
+      "id": "56",
+      "name": "Nutrient Based Subsidy",
+      "val_24_25": 52239,
+      "val_25_26_be": 49000,
+      "val_25_26_re": 60000,
+      "val_26_27_be": 54000
+    },
+    {
+      "id": "58",
+      "name": "Bio-pharma SHAKTI",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 500
+    },
+    {
+      "id": "59",
+      "name": "Chemical Parks",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 600
+    },
+    {
+      "id": "61",
+      "name": "Export Promotion Mission",
+      "val_24_25": 0,
+      "val_25_26_be": 2250,
+      "val_25_26_re": 2250,
+      "val_26_27_be": 2300
+    },
+    {
+      "id": "68",
+      "name": "Domestic Industry Incentivisation Scheme",
+      "val_24_25": 886,
+      "val_25_26_be": 2006,
+      "val_25_26_re": 1982,
+      "val_26_27_be": 1990
+    },
+    {
+      "id": "70",
+      "name": "Price Stabilisation Fund",
+      "val_24_25": 6971,
+      "val_25_26_be": 4020,
+      "val_25_26_re": 3019,
+      "val_26_27_be": 4100
+    },
+    {
+      "id": "73",
+      "name": "PM Internship Scheme",
+      "val_24_25": 32,
+      "val_25_26_be": 10831,
+      "val_25_26_re": 526,
+      "val_26_27_be": 4788
+    },
+    {
+      "id": "83",
+      "name": "Naval Fleet",
+      "val_24_25": 25567,
+      "val_25_26_be": 24391,
+      "val_25_26_re": 21397,
+      "val_26_27_be": 25024
+    },
+    {
+      "id": "85",
+      "name": "Special Projects",
+      "val_24_25": 849,
+      "val_25_26_be": 1732,
+      "val_25_26_re": 1520,
+      "val_26_27_be": 1989
+    },
+    {
+      "id": "86",
+      "name": "Projects of the Air Force",
+      "val_24_25": 261,
+      "val_25_26_be": 1702,
+      "val_25_26_re": 1651,
+      "val_26_27_be": 1619
+    },
+    {
+      "id": "87",
+      "name": "Investment in Public Enterprises",
+      "val_24_25": 1494,
+      "val_25_26_be": 1494,
+      "val_25_26_re": 1494,
+      "val_26_27_be": 1494
+    },
+    {
+      "id": "89",
+      "name": "Special Development Packages",
+      "val_24_25": 132,
+      "val_25_26_be": 200,
+      "val_25_26_re": 165,
+      "val_26_27_be": 1046
+    },
+    {
+      "id": "91",
+      "name": "Mission Mausam",
+      "val_24_25": 516,
+      "val_25_26_be": 1329,
+      "val_25_26_re": 840,
+      "val_26_27_be": 1342
+    },
+    {
+      "id": "98",
+      "name": "IndiaAI Mission",
+      "val_24_25": 19,
+      "val_25_26_be": 2000,
+      "val_25_26_re": 800,
+      "val_26_27_be": 1000
+    },
+    {
+      "id": "103",
+      "name": "Control of Pollution",
+      "val_24_25": 16,
+      "val_25_26_be": 854,
+      "val_25_26_re": 1300,
+      "val_26_27_be": 1091
+    },
+    {
+      "id": "107",
+      "name": "Technology in National Security",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 31631,
+      "val_26_27_be": 9800
+    },
+    {
+      "id": "108",
+      "name": "SME Growth Fund",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 500
+    },
+    {
+      "id": "109",
+      "name": "Infrastructure Risk Guarantee Fund",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 1000
+    },
+    {
+      "id": "114",
+      "name": "Dairy Development",
+      "val_24_25": 294,
+      "val_25_26_be": 1000,
+      "val_25_26_re": 1000,
+      "val_26_27_be": 1055
+    },
+    {
+      "id": "117",
+      "name": "Pradhan Mantri Swasthya Suraksha Yojana",
+      "val_24_25": 1681,
+      "val_25_26_be": 2200,
+      "val_25_26_re": 1500,
+      "val_26_27_be": 2005
+    },
+    {
+      "id": "123",
+      "name": "Border Infrastructure and Management",
+      "val_24_25": 3954,
+      "val_25_26_be": 5597,
+      "val_25_26_re": 5472,
+      "val_26_27_be": 5577
+    },
+    {
+      "id": "124",
+      "name": "Police Infrastructure",
+      "val_24_25": 2133,
+      "val_25_26_be": 4379,
+      "val_25_26_re": 3684,
+      "val_26_27_be": 5393
+    },
+    {
+      "id": "126",
+      "name": "Metro Projects",
+      "val_24_25": 24689,
+      "val_25_26_be": 31239,
+      "val_25_26_re": 27450,
+      "val_26_27_be": 28740
+    },
+    {
+      "id": "130",
+      "name": "Municipal Bonds",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 100
+    },
+    {
+      "id": "132",
+      "name": "National Ganga Plan",
+      "val_24_25": 2976,
+      "val_25_26_be": 3400,
+      "val_25_26_re": 2687,
+      "val_26_27_be": 3100
+    },
+    {
+      "id": "133",
+      "name": "Employees Pension Scheme,",
+      "val_24_25": 1995,
+      "val_25_26_be": 10235,
+      "val_25_26_re": 11250,
+      "val_26_27_be": 10500
+    },
+    {
+      "id": "136",
+      "name": "e-Courts Phase III",
+      "val_24_25": 1029,
+      "val_25_26_be": 1500,
+      "val_25_26_re": 1200,
+      "val_26_27_be": 1200
+    },
+    {
+      "id": "137",
+      "name": "Khadi Gramodyog Vikas Yojana",
+      "val_24_25": 843,
+      "val_25_26_be": 1066,
+      "val_25_26_re": 870,
+      "val_26_27_be": 1095
+    },
+    {
+      "id": "142",
+      "name": "PM Vishwakarma",
+      "val_24_25": 3993,
+      "val_25_26_be": 5100,
+      "val_25_26_re": 4400,
+      "val_26_27_be": 3861
+    },
+    {
+      "id": "146",
+      "name": "PM Surya Ghar Muft Bijli Yojana",
+      "val_24_25": 7818,
+      "val_25_26_be": 20000,
+      "val_25_26_re": 17000,
+      "val_26_27_be": 22000
+    },
+    {
+      "id": "147",
+      "name": "Direct Benefit Transfer - LPG",
+      "val_24_25": 375,
+      "val_25_26_be": 1500,
+      "val_25_26_re": 1000,
+      "val_26_27_be": 1500
+    },
+    {
+      "id": "148",
+      "name": "LPG Connection to Poor Households",
+      "val_24_25": 12700,
+      "val_25_26_be": 9100,
+      "val_25_26_re": 12736,
+      "val_26_27_be": 9200
+    },
+    {
+      "id": "152",
+      "name": "Maritime Development Fund",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 1000
+    },
+    {
+      "id": "153",
+      "name": "Power System Development Fund",
+      "val_24_25": 1191,
+      "val_25_26_be": 1100,
+      "val_25_26_re": 1100,
+      "val_26_27_be": 1103
+    },
+    {
+      "id": "154",
+      "name": "Reform Linked Distribution Scheme",
+      "val_24_25": 12974,
+      "val_25_26_be": 16021,
+      "val_25_26_re": 15671,
+      "val_26_27_be": 18000
+    },
+    {
+      "id": "169",
+      "name": "Workshop Including Production Units",
+      "val_24_25": 3990,
+      "val_25_26_be": 4624,
+      "val_25_26_re": 3185,
+      "val_26_27_be": 3888
+    },
+    {
+      "id": "170",
+      "name": "Customer Amenities",
+      "val_24_25": 13034,
+      "val_25_26_be": 12118,
+      "val_25_26_re": 12121,
+      "val_26_27_be": 11972
+    },
+    {
+      "id": "172",
+      "name": "Other Specified Works",
+      "val_24_25": 1151,
+      "val_25_26_be": 1241,
+      "val_25_26_re": 1371,
+      "val_26_27_be": 1371
+    },
+    {
+      "id": "173",
+      "name": "Stores Suspense",
+      "val_24_25": 23405,
+      "val_25_26_be": 24529,
+      "val_25_26_re": 24488,
+      "val_26_27_be": 27834
+    },
+    {
+      "id": "174",
+      "name": "Manufacturing Suspense",
+      "val_24_25": 54851,
+      "val_25_26_be": 64224,
+      "val_25_26_re": 64906,
+      "val_26_27_be": 73632
+    },
+    {
+      "id": "175",
+      "name": "Metropolitan Transportation Projects",
+      "val_24_25": 1447,
+      "val_25_26_be": 2368,
+      "val_25_26_re": 2355,
+      "val_26_27_be": 2886
+    },
+    {
+      "id": "176",
+      "name": "National Highways Authority of India",
+      "val_24_25": 168602,
+      "val_25_26_be": 170266,
+      "val_25_26_re": 170266,
+      "val_26_27_be": 187293
+    },
+    {
+      "id": "177",
+      "name": "Road Works",
+      "val_24_25": 130965,
+      "val_25_26_be": 116292,
+      "val_25_26_re": 116337,
+      "val_26_27_be": 121999
+    },
+    {
+      "id": "178",
+      "name": "Vigyan Dhara",
+      "val_24_25": 272,
+      "val_25_26_be": 1425,
+      "val_25_26_re": 2009,
+      "val_26_27_be": 1425
+    },
+    {
+      "id": "182",
+      "name": "Integrated Scheme in Skilling Architecture",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 600
+    },
+    {
+      "id": "183",
+      "name": "Divyangjan Kaushal Yojana",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 200
+    },
+    {
+      "id": "184",
+      "name": "Divyangjan Sahara Yojana",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 100
+    },
+    {
+      "id": "185",
+      "name": "Space Technology",
+      "val_24_25": 8271,
+      "val_25_26_be": 10230,
+      "val_25_26_re": 9602,
+      "val_26_27_be": 10397
+    },
+    {
+      "id": "186",
+      "name": "Space Applications",
+      "val_24_25": 1563,
+      "val_25_26_be": 1707,
+      "val_25_26_re": 1596,
+      "val_26_27_be": 1725
+    },
+    {
+      "id": "188",
+      "name": "Integrated Textile Program",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 1500
+    },
+    {
+      "id": "191",
+      "name": "Promotion of Sports Goods Manufacturing",
+      "val_24_25": 0,
+      "val_25_26_be": 0,
+      "val_25_26_re": 0,
+      "val_26_27_be": 500
+    }
+  ],
   "dbt_schemes": [
     {
       "name": "PAHAL",
