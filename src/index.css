@@ -303,3 +303,53 @@ body {
   }
 }
 
+/* Glassmorphic Glossary Tooltips */
+.glossary-tooltip-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+  border-bottom: 1px dotted var(--text-secondary);
+}
+
+.glossary-tooltip-box {
+  visibility: hidden;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  background: rgba(13, 17, 23, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-primary);
+  font-size: 11px;
+  font-family: var(--font-sans);
+  font-weight: normal;
+  line-height: 1.4;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  pointer-events: none;
+  text-align: left;
+}
+
+.glossary-tooltip-container:hover .glossary-tooltip-box {
+  visibility: visible;
+  opacity: 1;
+}
+
+.glossary-tooltip-box::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(13, 17, 23, 0.95) transparent transparent transparent;
+}
+

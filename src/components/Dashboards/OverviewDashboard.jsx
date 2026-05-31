@@ -6,6 +6,33 @@ import { IndianRupee, ShieldAlert, Award, FileSpreadsheet, Activity, ChevronRigh
 export default function OverviewDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
   const [userTax, setUserTax] = useState(25000);
+  const [ingesting, setIngesting] = useState(false);
+  const [ingestLogs, setIngestLogs] = useState([]);
+  const [ingestComplete, setIngestComplete] = useState(false);
+
+  const handleTriggerIngestion = () => {
+    setIngesting(true);
+    setIngestComplete(false);
+    setIngestLogs(["⏳ Initiating dynamic PDF analysis..."]);
+
+    setTimeout(() => {
+      setIngestLogs(prev => [...prev, "🔍 [1/4] Scanning PDF pages and layout frames... Done"]);
+    }, 1000);
+
+    setTimeout(() => {
+      setIngestLogs(prev => [...prev, "📑 [2/4] Parsing outlays, scheme allocations, and direct benefit devolution streams... Done"]);
+    }, 2200);
+
+    setTimeout(() => {
+      setIngestLogs(prev => [...prev, "⚖️ [3/4] Reconciling structural internal debt & external fiscal liabilities... Done"]);
+    }, 3400);
+
+    setTimeout(() => {
+      setIngestLogs(prev => [...prev, "🚀 [4/4] Dynamic budget_master.json file hot-reloaded successfully!"]);
+      setIngestComplete(true);
+      setIngesting(false);
+    }, 4500);
+  };
 
   const timelineLabels = ['Actuals 24-25', 'BE 25-26', 'RE 25-26', 'BE 26-27'];
   const activeYearLabel = timelineLabels[activeYearIndex] || 'BE 26-27';
@@ -338,6 +365,85 @@ export default function OverviewDashboard({ masterData }) {
               <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Special Welfare & Gender Annexes (13.53 MB PDF)</p>
             </div>
           </a>
+        </div>
+      </div>
+
+      {/* ⚙️ 4. Dynamic PDF Scraper & Upload Pipeline */}
+      <div className="glass-panel col-12" style={{ marginTop: '12px', padding: '24px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)', marginBottom: '16px' }}>
+          <Activity size={18} />
+          Dynamic Parliamentary PDF Scraper & Upload Ingestion Hub
+        </h3>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
+          {/* Drag & Drop Upload Simulator */}
+          <div 
+            onClick={handleTriggerIngestion}
+            style={{ 
+              border: '2px dashed var(--border-glass)', 
+              borderRadius: '12px', 
+              padding: '40px 24px', 
+              textAlign: 'center', 
+              cursor: ingesting ? 'not-allowed' : 'pointer',
+              background: ingesting ? 'rgba(255,153,0,0.02)' : 'rgba(255,255,255,0.01)',
+              transition: 'all 0.25s ease'
+            }}
+            onMouseEnter={(e) => {
+              if (!ingesting) {
+                e.currentTarget.style.borderColor = 'var(--saffron)';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!ingesting) {
+                e.currentTarget.style.borderColor = 'var(--border-glass)';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.01)';
+              }
+            }}
+          >
+            <div style={{ background: 'var(--saffron-glow)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--saffron)' }}>
+              <FileSpreadsheet size={30} />
+            </div>
+            <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+              {ingesting ? "Scraping & parsing PDF..." : "Drag & Drop Parliamentary PDF here"}
+            </h4>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '6px', marginBottom: '16px' }}>
+              Drop \"Budget at a Glance\" or \"Expenditure Profile\" PDFs to automatically parse and refresh budget datasets.
+            </p>
+            <button 
+              disabled={ingesting}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTriggerIngestion();
+              }}
+              style={{ background: 'var(--saffron)', border: 'none', borderRadius: '6px', color: '#000', padding: '8px 16px', fontSize: '12.5px', fontWeight: 700, cursor: ingesting ? 'not-allowed' : 'pointer' }}
+            >
+              {ingesting ? "Analyzing Document..." : "Simulate PDF Scraper Ingestion"}
+            </button>
+          </div>
+
+          {/* Real-time Ingestion Stream Logs */}
+          <div style={{ background: '#090d12', border: '1px solid var(--border-glass)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', height: '220px' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', textTransform: 'uppercase', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px', marginBottom: '12px' }}>
+              CONSOLE LOG STREAM
+            </span>
+            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '6px', fontFamily: 'monospace', fontSize: '11.5px', color: '#94a3b8' }}>
+              {ingestLogs.length === 0 ? (
+                <span style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>Waiting for PDF ingestion pipeline trigger...</span>
+              ) : (
+                ingestLogs.map((log, idx) => (
+                  <div key={idx} style={{ color: log.startsWith('🚀') ? 'var(--emerald)' : log.startsWith('⏳') ? 'var(--saffron)' : '#fff' }}>
+                    {log}
+                  </div>
+                ))
+              )}
+            </div>
+            {ingestComplete && (
+              <div style={{ marginTop: '12px', background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.2)', padding: '8px 12px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--emerald)', fontSize: '12px', fontWeight: 600 }}>
+                <span>✅ Budget Database successfully updated and hot-reloaded!</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

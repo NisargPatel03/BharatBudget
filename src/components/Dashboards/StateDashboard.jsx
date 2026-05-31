@@ -3,12 +3,14 @@ import IndiaMap from '../IndiaMap';
 import { ShieldCheck, TrendingUp, HelpCircle, Map, RefreshCw, Sliders, BarChart2, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { exportToCsv } from '../../utils/exportCsv';
+import GlossaryTooltip from '../GlossaryTooltip';
 
 export default function StateDashboard({ masterData }) {
   const [activeStateId, setActiveStateId] = useState("gj");
   const [compStateA, setCompStateA] = useState("Gujarat");
   const [compStateB, setCompStateB] = useState("Haryana");
   const [compareMetric, setCompareMetric] = useState("debtGSDP");
+  const [showPrintModal, setShowPrintModal] = useState(false);
 
   // Finance Commission Sandbox Weights
   const [popWeight, setPopWeight] = useState(15.0);
@@ -232,8 +234,16 @@ export default function StateDashboard({ masterData }) {
       <div className="glass-panel col-6" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '12px', marginBottom: '4px' }}>
           <div>
-            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>ACTIVE STATE SUMMARY</span>
-            <h2 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--saffron)' }}>{activeMeta.state}</h2>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              ACTIVE STATE SUMMARY
+              <button 
+                onClick={() => setShowPrintModal(true)}
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '3px 6px', fontSize: '9.5px', color: '#fff', cursor: 'pointer', fontWeight: 600 }}
+              >
+                🖨️ Print Scorecard
+              </button>
+            </span>
+            <h2 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--saffron)', marginTop: '4px' }}>{activeMeta.state}</h2>
           </div>
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>NATIONAL RANK</span>
@@ -508,7 +518,7 @@ export default function StateDashboard({ masterData }) {
               <div>
                 <h4 style={{ fontSize: '15px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)' }}>
                   <TrendingUp size={18} />
-                  Sovereign Debt Burden & Fiscal Autonomy
+                  <GlossaryTooltip termKey="fiscalDeficit">Sovereign Debt Burden & Fiscal Autonomy</GlossaryTooltip>
                 </h4>
                 <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                   Comparing Gross Sovereign Debt-to-GSDP vs Own Tax Revenue (OTR) Dependency.
@@ -590,8 +600,8 @@ export default function StateDashboard({ masterData }) {
 
           {/* Column 2: State DBT Efficiency Scoreboard */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--ashoka-blue)' }}>
-              🏆 Direct Benefit Transfer (DBT) Performance Scoreboard
+            <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--ashoka-blue)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              🏆 <GlossaryTooltip termKey="dbtScore">Direct Benefit Transfer (DBT) Performance Scoreboard</GlossaryTooltip>
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', maxHeight: '300px', paddingRight: '4px' }}>
               {stateScores.map((state, idx) => (
@@ -654,6 +664,84 @@ export default function StateDashboard({ masterData }) {
           </div>
         </div>
       </div>
+
+      {/* 2.1 Printable Scorecard Modal */}
+      {showPrintModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '20px' }}>
+          <div style={{ background: '#0d1117', border: '1px solid var(--border-glass)', borderRadius: '12px', width: '90%', maxWidth: '600px', padding: '32px', position: 'relative' }}>
+            {/* Close Button */}
+            <button 
+              onClick={() => setShowPrintModal(false)}
+              style={{ position: 'absolute', top: '16px', right: '16px', background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '20px', cursor: 'pointer' }}
+            >
+              ✕
+            </button>
+
+            {/* Scorecard Content */}
+            <div id="printable-area" style={{ fontFamily: 'monospace', color: '#fff' }}>
+              <div style={{ textAlign: 'center', borderBottom: '2px dashed var(--border-glass)', paddingBottom: '16px', marginBottom: '20px' }}>
+                <h1 style={{ fontSize: '20px', color: 'var(--saffron)', fontWeight: 800 }}>BHARATBUDGET EXECUTIVE STATE SCORECARD</h1>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>OFFICIAL SOVEREIGN WELFARE & DEVOLUTION STATISTICS</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', fontSize: '14px' }}>
+                <span>State: <strong style={{ color: 'var(--saffron)' }}>{activeMeta.state.toUpperCase()}</strong></span>
+                <span>National Rank: <strong style={{ color: 'var(--emerald)' }}>#{activeMeta.rank}</strong></span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', borderBottom: '1px dashed rgba(255,255,255,0.1)', paddingBottom: '16px', marginBottom: '16px' }}>
+                <div>
+                  <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)' }}>AADHAAR SATURATION</span>
+                  <strong style={{ fontSize: '15px' }}>{activeMeta.aadhaar_saturation}%</strong>
+                </div>
+                <div>
+                  <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)' }}>DBT SATURATION SCORE</span>
+                  <strong style={{ fontSize: '15px', color: 'var(--ashoka-blue)' }}>{activeMeta.overall_score} / 100</strong>
+                </div>
+                <div>
+                  <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)' }}>DEBT-TO-GSDP BURDEN</span>
+                  <strong style={{ fontSize: '15px', color: stateFinance.debtGSDP >= 35 ? 'var(--crimson)' : '#fff' }}>{stateFinance.debtGSDP}%</strong>
+                </div>
+                <div>
+                  <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)' }}>FISCAL AUTONOMY (OTR)</span>
+                  <strong style={{ fontSize: '15px', color: stateFinance.otrRatio >= 60 ? 'var(--emerald)' : 'var(--saffron)' }}>{stateFinance.otrRatio}%</strong>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '24px' }}>
+                <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '8px' }}>DBT BANKING DISBURSEMENT PATHWAYS</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                  <span>🏦 Commercial Banks:</span>
+                  <strong>68%</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginTop: '4px' }}>
+                  <span>🏛️ Cooperative/RRB Accounts:</span>
+                  <strong>18%</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginTop: '4px' }}>
+                  <span>✉️ Post Office Savings:</span>
+                  <strong>14%</strong>
+                </div>
+              </div>
+
+              <div style={{ borderTop: '2px dashed var(--border-glass)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+                <button 
+                  onClick={() => window.print()}
+                  style={{ flex: 1, padding: '10px', background: 'var(--emerald)', border: 'none', borderRadius: '6px', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
+                >
+                  🖨️ Trigger System Print
+                </button>
+                <button 
+                  onClick={() => setShowPrintModal(false)}
+                  style={{ flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

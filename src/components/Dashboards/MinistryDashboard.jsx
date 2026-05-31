@@ -150,11 +150,25 @@ const ministryData = {
 
 export default function MinistryDashboard() {
   const [selectedKey, setSelectedKey] = useState("defence");
+  const [compMinistryA, setCompMinistryA] = useState("defence");
+  const [compMinistryB, setCompMinistryB] = useState("highways");
   const data = ministryData[selectedKey];
 
   const formatCrores = (val) => {
     return val.toLocaleString('en-IN');
   };
+
+  const ministryTimelineA = ministryData[compMinistryA]?.timeline || [];
+  const ministryTimelineB = ministryData[compMinistryB]?.timeline || [];
+
+  const comparisonData = ministryTimelineA.map((item, idx) => {
+    const itemB = ministryTimelineB[idx] || {};
+    return {
+      year: item.year,
+      [`${ministryData[compMinistryA]?.name} (BE)`]: item.budget,
+      [`${ministryData[compMinistryB]?.name} (BE)`]: itemB.budget || 0
+    };
+  });
 
   return (
     <div className="animate-fade-in dashboard-grid col-12">
@@ -341,6 +355,92 @@ export default function MinistryDashboard() {
               <Line name="Allocation Path" type="monotone" dataKey="budget" stroke="var(--emerald)" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} />
             </LineChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* 3. Cross-Ministry spending Correlation Matrix */}
+      <div className="glass-panel col-12" style={{ marginTop: '12px', padding: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)' }}>
+              <TrendingUp size={18} />
+              Cross-Ministry Spending Correlation & YoY Divergence
+            </h3>
+            <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              Compare 5-year budget growth paths side-by-side to analyze inter-ministry budget devolution balance.
+            </p>
+          </div>
+          
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <select 
+              value={compMinistryA} 
+              onChange={(e) => setCompMinistryA(e.target.value)}
+              style={{ padding: '6px 10px', fontSize: '12px', background: 'var(--bg-secondary)', color: '#fff', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
+            >
+              {Object.keys(ministryData).map((k) => (
+                <option key={k} value={k}>{ministryData[k].name}</option>
+              ))}
+            </select>
+            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>vs</span>
+            <select 
+              value={compMinistryB} 
+              onChange={(e) => setCompMinistryB(e.target.value)}
+              style={{ padding: '6px 10px', fontSize: '12px', background: 'var(--bg-secondary)', color: '#fff', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
+            >
+              {Object.keys(ministryData).map((k) => (
+                <option key={k} value={k}>{ministryData[k].name}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
+          {/* Comparative Multi-Line Chart */}
+          <div style={{ height: '240px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={comparisonData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+                <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={10} />
+                <YAxis stroke="var(--text-secondary)" fontSize={10} />
+                <Tooltip contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }} />
+                <Legend wrapperStyle={{ fontSize: '11px' }} />
+                <Line name={`${ministryData[compMinistryA]?.name} (BE)`} type="monotone" dataKey={`${ministryData[compMinistryA]?.name} (BE)`} stroke="var(--saffron)" strokeWidth={2.5} dot={{ r: 4 }} />
+                <Line name={`${ministryData[compMinistryB]?.name} (BE)`} type="monotone" dataKey={`${ministryData[compMinistryB]?.name} (BE)`} stroke="var(--ashoka-blue)" strokeWidth={2.5} dot={{ r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* YoY Growth Divergence Insights */}
+          <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '10px', padding: '16px', fontSize: '12px', display: 'flex', flexDirection: 'column', justifyGap: '12px' }}>
+            <h4 style={{ fontSize: '13px', fontWeight: 700, color: '#fff', margin: 0, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
+              📊 Computed Growth Divergence & Capital Devolution Check
+            </h4>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px', flex: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>{ministryData[compMinistryA]?.name} 5-Yr Growth:</span>
+                <strong style={{ color: 'var(--saffron)' }}>
+                  {(((ministryTimelineA[ministryTimelineA.length - 1]?.budget || 0) / (ministryTimelineA[0]?.budget || 1) - 1) * 100).toFixed(1)}%
+                </strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>{ministryData[compMinistryB]?.name} 5-Yr Growth:</span>
+                <strong style={{ color: 'var(--ashoka-blue)' }}>
+                  {(((ministryTimelineB[ministryTimelineB.length - 1]?.budget || 0) / (ministryTimelineB[0]?.budget || 1) - 1) * 100).toFixed(1)}%
+                </strong>
+              </div>
+              
+              <div style={{ borderTop: '1px dashed rgba(255,255,255,0.05)', paddingTop: '10px', marginTop: '4px' }}>
+                <span style={{ display: 'block', fontSize: '10.5px', color: 'var(--text-secondary)', marginBottom: '4px' }}>EXECUTIVE DEVOLUTION VERDICT</span>
+                <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-primary)', lineHeight: 1.4 }}>
+                  {Math.abs((((ministryTimelineA[ministryTimelineA.length - 1]?.budget || 0) / (ministryTimelineA[0]?.budget || 1) - 1) * 100) - (((ministryTimelineB[ministryTimelineB.length - 1]?.budget || 0) / (ministryTimelineB[0]?.budget || 1) - 1) * 100)) > 25
+                    ? `⚠️ High Allocative Divergence: ${ministryData[compMinistryA]?.name} and ${ministryData[compMinistryB]?.name} show strongly asymmetric expansion profiles. Investigate planning priorities.`
+                    : `✅ Balanced Capital Devolution: Both ministries show closely correlated YoY budget scaling. Consistent with baseline public asset expansions.`
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
