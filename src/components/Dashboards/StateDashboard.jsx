@@ -3,31 +3,52 @@ import IndiaMap from '../IndiaMap';
 import { ShieldCheck, TrendingUp, HelpCircle, Map } from 'lucide-react';
 
 export default function StateDashboard({ masterData }) {
-  const [activeStateId, setActiveStateId] = useState("gujarat");
-  const [compStateA, setCompStateA] = useState("gujarat");
-  const [compStateB, setCompStateB] = useState("haryana");
+  const [activeStateId, setActiveStateId] = useState("gj");
+  const [compStateA, setCompStateA] = useState("Gujarat");
+  const [compStateB, setCompStateB] = useState("Haryana");
 
   const stateScores = masterData.state_dbt_scores || [];
 
   // Fetch meta for active state ID
   const getActiveStateMeta = () => {
-    // Map id to name matching
+    // Map ISO 2-letter code to state name
     const idMap = {
-      gujarat: "Gujarat",
-      haryana: "Haryana",
-      "uttar-pradesh": "Uttar Pradesh",
-      tripura: "Tripura",
-      uttarakhand: "Uttarakhand",
-      jharkhand: "Jharkhand",
-      goa: "Goa",
-      punjab: "Punjab",
-      maharashtra: "Maharashtra",
-      rajasthan: "Rajasthan",
-      "madhya-pradesh": "Madhya Pradesh",
-      "tamil-nadu": "Tamil Nadu",
-      karnataka: "Karnataka",
-      "west-bengal": "West Bengal",
-      bihar: "Bihar"
+      an: "Andaman and Nicobar Islands",
+      ap: "Andhra Pradesh",
+      ar: "Arunachal Pradesh",
+      as: "Assam",
+      br: "Bihar",
+      ch: "Chandigarh",
+      ct: "Chhattisgarh",
+      dn: "Dadra and Nagar Haveli",
+      dd: "Daman and Diu",
+      dl: "Delhi",
+      ga: "Goa",
+      gj: "Gujarat",
+      hr: "Haryana",
+      hp: "Himachal Pradesh",
+      jk: "Jammu and Kashmir",
+      jh: "Jharkhand",
+      ka: "Karnataka",
+      kl: "Kerala",
+      ld: "Lakshadweep",
+      mp: "Madhya Pradesh",
+      mh: "Maharashtra",
+      mn: "Manipur",
+      ml: "Meghalaya",
+      mz: "Mizoram",
+      nl: "Nagaland",
+      or: "Odisha",
+      py: "Puducherry",
+      pb: "Punjab",
+      rj: "Rajasthan",
+      sk: "Sikkim",
+      tn: "Tamil Nadu",
+      tg: "Telangana",
+      tr: "Tripura",
+      up: "Uttar Pradesh",
+      ut: "Uttarakhand",
+      wb: "West Bengal"
     };
     const name = idMap[activeStateId] || "Gujarat";
     return stateScores.find(s => s.state.toLowerCase() === name.toLowerCase()) || stateScores[3]; // Fallback to Gujarat
@@ -41,21 +62,42 @@ export default function StateDashboard({ masterData }) {
     setActiveStateId(id);
     // Auto-update comparison state A to match selected state
     const idMap = {
-      gujarat: "Gujarat",
-      haryana: "Haryana",
-      "uttar-pradesh": "Uttar Pradesh",
-      tripura: "Tripura",
-      uttarakhand: "Uttarakhand",
-      jharkhand: "Jharkhand",
-      goa: "Goa",
-      punjab: "Punjab",
-      maharashtra: "Maharashtra",
-      rajasthan: "Rajasthan",
-      "madhya-pradesh": "Madhya Pradesh",
-      "tamil-nadu": "Tamil Nadu",
-      karnataka: "Karnataka",
-      "west-bengal": "West Bengal",
-      bihar: "Bihar"
+      an: "Andaman and Nicobar Islands",
+      ap: "Andhra Pradesh",
+      ar: "Arunachal Pradesh",
+      as: "Assam",
+      br: "Bihar",
+      ch: "Chandigarh",
+      ct: "Chhattisgarh",
+      dn: "Dadra and Nagar Haveli",
+      dd: "Daman and Diu",
+      dl: "Delhi",
+      ga: "Goa",
+      gj: "Gujarat",
+      hr: "Haryana",
+      hp: "Himachal Pradesh",
+      jk: "Jammu and Kashmir",
+      jh: "Jharkhand",
+      ka: "Karnataka",
+      kl: "Kerala",
+      ld: "Lakshadweep",
+      mp: "Madhya Pradesh",
+      mh: "Maharashtra",
+      mn: "Manipur",
+      ml: "Meghalaya",
+      mz: "Mizoram",
+      nl: "Nagaland",
+      or: "Odisha",
+      py: "Puducherry",
+      pb: "Punjab",
+      rj: "Rajasthan",
+      sk: "Sikkim",
+      tn: "Tamil Nadu",
+      tg: "Telangana",
+      tr: "Tripura",
+      up: "Uttar Pradesh",
+      ut: "Uttarakhand",
+      wb: "West Bengal"
     };
     if (idMap[id]) {
       setCompStateA(idMap[id]);
