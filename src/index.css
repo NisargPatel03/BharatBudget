@@ -355,56 +355,86 @@ body {
 
 /* High-Contrast Single Page Print Layout for Scorecard */
 @media print {
-  /* Hide the sidebar, headers, and all unselected content panels */
-  body *, 
-  #root > div > aside, 
+  /* Completely hide all other application elements from the document flow */
+  #root > div > aside,
+  #root > div > main > header,
   #root > div > main > div:not(.animate-fade-in),
+  .app-sidebar,
+  .app-header,
+  .sidebar-overlay,
   .dashboard-grid,
-  .glass-panel {
-    visibility: hidden !important;
+  .glass-panel,
+  .hamburger-btn,
+  .animate-fade-in {
+    display: none !important;
   }
 
-  /* Expose ONLY the printable area container */
-  #printable-area, 
-  #printable-area * {
-    visibility: visible !important;
-  }
-
-  /* Convert the viewport to pure clean white for paper output */
-  html, body {
+  /* Reset all global layout containers to simple block rendering with 0 margins */
+  html, body, #root, #root > div, #root > div > main {
     background: #ffffff !important;
     color: #000000 !important;
     margin: 0 !important;
     padding: 0 !important;
-    height: auto !important;
     overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    display: block !important;
   }
 
-  /* Position the scorecard absolutely at the top-left of the paper page */
-  #printable-area {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
+  /* Reset the fixed print modal backdrop container to be static and transparent */
+  div[style*="position: fixed"] {
+    position: static !important;
+    inset: auto !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    display: block !important;
+    padding: 0 !important;
     margin: 0 !important;
-    padding: 20px !important;
+    width: 100% !important;
+    height: auto !important;
+    z-index: auto !important;
+    box-shadow: none !important;
+  }
+
+  /* Reset the inner modal dialog card background and border styles */
+  div[style*="background: rgb(13, 17, 23)"],
+  div[style*="background: #0d1117"],
+  div[style*="background:#0d1117"] {
     background: #ffffff !important;
     color: #000000 !important;
     border: none !important;
     box-shadow: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 20px !important;
+    margin: 0 !important;
   }
 
-  /* Force all print-specific typographic contrast */
+  /* Completely isolate the scorecard print block inside the card */
+  #printable-area {
+    display: block !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-family: monospace !important;
+  }
+
+  /* Force all print-specific typographic and border contrast rules */
   #printable-area * {
     color: #000000 !important;
     background: transparent !important;
     border-color: #000000 !important;
     box-shadow: none !important;
+    text-shadow: none !important;
   }
 
-  /* Hide active buttons and actions from printing on paper */
-  button, 
-  button *,
+  /* Hide close button and the bottom trigger button bar */
+  button,
+  .modal-close-btn,
   div[style*="border-top: 2px dashed"],
   div[style*="border-top: 2px dashed"] * {
     display: none !important;
