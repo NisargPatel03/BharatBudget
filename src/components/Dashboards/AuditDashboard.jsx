@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ShieldAlert, Trash2, Award, ClipboardCheck, ArrowDownRight, ArrowRight } from 'lucide-react';
+import { ShieldAlert, Trash2, Award, ClipboardCheck, ArrowDownRight, ArrowRight, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { exportToCsv } from '../../utils/exportCsv';
 
 export default function AuditDashboard({ masterData }) {
   const auditLogs = masterData.cag_audit_logs || [];
@@ -191,9 +192,26 @@ export default function AuditDashboard({ masterData }) {
           
           {/* Column 1: Unspent Voted Grants Chart */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--crimson)' }}>
-              ⚠️ Ministry-wise Voted Grants Returned Unspent (₹ in Crores)
-            </h4>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+              <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--crimson)', display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
+                ⚠️ Voted Grants Returned Unspent
+              </h4>
+              <button 
+                onClick={() => {
+                  const unspentData = [
+                    { ministry: "Communications", unspent_crores: 85240 },
+                    { ministry: "Road Transport", unspent_crores: 14210 },
+                    { ministry: "Defence Capital", unspent_crores: 9812 },
+                    { ministry: "Consumer Affairs", unspent_crores: 4540 },
+                    { ministry: "Jal Shakti", unspent_crores: 3120 }
+                  ];
+                  exportToCsv(unspentData, "cag_unspent_voted_grants.csv");
+                }}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', borderRadius: '6px', padding: '4px 8px', fontSize: '10.5px', color: '#fff', cursor: 'pointer', fontWeight: 600 }}
+              >
+                <Download size={12} /> Export CSV
+              </button>
+            </div>
             <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
               CAG flags massive capital balances remaining unspent at fiscal year-end, pointing to baseline planning inefficiencies.
             </p>

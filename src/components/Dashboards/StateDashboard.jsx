@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import IndiaMap from '../IndiaMap';
-import { ShieldCheck, TrendingUp, HelpCircle, Map, RefreshCw, Sliders, BarChart2 } from 'lucide-react';
+import { ShieldCheck, TrendingUp, HelpCircle, Map, RefreshCw, Sliders, BarChart2, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { exportToCsv } from '../../utils/exportCsv';
 
 export default function StateDashboard({ masterData }) {
   const [activeStateId, setActiveStateId] = useState("gj");
@@ -513,21 +514,50 @@ export default function StateDashboard({ masterData }) {
                   Comparing Gross Sovereign Debt-to-GSDP vs Own Tax Revenue (OTR) Dependency.
                 </p>
               </div>
-              <button 
-                onClick={() => setCompareMetric(compareMetric === 'debtGSDP' ? 'otrRatio' : 'debtGSDP')}
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid var(--border-glass)',
-                  borderRadius: '6px',
-                  color: '#fff',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  padding: '6px 12px',
-                  cursor: 'pointer'
-                }}
-              >
-                Switch to {compareMetric === 'debtGSDP' ? 'Fiscal Autonomy (OTR %)' : 'Debt-to-GSDP %'}
-              </button>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button 
+                  onClick={() => {
+                    const dataToExport = Object.keys(rbiStateFinances).map(stateName => ({
+                      state: stateName,
+                      debtGSDP: rbiStateFinances[stateName].debtGSDP + "%",
+                      otrRatio: rbiStateFinances[stateName].otrRatio + "%",
+                      dbtVol: rbiStateFinances[stateName].dbtVol + "L",
+                      topSector: rbiStateFinances[stateName].topSector
+                    }));
+                    exportToCsv(dataToExport, "rbi_state_finances_comparison.csv");
+                  }}
+                  style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '6px',
+                    color: '#fff',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    padding: '6px 12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  <Download size={13} /> Export CSV
+                </button>
+                <button 
+                  onClick={() => setCompareMetric(compareMetric === 'debtGSDP' ? 'otrRatio' : 'debtGSDP')}
+                  style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '6px',
+                    color: '#fff',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    padding: '6px 12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Switch to {compareMetric === 'debtGSDP' ? 'Fiscal Autonomy (OTR %)' : 'Debt-to-GSDP %'}
+                </button>
+              </div>
             </div>
 
             {/* Horizontal Bar Chart comparison */}

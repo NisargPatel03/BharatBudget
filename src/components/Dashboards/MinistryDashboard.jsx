@@ -21,6 +21,10 @@ const ministryData = {
       { name: "Navy Fleet Modernisation", budget: 115200 },
       { name: "Air Force Aircraft Purchases", budget: 98120 },
       { name: "Defence Pension Allocations", budget: 126220 }
+    ],
+    outcomes: [
+      { indicator: "Indigenous Fighter Aircraft Produced", target: 36, actual: 32, unit: "Aircraft", cost: 110 },
+      { indicator: "Border Road Infrastructure Laid", target: 450, actual: 410, unit: "km", cost: 2.5 }
     ]
   },
   highways: {
@@ -40,6 +44,10 @@ const ministryData = {
       { name: "National Highways Authority (NHAI)", budget: 168400 },
       { name: "Bharatmala Pariyojana (Phase 1)", budget: 85200 },
       { name: "State Roads Devolution Fund", budget: 24400 }
+    ],
+    outcomes: [
+      { indicator: "National Highways Constructed", target: 12000, actual: 10800, unit: "km", cost: 14.5 },
+      { indicator: "Expressways Modernised", target: 1200, actual: 1120, unit: "km", cost: 8.2 }
     ]
   },
   railways: {
@@ -60,6 +68,10 @@ const ministryData = {
       { name: "Track Renewals & Electrification", budget: 95000 },
       { name: "Station Redevelopment Scheme", budget: 45000 },
       { name: "Safety Outlays & Kavach System", budget: 29800 }
+    ],
+    outcomes: [
+      { indicator: "New Track Lines Electrified", target: 6500, actual: 6100, unit: "km", cost: 1.8 },
+      { indicator: "Kavach Protection System Installed", target: 2000, actual: 1500, unit: "km", cost: 0.9 }
     ]
   },
   agriculture: {
@@ -80,6 +92,10 @@ const ministryData = {
       { name: "PM Fasal Bima Yojana (Insurance)", budget: 15000 },
       { name: "Modified Interest Subvention (MIS)", budget: 22500 },
       { name: "Krishi Unnayan Yojana (RKVY)", budget: 30000 }
+    ],
+    outcomes: [
+      { indicator: "Crop Loans Subvention Discharged", target: 3.2, actual: 2.9, unit: "Cr Farmers", cost: 0.12 },
+      { indicator: "Soil Health Cards Distributed", target: 1.5, actual: 1.45, unit: "Cr Cards", cost: 0.02 }
     ]
   },
   rural: {
@@ -100,6 +116,10 @@ const ministryData = {
       { name: "PM Awas Yojana-Gramin (Housing)", budget: 54500 },
       { name: "PM Gram Sadak Yojana (Rural Roads)", budget: 19000 },
       { name: "National Rural Livelihoods (DAY-NRLM)", budget: 18066 }
+    ],
+    outcomes: [
+      { indicator: "PMAY-G Rural Houses Built", target: 4.8, actual: 4.3, unit: "Million Houses", cost: 0.15 },
+      { indicator: "MNREGA Mandays Generated", target: 240, actual: 260, unit: "Cr Mandays", cost: 0.04 }
     ]
   },
   health: {
@@ -120,6 +140,10 @@ const ministryData = {
       { name: "Ayushman Bharat - PMJAY Insurance", budget: 7500 },
       { name: "AIIMS Infrastructure Projects", budget: 18500 },
       { name: "Health Infrastructure Mission (PM-ABHIM)", budget: 28287 }
+    ],
+    outcomes: [
+      { indicator: "Ayushman E-Cards Issued", target: 8.5, actual: 8.1, unit: "Cr Cards", cost: 0.015 },
+      { indicator: "New AIIMS Beds Operationalised", target: 4500, actual: 4100, unit: "Beds", cost: 0.45 }
     ]
   }
 };
@@ -247,6 +271,54 @@ export default function MinistryDashboard() {
               <Bar name="CGA Spend (Actual)" dataKey="actual" fill="var(--emerald)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Physical Outcome Accountability Indicators & Cost-per-Unit Benchmarks */}
+      <div className="glass-panel col-12" style={{ marginTop: '12px', padding: '24px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', color: 'var(--emerald)' }}>
+          <CalendarRange size={20} />
+          Physical Outcome Accountability Metrics (Target vs. Actuals)
+        </h3>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' }}>
+          {data.outcomes?.map((obj, idx) => {
+            const pct = Math.round((obj.actual / obj.target) * 100);
+            return (
+              <div 
+                key={idx}
+                style={{
+                  background: 'rgba(255,255,255,0.01)',
+                  border: '1px solid var(--border-glass)',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h4 style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{obj.indicator}</h4>
+                  <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--emerald)' }}>{pct}% MET</span>
+                </div>
+                
+                {/* Visual Progress Bar */}
+                <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ width: `${Math.min(pct, 100)}%`, height: '100%', background: 'var(--emerald)', borderRadius: '3px' }} />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                  <span>Target: {obj.target} {obj.unit}</span>
+                  <strong>Actual: {obj.actual} {obj.unit}</strong>
+                </div>
+
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-secondary)' }}>
+                  <span>Computed Cost Efficiency:</span>
+                  <strong style={{ color: 'var(--saffron)' }}>₹ {obj.cost} Cr per {obj.unit.substring(0, obj.unit.length - 1)}</strong>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

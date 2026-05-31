@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useBudgetStore } from '../../store/useBudgetStore';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell } from 'recharts';
-import { IndianRupee, Landmark, TrendingUp } from 'lucide-react';
+import { IndianRupee, Landmark, TrendingUp, Download, Receipt } from 'lucide-react';
+import { exportToCsv } from '../../utils/exportCsv';
 
 export default function TaxDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
@@ -9,6 +10,56 @@ export default function TaxDashboard({ masterData }) {
 
   const timelineLabels = ['Actuals 24-25', 'BE 2025-26', 'RE 2025-26', 'BE 2026-27'];
   const activeYearLabel = timelineLabels[activeYearIndex] || 'BE 2026-27';
+
+  // Citizen tax calculator states
+  const [citizenIncome, setCitizenIncome] = useState(800000);
+  const [citizenSpending, setCitizenSpending] = useState(25000);
+
+  const computeDirectTax = (income) => {
+    const netIncome = Math.max(0, income - 75000); // Less Standard Deduction
+    if (netIncome <= 700000) return 0; // Tax rebate up to 7 Lakhs net income
+    
+    let tax = 0;
+    if (netIncome > 1500000) {
+      tax += (netIncome - 1500000) * 0.3;
+      tax += 300000 * 0.2;
+      tax += 200000 * 0.15;
+      tax += 300000 * 0.1;
+      tax += 400000 * 0.05;
+    } else if (netIncome > 1200000) {
+      tax += (netIncome - 1200000) * 0.2;
+      tax += 200000 * 0.15;
+      tax += 300000 * 0.1;
+      tax += 400000 * 0.05;
+    } else if (netIncome > 1000000) {
+      tax += (netIncome - 1000000) * 0.15;
+      tax += 300000 * 0.1;
+      tax += 400000 * 0.05;
+    } else if (netIncome > 700000) {
+      tax += (netIncome - 700000) * 0.1;
+      tax += 400000 * 0.05;
+    } else if (netIncome > 300000) {
+      tax += (netIncome - 300000) * 0.05;
+    }
+    return Math.round(tax * 1.04); // 4% Cess
+  };
+
+  const estimatedDirect = computeDirectTax(citizenIncome);
+  const estimatedIndirect = Math.round(citizenSpending * 12 * 0.15); // Est 15% GST average
+  const totalTaxContribution = estimatedDirect + estimatedIndirect;
+
+  // Rupee goes to breakdown
+  const taxDistribution = [
+    { category: "Sovereign Interest Servicing", share: 0.21 },
+    { category: "National Security & Defence", share: 0.08 },
+    { category: "Central Sector Schemes", share: 0.16 },
+    { category: "States Share of Devolutions", share: 0.19 },
+    { category: "Centrally Sponsored Welfare Schemes", share: 0.08 },
+    { category: "Subsidies (Food & Fertilizers)", share: 0.06 },
+    { category: "Finance Commission Grants", share: 0.09 },
+    { category: "National Sovereign Pensions", share: 0.04 },
+    { category: "Other Central Allocations", share: 0.09 }
+  ];
 
   // Group raw direct tax trajectory over years
   const taxTimeline = [
@@ -71,10 +122,18 @@ export default function TaxDashboard({ masterData }) {
     <div className="animate-fade-in dashboard-grid col-12" style={{ gap: '16px' }}>
       {/* 1. Spline Area Chart: Direct Tax trajectory */}
       <div className="glass-panel col-7" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-          <TrendingUp size={20} color="var(--emerald)" />
-          Direct Tax Growth Trajectory (Corporate vs. Personal Income Tax)
-        </h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '10px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <TrendingUp size={20} color="var(--emerald)" />
+            Direct Tax Growth Trajectory
+          </h3>
+          <button 
+            onClick={() => exportToCsv(taxTimeline, "direct_tax_growth_timeline.csv")}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', borderRadius: '6px', padding: '6px 10px', fontSize: '11px', color: '#fff', cursor: 'pointer', fontWeight: 600 }}
+          >
+            <Download size={13} /> Export CSV
+          </button>
+        </div>
         <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
           10-year comparative spline timeline plotting corporate tax earnings vs personal income tax receipts (₹ in Crores).
         </p>
@@ -147,31 +206,108 @@ export default function TaxDashboard({ masterData }) {
         </div>
       </div>
 
-      {/* 3. Bottom Row: SGST Ranking */}
-      <div className="glass-panel col-12" style={{ marginTop: '12px' }}>
-        <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-          <IndianRupee size={20} color="var(--ashoka-blue)" />
-          Top State-wise GST Contributions (State of State Finances 2025)
-        </h3>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
-          {stateGstRankings.map((item, idx) => (
-            <div 
-              key={idx}
-              style={{ 
-                background: 'rgba(255,255,255,0.01)', 
-                border: '1px solid var(--border-glass)', 
-                borderRadius: '10px', 
-                padding: '16px',
-                textAlign: 'center'
-              }}
-            >
-              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', textTransform: 'uppercase' }}>STATE CONTRIBUTION</span>
-              <h4 style={{ fontSize: '14px', fontWeight: 700, marginTop: '4px', color: 'var(--text-primary)' }}>{item.state}</h4>
-              <h3 style={{ fontSize: '20px', fontWeight: 800, marginTop: '8px', color: 'var(--emerald)' }}>₹ {formatCrores(item.gst)} Cr</h3>
-              <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)', marginTop: '4px' }}>SGST RECEIPT POOL</span>
+      {/* 3. Bottom Row: SGST Ranking & Citizen Tax Receipt Generator */}
+      <div className="glass-panel col-12" style={{ marginTop: '12px', padding: '24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '32px' }}>
+          
+          {/* Column 1: State SGST Contributions */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--ashoka-blue)' }}>
+                <IndianRupee size={20} />
+                Top State GST Contributions
+              </h3>
+              <button 
+                onClick={() => exportToCsv(stateGstRankings, "state_gst_contributions.csv")}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', borderRadius: '6px', padding: '6px 10px', fontSize: '11px', color: '#fff', cursor: 'pointer', fontWeight: 600 }}
+              >
+                <Download size={13} /> Export CSV
+              </button>
             </div>
-          ))}
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+              Official state-wise GST revenue records dispatches under sovereign shared tax pools (RBI report 2025).
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+              {stateGstRankings.map((item, idx) => (
+                <div 
+                  key={idx}
+                  style={{ 
+                    background: 'rgba(255,255,255,0.01)', 
+                    border: '1px solid var(--border-glass)', 
+                    borderRadius: '10px', 
+                    padding: '14px',
+                    textAlign: 'center'
+                  }}
+                >
+                  <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.state}</h4>
+                  <h3 style={{ fontSize: '18px', fontWeight: 800, marginTop: '6px', color: 'var(--emerald)' }}>₹ {formatCrores(item.gst)} Cr</h3>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Column 2: Citizen Tax Receipt Generator */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+              <Receipt size={20} />
+              Interactive Citizen Tax Receipt
+            </h3>
+            <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
+              Input your financial parameters under the New Tax Regime (Budget 2026-27) to generate a dynamic print-style receipt.
+            </p>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div>
+                <label style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px', fontWeight: 600 }}>ANNUAL INCOME (₹)</label>
+                <input 
+                  type="number" 
+                  value={citizenIncome}
+                  onChange={(e) => setCitizenIncome(Number(e.target.value))}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '12.5px' }}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px', fontWeight: 600 }}>EST. MONTHLY SPEND (₹)</label>
+                <input 
+                  type="number" 
+                  value={citizenSpending}
+                  onChange={(e) => setCitizenSpending(Number(e.target.value))}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '12.5px' }}
+                />
+              </div>
+            </div>
+
+            {/* Print-style Receipt Card */}
+            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px dashed var(--border-glass)', borderRadius: '8px', padding: '16px', fontFamily: 'monospace', fontSize: '12px' }}>
+              <div style={{ textAlign: 'center', borderBottom: '1px dashed rgba(255,255,255,0.1)', paddingBottom: '10px', marginBottom: '12px' }}>
+                <strong style={{ color: 'var(--saffron)', fontSize: '13px' }}>GOVERNMENT OF INDIA</strong>
+                <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)', marginTop: '2px' }}>SOVEREIGN TAX CITIZEN RECORD</span>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span>Direct Income Tax:</span>
+                <strong>₹ {estimatedDirect.toLocaleString('en-IN')}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', borderBottom: '1px dashed rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
+                <span>Indirect Taxes (GST):</span>
+                <strong>₹ {estimatedIndirect.toLocaleString('en-IN')}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--emerald)', fontWeight: 800, marginBottom: '12px' }}>
+                <span>TOTAL CONTRIBUTION:</span>
+                <span>₹ {totalTaxContribution.toLocaleString('en-IN')}</span>
+              </div>
+
+              <div style={{ borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '10px' }}>
+                <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '8px', textAlign: 'center' }}>YOUR RUPEE ALLOCATION BREAKDOWN</span>
+                {taxDistribution.map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '11px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>• {item.category}:</span>
+                    <strong>₹ {Math.round(totalTaxContribution * item.share).toLocaleString('en-IN')}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
