@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { ShieldAlert, Trash2, Award, ClipboardCheck, ArrowDownRight, ArrowRight, CheckCircle, AlertTriangle } from 'lucide-react';
+import { ShieldAlert, Trash2, Award, ClipboardCheck, ArrowDownRight, ArrowRight } from 'lucide-react';
 
 export default function AuditDashboard({ masterData }) {
   const auditLogs = masterData.cag_audit_logs || [];
   const [activeMinistry, setActiveMinistry] = useState("telecom");
-  const [dispatchedQuery, setDispatchedQuery] = useState(null);
 
   // Dynamic Department dataset for the Interactive Flow
   const ministries = {
@@ -64,42 +63,8 @@ export default function AuditDashboard({ masterData }) {
     return val.toLocaleString('en-IN');
   };
 
-  const handleDispatchQuery = (objectionTitle, value) => {
-    setDispatchedQuery({ title: objectionTitle, val: value });
-    setTimeout(() => {
-      setDispatchedQuery(null);
-    }, 4500); // Dynamic notification disappears after 4.5s
-  };
-
   return (
     <div className="animate-fade-in dashboard-grid col-12">
-      {/* Dynamic Action Notification Banner */}
-      {dispatchedQuery && (
-        <div 
-          className="col-12"
-          style={{
-            background: 'rgba(0, 210, 133, 0.15)',
-            border: '1px solid var(--emerald)',
-            borderRadius: '10px',
-            padding: '14px 20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            boxShadow: '0 0 15px rgba(0, 210, 133, 0.2)',
-            animation: 'slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            marginBottom: '4px'
-          }}
-        >
-          <CheckCircle color="var(--emerald)" size={20} />
-          <div>
-            <strong style={{ color: '#fff', fontSize: '13px' }}>Reconciliation Request Dispatched!</strong>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px' }}>
-              Official CAG discrepancy query regarding <strong>"{dispatchedQuery.title}"</strong> (₹{formatCrores(dispatchedQuery.val)} Cr) successfully transmitted to {selectedData.name}.
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* 1. Risk Selection Heatmap (Left Column) */}
       <div className="glass-panel col-6" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
         <h3 style={{ fontSize: '17px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crimson)', marginBottom: '4px' }}>
@@ -213,38 +178,7 @@ export default function AuditDashboard({ masterData }) {
                 <strong style={{ fontSize: '13.5px', color: 'var(--saffron)' }}>₹{formatCrores(obj.val)} Cr</strong>
               </div>
               <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>{obj.title}</h4>
-              <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4', marginBottom: '10px' }}>{obj.desc}</p>
-              
-              <button 
-                onClick={() => handleDispatchQuery(obj.title, obj.val)}
-                style={{
-                  width: '100%',
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid var(--border-glass)',
-                  borderRadius: '6px',
-                  padding: '6px 10px',
-                  color: 'var(--text-primary)',
-                  fontSize: '11.5px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                  e.currentTarget.style.borderColor = 'var(--border-glass-active)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
-                  e.currentTarget.style.borderColor = 'var(--border-glass)';
-                }}
-              >
-                <AlertTriangle size={12} color="var(--saffron)" />
-                Initiate Executive Reconciliation Query
-              </button>
+              <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{obj.desc}</p>
             </div>
           ))}
         </div>
