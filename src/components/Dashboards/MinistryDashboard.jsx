@@ -3,6 +3,52 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Landmark, TrendingUp, AlertTriangle, CalendarRange } from 'lucide-react';
 
 const ministryData = {
+  jal_shakti: {
+    name: "Ministry of Jal Shakti",
+    allocation: 77300,
+    actual: 71200,
+    growth: 8.5,
+    burnRate: 92.1,
+    timeline: [
+      { year: "2021-22", budget: 48000, actual: 44200 },
+      { year: "2022-23", budget: 55000, actual: 52100 },
+      { year: "2023-24", budget: 69000, actual: 67800 },
+      { year: "2024-25", budget: 75000, actual: 73900 },
+      { year: "2025-26 BE", budget: 77300, actual: 71200 }
+    ],
+    schemes: [
+      { name: "Jal Jeevan Mission (Rural Tap Water)", budget: 62000 },
+      { name: "Swachh Bharat Mission (Gramin)", budget: 12500 },
+      { name: "National River Conservation Outlays", budget: 2800 }
+    ],
+    outcomes: [
+      { indicator: "Rural Household Tap Water Connections Added", target: 1.5, actual: 1.35, unit: "Cr Connections", cost: 413.3 },
+      { indicator: "Open Defecation Free (ODF Plus) Villages Verified", target: 45000, actual: 41200, unit: "Villages", cost: 0.3 }
+    ]
+  },
+  solar: {
+    name: "Ministry of New & Renewable Energy",
+    allocation: 19100,
+    actual: 17800,
+    growth: 24.2,
+    burnRate: 93.2,
+    timeline: [
+      { year: "2021-22", budget: 7800, actual: 7200 },
+      { year: "2022-23", budget: 11000, actual: 10400 },
+      { year: "2023-24", budget: 14500, actual: 13900 },
+      { year: "2024-25", budget: 17200, actual: 16800 },
+      { year: "2025-26 BE", budget: 19100, actual: 17800 }
+    ],
+    schemes: [
+      { name: "PM-KUSUM (Solar Pumps for Farmers)", budget: 8200 },
+      { name: "Grid-Connected Solar Power Capacity Projects", budget: 6500 },
+      { name: "National Green Hydrogen Mission", budget: 4400 }
+    ],
+    outcomes: [
+      { indicator: "Grid-Connected Solar Power Capacity Installed", target: 25000, actual: 22800, unit: "MW", cost: 0.28 },
+      { indicator: "Solar Pumps Distributed under PM-KUSUM", target: 120000, actual: 108000, unit: "Pumps", cost: 0.076 }
+    ]
+  },
   defence: {
     name: "Ministry of Defence",
     allocation: 621940,

@@ -12,10 +12,11 @@ export default function TaxDashboard({ masterData }) {
   const activeYearLabel = timelineLabels[activeYearIndex] || 'BE 2026-27';
 
   // Citizen tax calculator states
-  const [citizenIncome, setCitizenIncome] = useState(800000);
+  const [citizenIncome, setCitizenIncome] = useState(900000);
+  const [citizenDeductions, setCitizenDeductions] = useState(150000); // 80C, 80D, etc.
   const [citizenSpending, setCitizenSpending] = useState(25000);
 
-  const computeDirectTax = (income) => {
+  const computeNewRegimeTax = (income) => {
     const netIncome = Math.max(0, income - 75000); // Less Standard Deduction
     if (netIncome <= 700000) return 0; // Tax rebate up to 7 Lakhs net income
     
@@ -44,9 +45,28 @@ export default function TaxDashboard({ masterData }) {
     return Math.round(tax * 1.04); // 4% Cess
   };
 
-  const estimatedDirect = computeDirectTax(citizenIncome);
+  const computeOldRegimeTax = (income, deductions) => {
+    const netIncome = Math.max(0, income - 50000 - deductions); // Less Standard Deduction (50k) and deductions
+    if (netIncome <= 500000) return 0; // Tax rebate up to 5 Lakhs net income
+    
+    let tax = 0;
+    if (netIncome > 1000000) {
+      tax += (netIncome - 1000000) * 0.3;
+      tax += 500000 * 0.2; // 5L to 10L
+      tax += 250000 * 0.05; // 2.5L to 5L
+    } else if (netIncome > 500000) {
+      tax += (netIncome - 500000) * 0.2;
+      tax += 250000 * 0.05;
+    } else if (netIncome > 250000) {
+      tax += (netIncome - 250000) * 0.05;
+    }
+    return Math.round(tax * 1.04); // 4% Cess
+  };
+
+  const estimatedNewDirect = computeNewRegimeTax(citizenIncome);
+  const estimatedOldDirect = computeOldRegimeTax(citizenIncome, citizenDeductions);
   const estimatedIndirect = Math.round(citizenSpending * 12 * 0.15); // Est 15% GST average
-  const totalTaxContribution = estimatedDirect + estimatedIndirect;
+  const totalTaxContribution = estimatedNewDirect + estimatedIndirect;
 
   // Rupee goes to breakdown
   const taxDistribution = [
@@ -245,37 +265,99 @@ export default function TaxDashboard({ masterData }) {
               ))}
             </div>
           </div>
-
-          {/* Column 2: Citizen Tax Receipt Generator */}
+          {/* Column 2: Citizen Tax Receipt & Comparison Calculator */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
               <Receipt size={20} />
-              Interactive Citizen Tax Receipt
+              New vs. Old Tax Regime Reform Sandbox
             </h3>
             <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
-              Input your financial parameters under the New Tax Regime (Budget 2026-27) to generate a dynamic print-style receipt.
+              Input your annual income and eligible deductions to contrast your tax liability under the Old Regime vs the New Regime.
             </p>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
               <div>
-                <label style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px', fontWeight: 600 }}>ANNUAL INCOME (₹)</label>
+                <label style={{ fontSize: '9px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px', fontWeight: 700 }}>ANNUAL INCOME (₹)</label>
                 <input 
                   type="number" 
                   value={citizenIncome}
                   onChange={(e) => setCitizenIncome(Number(e.target.value))}
-                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '12.5px' }}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '11.5px', fontWeight: 600 }}
                 />
               </div>
               <div>
-                <label style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px', fontWeight: 600 }}>EST. MONTHLY SPEND (₹)</label>
+                <label style={{ fontSize: '9px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px', fontWeight: 700 }}>OLD DEDUCTIONS (₹)</label>
+                <input 
+                  type="number" 
+                  value={citizenDeductions}
+                  onChange={(e) => setCitizenDeductions(Number(e.target.value))}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '11.5px', fontWeight: 600 }}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '9px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px', fontWeight: 700 }}>MONTHLY SPEND (₹)</label>
                 <input 
                   type="number" 
                   value={citizenSpending}
                   onChange={(e) => setCitizenSpending(Number(e.target.value))}
-                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '12.5px' }}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '11.5px', fontWeight: 600 }}
                 />
               </div>
             </div>
+
+            {/* Side-by-side Regime Graphics & Bar Chart Comparison */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '4px' }}>
+              {/* Old Regime Card */}
+              <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '8px', padding: '12px' }}>
+                <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)' }}>OLD REGIME (WITH DEDUCTIONS)</span>
+                <div style={{ marginTop: '8px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Standard Deduction:</div>
+                  <strong style={{ fontSize: '12.5px', color: '#fff' }}>₹ 50,000</strong>
+                </div>
+                <div style={{ marginTop: '6px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Taxable Income:</div>
+                  <strong style={{ fontSize: '12.5px', color: '#fff' }}>₹ {Math.max(0, citizenIncome - 50000 - citizenDeductions).toLocaleString('en-IN')}</strong>
+                </div>
+                <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed rgba(255,255,255,0.05)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Income Tax Liability:</div>
+                  <strong style={{ fontSize: '16px', color: 'var(--crimson)' }}>₹ {estimatedOldDirect.toLocaleString('en-IN')}</strong>
+                </div>
+              </div>
+
+              {/* New Regime Card */}
+              <div style={{ background: 'rgba(255,153,0,0.02)', border: '1px solid rgba(255,153,0,0.2)', borderRadius: '8px', padding: '12px', boxShadow: '0 0 10px rgba(255,153,0,0.05)' }}>
+                <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--saffron)' }}>NEW REGIME (REVISED 2026-27)</span>
+                <div style={{ marginTop: '8px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Standard Deduction:</div>
+                  <strong style={{ fontSize: '12.5px', color: '#fff' }}>₹ 75,000</strong>
+                </div>
+                <div style={{ marginTop: '6px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Taxable Income:</div>
+                  <strong style={{ fontSize: '12.5px', color: '#fff' }}>₹ {Math.max(0, citizenIncome - 75000).toLocaleString('en-IN')}</strong>
+                </div>
+                <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed rgba(255,255,255,0.05)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Income Tax Liability:</div>
+                  <strong style={{ fontSize: '16px', color: 'var(--emerald)' }}>₹ {estimatedNewDirect.toLocaleString('en-IN')}</strong>
+                </div>
+              </div>
+            </div>
+
+            {/* Savings Callout */}
+            {estimatedOldDirect > estimatedNewDirect ? (
+              <div style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px', color: 'var(--emerald)', fontWeight: 700, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>🎉 Dynamic Savings with New Regime:</span>
+                <strong style={{ fontSize: '14px' }}>₹ {(estimatedOldDirect - estimatedNewDirect).toLocaleString('en-IN')} Saved!</strong>
+              </div>
+            ) : estimatedOldDirect < estimatedNewDirect ? (
+              <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px', color: 'var(--crimson)', fontWeight: 700, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>💡 Old Regime remains cheaper in your bracket by:</span>
+                <strong style={{ fontSize: '14px' }}>₹ {(estimatedNewDirect - estimatedOldDirect).toLocaleString('en-IN')}</strong>
+              </div>
+            ) : (
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px', color: '#fff', fontWeight: 600, textAlign: 'center' }}>
+                ⚖️ Both tax regimes result in zero liability for your income bracket.
+              </div>
+            )}
 
             {/* Print-style Receipt Card */}
             <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px dashed var(--border-glass)', borderRadius: '8px', padding: '16px', fontFamily: 'monospace', fontSize: '12px' }}>
@@ -285,8 +367,8 @@ export default function TaxDashboard({ masterData }) {
               </div>
               
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span>Direct Income Tax:</span>
-                <strong>₹ {estimatedDirect.toLocaleString('en-IN')}</strong>
+                <span>Direct Income Tax (New Regime):</span>
+                <strong>₹ {estimatedNewDirect.toLocaleString('en-IN')}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', borderBottom: '1px dashed rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
                 <span>Indirect Taxes (GST):</span>
