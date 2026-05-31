@@ -32,7 +32,7 @@ export default function TaxDashboard({ masterData }) {
   const stateGstRankings = [
     { state: "Maharashtra", gst: 32410 },
     { state: "Karnataka", gst: 18940 },
-    { year: "Gujarat", state: "Gujarat", gst: 17400 },
+    { state: "Gujarat", gst: 17400 },
     { state: "Tamil Nadu", gst: 16500 },
     { state: "Uttar Pradesh", gst: 12400 },
     { state: "Haryana", gst: 10500 }
@@ -56,7 +56,7 @@ export default function TaxDashboard({ masterData }) {
 
         <div style={{ flex: 1, minHeight: '250px' }}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={taxTimeline}>
+            <AreaChart data={taxTimeline} margin={{ top: 10, right: 10, left: 35, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={11} />
               <YAxis stroke="var(--text-secondary)" fontSize={11} />
