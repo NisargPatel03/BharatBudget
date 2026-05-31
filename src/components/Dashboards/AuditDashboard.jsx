@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldAlert, Trash2, Award, ClipboardCheck, ArrowDownRight, ArrowRight } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 export default function AuditDashboard({ masterData }) {
   const auditLogs = masterData.cag_audit_logs || [];
@@ -181,6 +182,95 @@ export default function AuditDashboard({ masterData }) {
               <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{obj.desc}</p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* 2.5. Ministry Unspent Grants & Systemic Compliance Ledger */}
+      <div className="glass-panel col-12" style={{ marginTop: '12px', padding: '24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '32px' }}>
+          
+          {/* Column 1: Unspent Voted Grants Chart */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--crimson)' }}>
+              ⚠️ Ministry-wise Voted Grants Returned Unspent (₹ in Crores)
+            </h4>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+              CAG flags massive capital balances remaining unspent at fiscal year-end, pointing to baseline planning inefficiencies.
+            </p>
+            <div style={{ height: '240px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart 
+                  data={[
+                    { name: "Communications", unspent: 85240 },
+                    { name: "Road Transport", unspent: 14210 },
+                    { name: "Defence Capital", unspent: 9812 },
+                    { name: "Consumer Affairs", unspent: 4540 },
+                    { name: "Jal Shakti", unspent: 3120 }
+                  ]} 
+                  margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+                  <XAxis dataKey="name" stroke="var(--text-secondary)" fontSize={10} />
+                  <YAxis stroke="var(--text-secondary)" fontSize={10} />
+                  <Tooltip 
+                    contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                    formatter={(value) => [`₹ ${value.toLocaleString('en-IN')} Cr`, 'Unspent Balance']}
+                  />
+                  <Bar dataKey="unspent" fill="var(--crimson)" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Column 2: Systemic Compliance Objections Ledger */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--saffron)' }}>
+              📑 Systemic Utilization Certificates & Suspense Account Objections
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {[
+                { ministry: "Ministry of Jal Shakti", issue: "Outstanding Utilization Certificates (UCs)", val: 14281, status: "UNRESOLVED", age: "3 Years" },
+                { ministry: "Ministry of Education", issue: "Suspense Account Reconciliations", val: 8910, status: "PARTIAL", age: "2 Years" },
+                { ministry: "Ministry of Rural Development", issue: "Duplicate Job Card Disbursements", val: 3211, status: "INVESTIGATING", age: "1 Year" }
+              ].map((obj, idx) => (
+                <div 
+                  key={idx}
+                  style={{
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '10px',
+                    padding: '12px 16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <strong style={{ fontSize: '13px', color: '#fff' }}>{obj.ministry}</strong>
+                    <span 
+                      style={{ 
+                        fontSize: '9px', 
+                        fontWeight: 800, 
+                        padding: '2px 6px', 
+                        borderRadius: '4px',
+                        background: obj.status === 'UNRESOLVED' ? 'rgba(255, 59, 48, 0.15)' : 'rgba(250, 204, 21, 0.15)',
+                        color: obj.status === 'UNRESOLVED' ? 'var(--crimson)' : 'var(--saffron)'
+                      }}
+                    >
+                      {obj.status}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+                    <span>{obj.issue}</span>
+                    <strong style={{ color: 'var(--saffron)' }}>₹ {obj.val.toLocaleString('en-IN')} Cr</strong>
+                  </div>
+                  <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                    Outstanding Age: {obj.age}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 

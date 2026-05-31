@@ -174,6 +174,108 @@ export default function TaxDashboard({ masterData }) {
           ))}
         </div>
       </div>
+
+      {/* 4. Non-Tax Receipts Concentric Donut & Direct/Indirect Progressivity Timeline */}
+      <div className="glass-panel col-12" style={{ marginTop: '16px', padding: '24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '32px' }}>
+          
+          {/* Column 1: Non-Tax Inflows Breakdown */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: '#a855f7' }}>
+              📊 Concentric Split of Non-Tax Inflows (₹ in Crores)
+            </h4>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+              Non-Tax revenues are anchored by the central sovereign surplus dividend transfers along with strategic telecom auctions.
+            </p>
+            <div style={{ flex: 1, minHeight: '240px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ width: '150px', height: '100%' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: "RBI Surplus Transfers", value: 210000, color: "#a855f7" },
+                        { name: "Telecom Spectrum Fees", value: 120000, color: "#3b82f6" },
+                        { name: "Public Disinvestment", value: 50000, color: "#f43f5e" },
+                        { name: "Sovereign Service Fees", value: 286228, color: "#10b981" }
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={45}
+                      outerRadius={65}
+                      paddingAngle={2}
+                      dataKey="value"
+                    >
+                      {[
+                        { name: "RBI Surplus Transfers", value: 210000, color: "#a855f7" },
+                        { name: "Telecom Spectrum Fees", value: 120000, color: "#3b82f6" },
+                        { name: "Public Disinvestment", value: 50000, color: "#f43f5e" },
+                        { name: "Sovereign Service Fees", value: 286228, color: "#10b981" }
+                      ].map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value) => [`₹ ${value.toLocaleString('en-IN')} Cr`, 'Receipts']}
+                      contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '11.5px' }}>
+                {[
+                  { name: "RBI Surplus Transfers", value: 210000, color: "#a855f7" },
+                  { name: "Telecom Spectrum Fees", value: 120000, color: "#3b82f6" },
+                  { name: "Public Disinvestment", value: 50000, color: "#f43f5e" },
+                  { name: "Sovereign Service Fees", value: 286228, color: "#10b981" }
+                ].map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '4px' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)' }}>
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color }} />
+                      {item.name}
+                    </span>
+                    <strong style={{ color: 'var(--text-primary)' }}>₹ {item.value.toLocaleString('en-IN')} Cr</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Column 2: Direct vs. Indirect Tax Timeline */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--saffron)' }}>
+              📈 Progressive Tax Balance Timeline (15-Year Area Chart)
+            </h4>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+              Direct Taxes (Progressive Corporate/Income Tax) vs Indirect Taxes (Regressive Customs/Excise/GST) in ₹ Crores.
+            </p>
+            <div style={{ height: '240px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart 
+                  data={[
+                    { year: '2010', direct: 378000, indirect: 312000 },
+                    { year: '2014', direct: 638000, indirect: 521000 },
+                    { year: '2018', direct: 1002000, indirect: 912000 },
+                    { year: '2022', direct: 1412000, indirect: 1284000 },
+                    { year: '2026 BE', direct: 2697000, indirect: 1679130 }
+                  ]} 
+                  margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+                  <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={10} />
+                  <YAxis stroke="var(--text-secondary)" fontSize={10} />
+                  <Tooltip 
+                    contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                    formatter={(value) => [`₹ ${value.toLocaleString('en-IN')} Cr`, '']}
+                  />
+                  <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11.5px' }} />
+                  <Area name="Progressive Direct Taxes" type="monotone" dataKey="direct" stroke="var(--saffron)" fill="var(--saffron)" fillOpacity={0.06} />
+                  <Area name="Regressive Indirect Taxes" type="monotone" dataKey="indirect" stroke="var(--ashoka-blue)" fill="var(--ashoka-blue)" fillOpacity={0.03} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

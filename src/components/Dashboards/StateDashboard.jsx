@@ -7,6 +7,7 @@ export default function StateDashboard({ masterData }) {
   const [activeStateId, setActiveStateId] = useState("gj");
   const [compStateA, setCompStateA] = useState("Gujarat");
   const [compStateB, setCompStateB] = useState("Haryana");
+  const [compareMetric, setCompareMetric] = useState("debtGSDP");
 
   // Finance Commission Sandbox Weights
   const [popWeight, setPopWeight] = useState(15.0);
@@ -273,6 +274,32 @@ export default function StateDashboard({ masterData }) {
           </div>
         </div>
 
+        {/* DBT Banking Mode stacked bar */}
+        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '12px 14px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
+          <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>
+            DBT Disbursement Banking Pathways
+          </span>
+          <div style={{ display: 'flex', height: '10px', borderRadius: '5px', overflow: 'hidden', background: 'rgba(255,255,255,0.05)' }}>
+            <div style={{ width: '68%', background: 'var(--saffron)' }} title="Commercial Banks: 68%" />
+            <div style={{ width: '18%', background: 'var(--ashoka-blue)' }} title="Regional Rural Banks: 18%" />
+            <div style={{ width: '14%', background: 'var(--emerald)' }} title="Post Offices: 14%" />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-secondary)', marginTop: '8px' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '3px', background: 'var(--saffron)' }} />
+              Commercial (68%)
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '3px', background: 'var(--ashoka-blue)' }} />
+              Coop/RRB (18%)
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '3px', background: 'var(--emerald)' }} />
+              Post (14%)
+            </span>
+          </div>
+        </div>
+
         {/* State Devotion Info */}
         <div style={{ background: 'var(--bg-secondary)', padding: '16px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
           <h4 style={{ fontSize: '13.5px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
@@ -465,6 +492,134 @@ export default function StateDashboard({ masterData }) {
                   <Bar name="Your Custom Share" dataKey="Your Custom Share" fill="var(--saffron)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Enriched RBI State Sovereign Debt & DAMA DBT Rank Scoreboards */}
+      <div className="glass-panel col-12" style={{ marginTop: '16px', padding: '24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '32px' }}>
+          
+          {/* Column 1: State Sovereign Debt & Autonomy Rankings */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', flexWrap: 'wrap', gap: '10px' }}>
+              <div>
+                <h4 style={{ fontSize: '15px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)' }}>
+                  <TrendingUp size={18} />
+                  Sovereign Debt Burden & Fiscal Autonomy
+                </h4>
+                <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                  Comparing Gross Sovereign Debt-to-GSDP vs Own Tax Revenue (OTR) Dependency.
+                </p>
+              </div>
+              <button 
+                onClick={() => setCompareMetric(compareMetric === 'debtGSDP' ? 'otrRatio' : 'debtGSDP')}
+                style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid var(--border-glass)',
+                  borderRadius: '6px',
+                  color: '#fff',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  padding: '6px 12px',
+                  cursor: 'pointer'
+                }}
+              >
+                Switch to {compareMetric === 'debtGSDP' ? 'Fiscal Autonomy (OTR %)' : 'Debt-to-GSDP %'}
+              </button>
+            </div>
+
+            {/* Horizontal Bar Chart comparison */}
+            <div style={{ height: '300px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart 
+                  layout="vertical" 
+                  data={Object.keys(rbiStateFinances).map(stateName => ({
+                    state: stateName,
+                    val: rbiStateFinances[stateName][compareMetric]
+                  })).sort((a, b) => b.val - a.val)} 
+                  margin={{ top: 5, right: 20, left: 30, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+                  <XAxis type="number" stroke="var(--text-secondary)" fontSize={10} unit="%" />
+                  <YAxis dataKey="state" type="category" stroke="var(--text-secondary)" fontSize={10} width={80} />
+                  <Tooltip 
+                    contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                    formatter={(value) => [`${value}%`, compareMetric === 'debtGSDP' ? 'Debt-to-GSDP' : 'Fiscal Autonomy OTR']}
+                  />
+                  <Bar 
+                    dataKey="val" 
+                    fill={compareMetric === 'debtGSDP' ? 'var(--crimson)' : 'var(--emerald)'} 
+                    radius={[0, 4, 4, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Column 2: State DBT Efficiency Scoreboard */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--ashoka-blue)' }}>
+              🏆 Direct Benefit Transfer (DBT) Performance Scoreboard
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', maxHeight: '300px', paddingRight: '4px' }}>
+              {stateScores.map((state, idx) => (
+                <div 
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    background: state.state === activeStateName ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.01)',
+                    border: '1px solid',
+                    borderColor: state.state === activeStateName ? 'var(--saffron)' : 'var(--border-glass)',
+                    borderRadius: '8px',
+                    padding: '8px 12px'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ 
+                      fontSize: '11px', 
+                      fontWeight: 800, 
+                      color: idx === 0 ? '#fbbf24' : idx === 1 ? '#94a3b8' : idx === 2 ? '#b45309' : 'var(--text-secondary)',
+                      width: '20px'
+                    }}>
+                      #{state.rank}
+                    </span>
+                    <strong style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>{state.state}</strong>
+                  </div>
+                  <div style={{ display: 'flex', gap: '16px', fontSize: '12px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Aadhaar: {state.aadhaar_saturation}%</span>
+                    <strong style={{ color: 'var(--emerald)' }}>Score: {state.overall_score}</strong>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* State CSS & SDRF Allocation details */}
+        <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--emerald)', marginBottom: '12px' }}>
+            📦 Centrally Sponsored Schemes State Outlay & SDRF Disaster Devolutions: {activeMeta.state}
+          </h4>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+            <div style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>MGNREGS (Rural Employment Dev)</span>
+              <strong style={{ fontSize: '16px', color: '#fff', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 8500).toFixed(0)} Crores</strong>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>Jal Jeevan Mission (Clean Tap Water)</span>
+              <strong style={{ fontSize: '16px', color: '#fff', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 4500).toFixed(0)} Crores</strong>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>PMAY-G (Welfare Gramin Housing)</span>
+              <strong style={{ fontSize: '16px', color: '#fff', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 5400).toFixed(0)} Crores</strong>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>SDRF Disaster Relief Devolutions</span>
+              <strong style={{ fontSize: '16px', color: 'var(--saffron)', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 1250).toFixed(0)} Crores</strong>
             </div>
           </div>
         </div>
