@@ -211,7 +211,8 @@ export default function StateDashboard({ masterData }) {
   };
 
   return (
-    <div className="animate-fade-in dashboard-grid col-12">
+    <>
+      <div className="animate-fade-in dashboard-grid col-12">
       {/* 1. Map Panel (Visual Centerpiece) */}
       <div className="glass-panel col-6" style={{ minHeight: '450px', display: 'flex', flexDirection: 'column' }}>
         <h3 style={{ fontSize: '17px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
@@ -663,7 +664,8 @@ export default function StateDashboard({ masterData }) {
             </div>
           </div>
         </div>
-      </div>
+      </div> {/* Close the glass-panel col-12 container */}
+    </div> {/* Close the outer animate-fade-in container */}
 
       {/* 2.1 Printable Scorecard Modal */}
       {showPrintModal && (
@@ -742,6 +744,6 @@ export default function StateDashboard({ masterData }) {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
