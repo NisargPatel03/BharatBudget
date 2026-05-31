@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg-primary: #050811;      /* Deep midnight blue space */
+  --bg-secondary: #0b1120;    /* Dark space card backgrounds */
+  --bg-card: rgba(11, 17, 32, 0.65);
+  --border-glass: rgba(255, 255, 255, 0.04);
+  --border-glass-active: rgba(255, 255, 255, 0.15);
+  
+  /* Tri-color Accent Highlights (Vibrant tailwinds-like HSL tones) */
+  --saffron: #ff6b00;
+  --saffron-glow: rgba(255, 107, 0, 0.15);
+  --saffron-border: rgba(255, 107, 0, 0.3);
+  
+  --emerald: #00d285;
+  --emerald-glow: rgba(0, 210, 133, 0.15);
+  --emerald-border: rgba(0, 210, 133, 0.3);
+  
+  --ashoka-blue: #0088ff;
+  --ashoka-glow: rgba(0, 136, 255, 0.15);
+  --ashoka-border: rgba(0, 136, 255, 0.3);
+  
+  /* Status/Callout Accents */
+  --crimson: #ff3b30;
+  --crimson-glow: rgba(255, 59, 48, 0.15);
+  
+  /* Typography */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+body {
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(255, 107, 0, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(0, 136, 255, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(0, 210, 133, 0.02) 0%, transparent 60%);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Glowing Border States */
+.glow-saffron {
+  box-shadow: 0 0 20px 0 var(--saffron-glow);
+  border-color: var(--saffron-border);
+}
+.glow-emerald {
+  box-shadow: 0 0 20px 0 var(--emerald-glow);
+  border-color: var(--emerald-border);
+}
+.glow-ashoka {
+  box-shadow: 0 0 20px 0 var(--ashoka-glow);
+  border-color: var(--ashoka-border);
+}
+.glow-crimson {
+  box-shadow: 0 0 20px 0 var(--crimson-glow);
+  border-color: rgba(255, 59, 48, 0.3);
+}
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+}
+
+.pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+/* Common Layout Utilities */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+}
+
+.col-12 { grid-column: span 12; }
+.col-8 { grid-column: span 8; }
+.col-6 { grid-column: span 6; }
+.col-4 { grid-column: span 4; }
+.col-3 { grid-column: span 3; }
+
+@media (max-width: 1200px) {
+  .col-8, .col-4, .col-3 { grid-column: span 6; }
+}
+
+@media (max-width: 768px) {
+  .col-8, .col-6, .col-4, .col-3 { grid-column: span 12; }
+}
