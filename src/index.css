@@ -124,6 +124,86 @@ body {
 }
 
 /* Common Layout Utilities */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-sidebar {
+  width: 260px;
+  background: rgba(11, 17, 32, 0.98);
+  border-right: 1px solid var(--border-glass);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  position: relative;
+}
+
+.app-header {
+  height: 70px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.app-main {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+}
+
+.hamburger-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.hamburger-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -143,11 +223,63 @@ body {
 .col-2 { grid-column: span 2; }
 .col-1 { grid-column: span 1; }
 
-@media (max-width: 1200px) {
+/* Custom inner component responsive grids */
+.deficit-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 20px;
+}
+
+.scheme-outlay-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Sidebar responsive overrides */
+@media (max-width: 1024px) {
+  .app-sidebar {
+    position: fixed;
+    left: -260px;
+    top: 0;
+    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.55);
+  }
+  .app-sidebar.open {
+    transform: translateX(260px);
+  }
+  .hamburger-btn {
+    display: flex;
+  }
+  .header-ticker {
+    display: none !important;
+  }
+  .app-header {
+    padding: 0 20px;
+  }
+  .app-main {
+    padding: 20px;
+  }
   .col-11, .col-10, .col-9, .col-8, .col-7, .col-5 { grid-column: span 6; }
   .col-4, .col-3 { grid-column: span 6; }
 }
 
 @media (max-width: 768px) {
-  .col-12, .col-11, .col-10, .col-9, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3, .col-2, .col-1 { grid-column: span 12; }
+  .app-header {
+    padding: 0 16px;
+  }
+  .app-main {
+    padding: 16px;
+  }
+  .col-12, .col-11, .col-10, .col-9, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3, .col-2, .col-1 { 
+    grid-column: span 12; 
+  }
+  .deficit-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .scheme-outlay-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
 }
+

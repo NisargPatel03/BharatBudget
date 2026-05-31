@@ -11,10 +11,11 @@ import TaxDashboard from './components/Dashboards/TaxDashboard';
 import budgetMaster from './data/budget_master.json';
 
 // Core icons from lucide
-import { Home, Landmark, Map, Calendar, AlertOctagon, IndianRupee, FileText, ChevronRight } from 'lucide-react';
+import { Home, Landmark, Map, Calendar, AlertOctagon, IndianRupee, FileText, ChevronRight, Menu, X } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Nav menu mappings
   const navItems = [
@@ -27,32 +28,41 @@ export default function App() {
     { id: 'tax', name: 'Tax Inflow Receipts', icon: IndianRupee, color: 'var(--emerald)' }
   ];
 
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+    setSidebarOpen(false); // Auto-close sidebar on mobile after clicking
+  };
+
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)' }}>
+    <div className="app-container">
+      {/* Mobile Sidebar Overlay Backdrop */}
+      <div 
+        className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
       {/* 1. Left Sidebar Navigation Panel */}
-      <aside 
-        style={{ 
-          width: '260px', 
-          background: 'rgba(11, 17, 32, 0.95)', 
-          borderRight: '1px solid var(--border-glass)',
-          display: 'flex',
-          flexDirection: 'column',
-          zIndex: 100,
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          flexShrink: 0
-        }}
-      >
+      <aside className={`app-sidebar ${sidebarOpen ? 'open' : ''}`}>
         {/* Brand Banner */}
-        <div style={{ padding: '24px', borderBottom: '1px solid var(--border-glass)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg, var(--saffron), var(--emerald))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#fff', fontSize: '18px' }}>
-            B
+        <div style={{ padding: '24px', borderBottom: '1px solid var(--border-glass)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg, var(--saffron), var(--emerald))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#fff', fontSize: '18px' }}>
+              B
+            </div>
+            <div>
+              <h1 style={{ fontSize: '17px', fontWeight: 800, letterSpacing: '0.5px' }}>BHARAT BUDGET</h1>
+              <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '1px' }}>COMMAND CENTER</span>
+            </div>
           </div>
-          <div>
-            <h1 style={{ fontSize: '17px', fontWeight: 800, letterSpacing: '0.5px' }}>BHARAT BUDGET</h1>
-            <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '1px' }}>COMMAND CENTER</span>
-          </div>
+          
+          {/* Close button inside sidebar on mobile */}
+          <button 
+            className="hamburger-btn" 
+            onClick={() => setSidebarOpen(false)}
+            style={{ marginRight: 0, padding: '4px' }}
+          >
+            <X size={20} />
+          </button>
         </div>
 
         {/* Sidebar Nav Buttons */}
@@ -63,7 +73,7 @@ export default function App() {
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => handleTabClick(item.id)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -105,33 +115,23 @@ export default function App() {
       </aside>
 
       {/* 2. Main Action Space */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      <div className="app-main-content">
         
         {/* Top Header Ticker Bar */}
-        <header 
-          style={{ 
-            height: '70px', 
-            background: 'var(--bg-secondary)', 
-            borderBottom: '1px solid var(--border-glass)', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between',
-            padding: '0 32px',
-            position: 'sticky',
-            top: 0,
-            zIndex: 90
-          }}
-        >
-          {/* Active section title */}
-          <div>
-            <h2 style={{ fontSize: '18px', fontWeight: 700, textTransform: 'capitalize', color: 'var(--text-primary)' }}>
+        <header className="app-header">
+          {/* Active section title with Mobile Hamburger Button */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
+              <Menu size={22} />
+            </button>
+            <h2 style={{ fontSize: '17px', fontWeight: 700, textTransform: 'capitalize', color: 'var(--text-primary)' }}>
               {navItems.find(n => n.id === activeTab)?.name} View
             </h2>
           </div>
 
           {/* Glowing ticker */}
           <div 
-            className="pulse-slow"
+            className="pulse-slow header-ticker"
             style={{ 
               display: 'flex', 
               alignItems: 'center', 
@@ -147,7 +147,7 @@ export default function App() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--saffron)' }}></span>
-              <span>Total Outlay: ₹48.2L Cr</span>
+              <span>Total Outlay: ₹53.5L Cr</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--emerald)' }}></span>
@@ -155,13 +155,13 @@ export default function App() {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--ashoka-blue)' }}></span>
-              <span>Deficit Pace: 4.9% of GDP</span>
+              <span>Deficit Pace: 4.3% of GDP</span>
             </div>
           </div>
         </header>
 
         {/* Scrollable Dashboard Viewport */}
-        <main style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
+        <main className="app-main">
           {activeTab === 'overview' && <OverviewDashboard masterData={budgetMaster} />}
           {activeTab === 'ministry' && <MinistryDashboard />}
           {activeTab === 'states' && <StateDashboard masterData={budgetMaster} />}

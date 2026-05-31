@@ -201,7 +201,7 @@ export default function OverviewDashboard({ masterData }) {
           Visualizing the official deficit indexes (Fiscal, Revenue, and Primary Deficits in Lakh Crores) alongside the target reduction route of Fiscal Deficit as % of GDP.
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '20px' }}>
+        <div className="deficit-container">
           {/* Main Recharts Spline Area Chart */}
           <div style={{ height: '280px' }}>
             <ResponsiveContainer width="100%" height="100%">

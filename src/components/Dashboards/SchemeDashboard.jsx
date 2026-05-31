@@ -199,7 +199,7 @@ export default function SchemeDashboard({ masterData }) {
         </div>
 
         {/* Outlay quick analysis breakdown */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px', fontSize: '12px' }}>
+        <div className="scheme-outlay-grid" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px', fontSize: '12px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-glass)' }}>
             <span style={{ color: 'var(--text-secondary)' }}>Target Allocation BE 2026-27:</span>
             <strong style={{ fontSize: '16px', fontWeight: 800, color: 'var(--emerald)' }}>
