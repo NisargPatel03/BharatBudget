@@ -46,9 +46,17 @@ export default function App() {
         {/* Brand Banner */}
         <div style={{ padding: '24px', borderBottom: '1px solid var(--border-glass)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg, var(--saffron), var(--emerald))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#fff', fontSize: '18px' }}>
-              B
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="BharatBudget Logo" 
+              style={{ 
+                width: '36px', 
+                height: '36px', 
+                borderRadius: '8px', 
+                border: '1px solid var(--border-glass)',
+                boxShadow: '0 0 10px rgba(255,255,255,0.05)'
+              }} 
+            />
             <div>
               <h1 style={{ fontSize: '17px', fontWeight: 800, letterSpacing: '0.5px' }}>BHARAT BUDGET</h1>
               <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '1px' }}>COMMAND CENTER</span>
