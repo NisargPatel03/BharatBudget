@@ -2,19 +2,26 @@ import React, { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { IndianRupee, ShieldAlert, Award, FileSpreadsheet, Activity, ChevronRight } from 'lucide-react';
 
-export default function OverviewDashboard({ masterData }) {
+export default function OverviewDashboard({ masterData, activeYearIndex = 3 }) {
   const [userTax, setUserTax] = useState(25000);
 
-  // Extract latest liabilities
-  const latestLiabilitiesObj = masterData.union_liabilities?.[masterData.union_liabilities.length - 1] || {
+  const timelineLabels = ['Actuals 24-25', 'BE 25-26', 'RE 25-26', 'BE 26-27'];
+  const activeYearLabel = timelineLabels[activeYearIndex] || 'BE 26-27';
+
+  // Dynamic nominal GDP corresponding to active year (in Lakh Crores)
+  const gdpEstimates = [290.4, 312.8, 315.0, 326.7];
+  const nominalGDP = gdpEstimates[activeYearIndex] || 326.7;
+
+  // Extract year specific liabilities
+  const latestLiabilitiesObj = masterData.union_liabilities?.[activeYearIndex] || masterData.union_liabilities?.[masterData.union_liabilities.length - 1] || {
     total_liabilities: 19977189,
     internal_debt: 17552202,
     external_liabilities: 564639
   };
 
-  // Live Capital vs Revenue Spends BE 2026-27
-  const capEx = masterData.expenditure_stats?.capital_exp?.[3] || 1221821;
-  const totalEx = masterData.expenditure_stats?.grand_total?.[3] || 5347315;
+  // Live Capital vs Revenue Spends dynamically bound to year
+  const capEx = masterData.expenditure_stats?.capital_exp?.[activeYearIndex] || 1221821;
+  const totalEx = masterData.expenditure_stats?.grand_total?.[activeYearIndex] || 5347315;
   const revEx = totalEx - capEx;
 
   const spendingSplit = [
@@ -23,11 +30,14 @@ export default function OverviewDashboard({ masterData }) {
   ];
 
   // Dynamic Paisa-per-Rupee Math from actual parsed outlays
-  const interestOutlay = masterData.expenditure_stats?.interest_payments?.[3] || 1403972;
-  const devolutionOutlay = masterData.transfer_stats?.devolution?.[2] || 1526255;
-  const fcGrantsOutlay = masterData.transfer_stats?.fc_grants?.[2] || 129397;
-  const sponsoredSchemes = masterData.transfer_stats?.sponsored_schemes?.[2] || 520333;
-  const sectorSchemes = masterData.transfer_stats?.sector_schemes?.[2] || 77371;
+  // Map index to transfers array size of 3 (24-25 = 0, 25-26 BE = 1, 25-26 RE = 1, 26-27 BE = 2)
+  const transferIdx = activeYearIndex === 0 ? 0 : activeYearIndex === 3 ? 2 : 1;
+
+  const interestOutlay = masterData.expenditure_stats?.interest_payments?.[activeYearIndex] || 1403972;
+  const devolutionOutlay = masterData.transfer_stats?.devolution?.[transferIdx] || 1526255;
+  const fcGrantsOutlay = masterData.transfer_stats?.fc_grants?.[transferIdx] || 129397;
+  const sponsoredSchemes = masterData.transfer_stats?.sponsored_schemes?.[transferIdx] || 520333;
+  const sectorSchemes = masterData.transfer_stats?.sector_schemes?.[transferIdx] || 77371;
 
   const calculatePaisa = (outlay) => {
     return Math.max(1, Math.round((outlay / totalEx) * 100));
@@ -78,8 +88,8 @@ export default function OverviewDashboard({ masterData }) {
           <IndianRupee size={32} />
         </div>
         <div>
-          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>TOTAL BUDGET OUTLAY (BE 26-27)</span>
-          <h2 style={{ fontSize: '26px', fontWeight: 800 }}>₹{formatLakhCrores(totalEx)} Lakh Cr</h2>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>TOTAL OUTLAY ({activeYearLabel})</span>
+          <h2 style={{ fontSize: '24px', fontWeight: 800, marginTop: '2px' }}>₹{formatLakhCrores(totalEx)} Lakh Cr</h2>
         </div>
       </div>
 
@@ -88,8 +98,8 @@ export default function OverviewDashboard({ masterData }) {
           <Award size={32} />
         </div>
         <div>
-          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>ESTIMATED NOMINAL GDP</span>
-          <h2 style={{ fontSize: '26px', fontWeight: 800 }}>₹326.7 Lakh Cr</h2>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>NOMINAL GDP ({activeYearLabel})</span>
+          <h2 style={{ fontSize: '24px', fontWeight: 800, marginTop: '2px' }}>₹{nominalGDP.toFixed(1)} Lakh Cr</h2>
         </div>
       </div>
 
@@ -98,8 +108,8 @@ export default function OverviewDashboard({ masterData }) {
           <ShieldAlert size={32} />
         </div>
         <div>
-          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>CENTRAL SOVEREIGN DEBT</span>
-          <h2 style={{ fontSize: '26px', fontWeight: 800 }}>₹{formatLakhCrores(latestLiabilitiesObj.total_liabilities)} Lakh Cr</h2>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>SOVEREIGN DEBT ({activeYearLabel})</span>
+          <h2 style={{ fontSize: '24px', fontWeight: 800, marginTop: '2px' }}>₹{formatLakhCrores(latestLiabilitiesObj.total_liabilities)} Lakh Cr</h2>
         </div>
       </div>
 

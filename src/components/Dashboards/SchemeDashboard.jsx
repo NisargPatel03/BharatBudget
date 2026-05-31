@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Search, Info, TrendingUp, TrendingDown, ArrowUpRight, Award, ShieldCheck, FileSpreadsheet } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Search, TrendingUp, TrendingDown, Award, ShieldCheck, FileSpreadsheet } from 'lucide-react';
 
-export default function SchemeDashboard({ masterData }) {
+export default function SchemeDashboard({ masterData, activeYearIndex = 3 }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSchemeId, setSelectedSchemeId] = useState('1'); // Default to Rashtriya Krishi Vikas Yojna
+  const [selectedSchemeId, setSelectedSchemeId] = useState('1'); // Default to first scheme
 
   const allSchemes = masterData.all_schemes || [];
   
@@ -18,15 +18,34 @@ export default function SchemeDashboard({ masterData }) {
     id: "1", name: "Rashtriya Krishi Vikas Yojna", val_24_25: 7228, val_25_26_be: 8500, val_25_26_re: 7000, val_26_27_be: 8550
   };
 
+  // Timeline year mapping
+  const timelineLabels = ['Actuals 24-25', 'BE 2025-26', 'RE 2025-26', 'BE 2026-27'];
+  const activeYearLabel = timelineLabels[activeYearIndex] || 'BE 2026-27';
+
+  // Get layout specific outlays
+  const getSchemeOutlay = (scheme, index) => {
+    switch (index) {
+      case 0: return scheme.val_24_25 || 0;
+      case 1: return scheme.val_25_26_be || 0;
+      case 2: return scheme.val_25_26_re || 0;
+      case 3: default: return scheme.val_26_27_be || 0;
+    }
+  };
+
+  // Dynamic KIs by year
+  const dbtTransfers = ["₹ 6.80 Lakh Cr", "₹ 6.95 Lakh Cr", "₹ 6.90 Lakh Cr", "₹ 7.30 Lakh Cr"];
+  const leakagePreventions = ["₹ 4.02 Lakh Cr", "₹ 4.10 Lakh Cr", "₹ 4.08 Lakh Cr", "₹ 4.31 Lakh Cr"];
+  const dbtTransactions = ["610 Crore", "645 Crore", "640 Crore", "713 Crore"];
+
   // Recharts YoY data structure
   const chartData = [
-    { name: '2024-25 Actuals', 'Outlay (₹ Cr)': activeScheme.val_24_25 },
-    { name: '2025-26 BE', 'Outlay (₹ Cr)': activeScheme.val_25_26_be },
-    { name: '2025-26 RE', 'Outlay (₹ Cr)': activeScheme.val_25_26_re },
-    { name: '2026-27 BE', 'Outlay (₹ Cr)': activeScheme.val_26_27_be }
+    { name: '24-25 Actuals', 'Outlay (₹ Cr)': activeScheme.val_24_25 },
+    { name: '25-26 BE', 'Outlay (₹ Cr)': activeScheme.val_25_26_be },
+    { name: '25-26 RE', 'Outlay (₹ Cr)': activeScheme.val_25_26_re },
+    { name: '26-27 BE', 'Outlay (₹ Cr)': activeScheme.val_26_27_be }
   ];
 
-  // Outlay growth math
+  // Outlay growth math (YoY)
   const diffBE = activeScheme.val_26_27_be - activeScheme.val_25_26_be;
   const growthRate = activeScheme.val_25_26_be > 0 
     ? ((diffBE / activeScheme.val_25_26_be) * 100).toFixed(1) 
@@ -45,8 +64,8 @@ export default function SchemeDashboard({ masterData }) {
           <Award size={32} />
         </div>
         <div>
-          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>TOTAL DBT TRANSFERRED</span>
-          <h2 style={{ fontSize: '28px', fontWeight: 800 }}>₹ 7.30 Lakh Cr</h2>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>DBT POOL ({activeYearLabel})</span>
+          <h2 style={{ fontSize: '24px', fontWeight: 800, marginTop: '2px' }}>{dbtTransfers[activeYearIndex]}</h2>
         </div>
       </div>
 
@@ -55,8 +74,8 @@ export default function SchemeDashboard({ masterData }) {
           <ShieldCheck size={32} />
         </div>
         <div>
-          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>CUMULATIVE LEAKAGES PREVENTED</span>
-          <h2 style={{ fontSize: '28px', fontWeight: 800 }}>₹ 4.31 Lakh Cr</h2>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>LEAKAGES DIVERTIED ({activeYearLabel})</span>
+          <h2 style={{ fontSize: '24px', fontWeight: 800, marginTop: '2px' }}>{leakagePreventions[activeYearIndex]}</h2>
         </div>
       </div>
 
@@ -65,8 +84,8 @@ export default function SchemeDashboard({ masterData }) {
           <FileSpreadsheet size={32} />
         </div>
         <div>
-          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>DBT TRANSACTIONS RECORDED</span>
-          <h2 style={{ fontSize: '28px', fontWeight: 800 }}>713 Crore</h2>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>DBT LEDGER ENTRIES ({activeYearLabel})</span>
+          <h2 style={{ fontSize: '24px', fontWeight: 800, marginTop: '2px' }}>{dbtTransactions[activeYearIndex]}</h2>
         </div>
       </div>
 
@@ -107,6 +126,7 @@ export default function SchemeDashboard({ masterData }) {
             {filteredSchemes.length > 0 ? (
               filteredSchemes.map((scheme) => {
                 const isSelected = selectedSchemeId === scheme.id;
+                const activeOutlay = getSchemeOutlay(scheme, activeYearIndex);
                 return (
                   <div
                     key={scheme.id}
@@ -134,10 +154,10 @@ export default function SchemeDashboard({ masterData }) {
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <h4 style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--saffron)' }}>
-                        ₹ {formatCrores(scheme.val_26_27_be)} Cr
+                        ₹ {formatCrores(activeOutlay)} Cr
                       </h4>
                       <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                        BE 2026-27 Allocation
+                        {activeYearLabel} Allocation
                       </span>
                     </div>
                   </div>
@@ -201,13 +221,13 @@ export default function SchemeDashboard({ masterData }) {
         {/* Outlay quick analysis breakdown */}
         <div className="scheme-outlay-grid" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px', fontSize: '12px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-glass)' }}>
-            <span style={{ color: 'var(--text-secondary)' }}>Target Allocation BE 2026-27:</span>
+            <span style={{ color: 'var(--text-secondary)' }}>Selected Outlay ({activeYearLabel}):</span>
             <strong style={{ fontSize: '16px', fontWeight: 800, color: 'var(--emerald)' }}>
-              ₹ {formatCrores(activeScheme.val_26_27_be)} Crore
+              ₹ {formatCrores(getSchemeOutlay(activeScheme, activeYearIndex))} Crore
             </strong>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-glass)' }}>
-            <span style={{ color: 'var(--text-secondary)' }}>Net YoY Allocation Increase:</span>
+            <span style={{ color: 'var(--text-secondary)' }}>Net 2-Year BE Growth Path:</span>
             <strong style={{ fontSize: '16px', fontWeight: 800, color: diffBE >= 0 ? 'var(--ashoka-blue)' : 'var(--crimson-red)' }}>
               {diffBE >= 0 ? '+' : ''}₹ {formatCrores(diffBE)} Crore
             </strong>

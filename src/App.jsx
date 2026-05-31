@@ -16,6 +16,14 @@ import { Home, Landmark, Map, Calendar, AlertOctagon, IndianRupee, FileText, Che
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeYearIndex, setActiveYearIndex] = useState(3); // Default to 2026-27 BE
+
+  const timelineOptions = [
+    { index: 0, label: '2024-25 Actuals', shortLabel: '24-25 Act', outlay: '₹48.2L Cr' },
+    { index: 1, label: '2025-26 BE', shortLabel: '25-26 BE', outlay: '₹48.2L Cr' },
+    { index: 2, label: '2025-26 RE', shortLabel: '25-26 RE', outlay: '₹47.7L Cr' },
+    { index: 3, label: '2026-27 BE', shortLabel: '26-27 BE', outlay: '₹53.5L Cr' }
+  ];
 
   // Nav menu mappings
   const navItems = [
@@ -129,7 +137,7 @@ export default function App() {
         {/* Top Header Ticker Bar */}
         <header className="app-header">
           {/* Active section title with Mobile Hamburger Button */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
               <Menu size={22} />
             </button>
@@ -138,13 +146,46 @@ export default function App() {
             </h2>
           </div>
 
-          {/* Glowing ticker */}
+          {/* Interactive Fiscal Timeline Pills */}
+          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.02)', padding: '4px', borderRadius: '10px', border: '1px solid var(--border-glass)', gap: '4px' }}>
+            {timelineOptions.map((opt) => {
+              const isActive = activeYearIndex === opt.index;
+              return (
+                <button
+                  key={opt.index}
+                  onClick={() => setActiveYearIndex(opt.index)}
+                  style={{
+                    background: isActive ? 'rgba(255,255,255,0.06)' : 'transparent',
+                    border: '1px solid',
+                    borderColor: isActive ? 'var(--border-glass-active)' : 'transparent',
+                    borderRadius: '8px',
+                    padding: '6px 12px',
+                    fontSize: '11.5px',
+                    fontWeight: 600,
+                    color: isActive ? 'var(--saffron)' : 'var(--text-secondary)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) e.currentTarget.style.color = 'var(--text-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) e.currentTarget.style.color = 'var(--text-secondary)';
+                  }}
+                >
+                  {opt.shortLabel}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Dynamic Year Stats Ticker */}
           <div 
             className="pulse-slow header-ticker"
             style={{ 
               display: 'flex', 
               alignItems: 'center', 
-              gap: '24px', 
+              gap: '16px', 
               fontSize: '12px', 
               fontWeight: 600, 
               color: 'var(--text-secondary)',
@@ -154,30 +195,82 @@ export default function App() {
               border: '1px solid var(--border-glass)'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--saffron)' }}></span>
-              <span>Total Outlay: ₹53.5L Cr</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--emerald)' }}></span>
-              <span>Welfare DBT pool: ₹7.30L Cr</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--ashoka-blue)' }}></span>
-              <span>Deficit Pace: 4.3% of GDP</span>
-            </div>
+            {activeYearIndex === 0 && (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--saffron)' }}></span>
+                  <span>Outlay: ₹48.2L Cr</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--emerald)' }}></span>
+                  <span>DBT Pool: ₹6.80L Cr</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--ashoka-blue)' }}></span>
+                  <span>Deficit: 4.8% of GDP</span>
+                </div>
+              </>
+            )}
+            {activeYearIndex === 1 && (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--saffron)' }}></span>
+                  <span>Outlay: ₹48.2L Cr</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--emerald)' }}></span>
+                  <span>DBT Pool: ₹6.95L Cr</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--ashoka-blue)' }}></span>
+                  <span>Deficit: 4.4% of GDP</span>
+                </div>
+              </>
+            )}
+            {activeYearIndex === 2 && (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--saffron)' }}></span>
+                  <span>Outlay: ₹47.7L Cr</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--emerald)' }}></span>
+                  <span>DBT Pool: ₹6.90L Cr</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--ashoka-blue)' }}></span>
+                  <span>Deficit: 4.4% of GDP</span>
+                </div>
+              </>
+            )}
+            {activeYearIndex === 3 && (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--saffron)' }}></span>
+                  <span>Outlay: ₹53.5L Cr</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--emerald)' }}></span>
+                  <span>DBT Pool: ₹7.30L Cr</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--ashoka-blue)' }}></span>
+                  <span>Deficit: 4.3% of GDP</span>
+                </div>
+              </>
+            )}
           </div>
         </header>
 
         {/* Scrollable Dashboard Viewport */}
         <main className="app-main">
-          {activeTab === 'overview' && <OverviewDashboard masterData={budgetMaster} />}
-          {activeTab === 'ministry' && <MinistryDashboard />}
-          {activeTab === 'states' && <StateDashboard masterData={budgetMaster} />}
-          {activeTab === 'schemes' && <SchemeDashboard masterData={budgetMaster} />}
-          {activeTab === 'monthly' && <MonthlyDashboard masterData={budgetMaster} />}
-          {activeTab === 'audit' && <AuditDashboard masterData={budgetMaster} />}
-          {activeTab === 'tax' && <TaxDashboard masterData={budgetMaster} />}
+          {activeTab === 'overview' && <OverviewDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
+          {activeTab === 'ministry' && <MinistryDashboard activeYearIndex={activeYearIndex} />}
+          {activeTab === 'states' && <StateDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
+          {activeTab === 'schemes' && <SchemeDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
+          {activeTab === 'monthly' && <MonthlyDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
+          {activeTab === 'audit' && <AuditDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
+          {activeTab === 'tax' && <TaxDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
         </main>
       </div>
     </div>

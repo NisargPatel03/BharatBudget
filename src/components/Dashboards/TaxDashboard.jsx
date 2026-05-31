@@ -2,8 +2,11 @@ import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell } from 'recharts';
 import { IndianRupee, Landmark, TrendingUp } from 'lucide-react';
 
-export default function TaxDashboard({ masterData }) {
+export default function TaxDashboard({ masterData, activeYearIndex = 3 }) {
   const rawMonthly = masterData.monthly_tax_collections || [];
+
+  const timelineLabels = ['Actuals 24-25', 'BE 2025-26', 'RE 2025-26', 'BE 2026-27'];
+  const activeYearLabel = timelineLabels[activeYearIndex] || 'BE 2026-27';
 
   // Group raw direct tax trajectory over years
   const taxTimeline = [
@@ -18,13 +21,13 @@ export default function TaxDashboard({ masterData }) {
   ];
 
   // Live Rupee Comes From inflow distribution (100 Paise of government income)
-  const corpVal = masterData.receipt_stats?.corporation_tax?.[3] || 1231000;
-  const incVal = masterData.receipt_stats?.income_tax?.[3] || 1466000;
-  const gstVal = masterData.receipt_stats?.gst?.[3] || 1019020;
-  const exciseVal = masterData.receipt_stats?.excise?.[3] || 388910;
-  const custVal = masterData.receipt_stats?.customs?.[3] || 271200;
-  const nonTaxVal = masterData.receipt_stats?.non_tax?.[3] || 666228;
-  const totalVal = masterData.receipt_stats?.total_receipts?.[3] || 5347315;
+  const corpVal = masterData.receipt_stats?.corporation_tax?.[activeYearIndex] || 1231000;
+  const incVal = masterData.receipt_stats?.income_tax?.[activeYearIndex] || 1466000;
+  const gstVal = masterData.receipt_stats?.gst?.[activeYearIndex] || 1019020;
+  const exciseVal = masterData.receipt_stats?.excise?.[activeYearIndex] || 388910;
+  const custVal = masterData.receipt_stats?.customs?.[activeYearIndex] || 271200;
+  const nonTaxVal = masterData.receipt_stats?.non_tax?.[activeYearIndex] || 666228;
+  const totalVal = masterData.receipt_stats?.total_receipts?.[activeYearIndex] || 5347315;
 
   const calculatePct = (val) => Math.max(1, Math.round((val / totalVal) * 100));
 
@@ -99,7 +102,7 @@ export default function TaxDashboard({ masterData }) {
           "Rupee Comes From" Inflow Receipt Split
         </h3>
         <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
-          Percentage breakdown of every 100 Paise of national treasury income (FY 2026-27).
+          Percentage breakdown of every 100 Paise of national treasury income ({activeYearLabel}).
         </p>
 
         <div style={{ flex: 1, minHeight: '200px', display: 'flex', alignItems: 'center', gap: '12px' }}>
