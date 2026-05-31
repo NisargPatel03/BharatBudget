@@ -47,7 +47,7 @@ export default function App() {
         <div style={{ padding: '24px', borderBottom: '1px solid var(--border-glass)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <img 
-              src="/logo.png" 
+              src="/logo_alt.png" 
               alt="BharatBudget Logo" 
               style={{ 
                 width: '36px', 
