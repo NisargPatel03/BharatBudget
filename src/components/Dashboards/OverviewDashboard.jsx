@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useBudgetStore } from '../../store/useBudgetStore';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { IndianRupee, ShieldAlert, Award, FileSpreadsheet, Activity, ChevronRight } from 'lucide-react';
 
-export default function OverviewDashboard({ masterData, activeYearIndex = 3 }) {
+export default function OverviewDashboard({ masterData }) {
+  const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
   const [userTax, setUserTax] = useState(25000);
 
   const timelineLabels = ['Actuals 24-25', 'BE 25-26', 'RE 25-26', 'BE 26-27'];

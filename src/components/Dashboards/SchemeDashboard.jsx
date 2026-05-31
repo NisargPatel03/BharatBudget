@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useBudgetStore } from '../../store/useBudgetStore';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Search, TrendingUp, TrendingDown, Award, ShieldCheck, FileSpreadsheet } from 'lucide-react';
 
-export default function SchemeDashboard({ masterData, activeYearIndex = 3 }) {
+export default function SchemeDashboard({ masterData }) {
+  const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSchemeId, setSelectedSchemeId] = useState('1'); // Default to first scheme
 

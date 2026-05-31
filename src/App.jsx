@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import OverviewDashboard from './components/Dashboards/OverviewDashboard';
-import MinistryDashboard from './components/Dashboards/MinistryDashboard';
-import StateDashboard from './components/Dashboards/StateDashboard';
-import SchemeDashboard from './components/Dashboards/SchemeDashboard';
-import MonthlyDashboard from './components/Dashboards/MonthlyDashboard';
-import AuditDashboard from './components/Dashboards/AuditDashboard';
-import TaxDashboard from './components/Dashboards/TaxDashboard';
+import React, { Suspense, lazy } from 'react';
+import { useBudgetStore } from './store/useBudgetStore';
+
+// Dynamic lazy imports for dashboard components
+const OverviewDashboard = lazy(() => import('./components/Dashboards/OverviewDashboard'));
+const MinistryDashboard = lazy(() => import('./components/Dashboards/MinistryDashboard'));
+const StateDashboard = lazy(() => import('./components/Dashboards/StateDashboard'));
+const SchemeDashboard = lazy(() => import('./components/Dashboards/SchemeDashboard'));
+const MonthlyDashboard = lazy(() => import('./components/Dashboards/MonthlyDashboard'));
+const AuditDashboard = lazy(() => import('./components/Dashboards/AuditDashboard'));
+const TaxDashboard = lazy(() => import('./components/Dashboards/TaxDashboard'));
 
 // Import compiled data
 import budgetMaster from './data/budget_master.json';
@@ -13,10 +16,40 @@ import budgetMaster from './data/budget_master.json';
 // Core icons from lucide
 import { Home, Landmark, Map, Calendar, AlertOctagon, IndianRupee, FileText, ChevronRight, Menu, X } from 'lucide-react';
 
+// Premium Loading Spinner fallback component
+function LoadingSpinner() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '380px', gap: '20px' }}>
+      <div className="pulse-slow" style={{
+        width: '45px',
+        height: '45px',
+        borderRadius: '50%',
+        border: '3px solid rgba(255,255,255,0.05)',
+        borderTopColor: 'var(--saffron)',
+        animation: 'spin 1s linear infinite'
+      }} />
+      <span style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--text-secondary)', letterSpacing: '0.08em' }}>
+        DECRYPTING PARLIAMENT LEDGER CHUNKS...
+      </span>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 export default function App() {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeYearIndex, setActiveYearIndex] = useState(3); // Default to 2026-27 BE
+  // Zustand Store integrations (centralized states)
+  const {
+    activeTab,
+    sidebarOpen,
+    activeYearIndex,
+    setActiveTab,
+    setSidebarOpen,
+    setActiveYearIndex
+  } = useBudgetStore();
 
   const timelineOptions = [
     { index: 0, label: '2024-25 Actuals', shortLabel: '24-25 Act', outlay: '₹48.2L Cr' },
@@ -264,13 +297,15 @@ export default function App() {
 
         {/* Scrollable Dashboard Viewport */}
         <main className="app-main">
-          {activeTab === 'overview' && <OverviewDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
-          {activeTab === 'ministry' && <MinistryDashboard activeYearIndex={activeYearIndex} />}
-          {activeTab === 'states' && <StateDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
-          {activeTab === 'schemes' && <SchemeDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
-          {activeTab === 'monthly' && <MonthlyDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
-          {activeTab === 'audit' && <AuditDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
-          {activeTab === 'tax' && <TaxDashboard masterData={budgetMaster} activeYearIndex={activeYearIndex} />}
+          <Suspense fallback={<LoadingSpinner />}>
+            {activeTab === 'overview' && <OverviewDashboard masterData={budgetMaster} />}
+            {activeTab === 'ministry' && <MinistryDashboard />}
+            {activeTab === 'states' && <StateDashboard masterData={budgetMaster} />}
+            {activeTab === 'schemes' && <SchemeDashboard masterData={budgetMaster} />}
+            {activeTab === 'monthly' && <MonthlyDashboard masterData={budgetMaster} />}
+            {activeTab === 'audit' && <AuditDashboard masterData={budgetMaster} />}
+            {activeTab === 'tax' && <TaxDashboard masterData={budgetMaster} />}
+          </Suspense>
         </main>
       </div>
     </div>
