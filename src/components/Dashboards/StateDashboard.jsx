@@ -334,7 +334,7 @@ export default function StateDashboard({ masterData }) {
           <div>
             <h3 style={{ fontSize: '18px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
               <Sliders size={20} color="var(--saffron)" />
-              16th Finance Commission Tax Devolution Sandbox
+              16th Finance Commission <GlossaryTooltip termKey="taxDevolution">Tax Devolution</GlossaryTooltip> Sandbox
             </h3>
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
               Adjust the formula sliders to modify how the Central Government devolves shared tax pools to India's states. Sliders dynamically auto-balance to sum to 100%.

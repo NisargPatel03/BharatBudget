@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ShieldAlert, Trash2, Award, ClipboardCheck, ArrowDownRight, ArrowRight, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { exportToCsv } from '../../utils/exportCsv';
+import GlossaryTooltip from '../GlossaryTooltip';
 
 export default function AuditDashboard({ masterData }) {
   const auditLogs = masterData.cag_audit_logs || [];
@@ -194,7 +195,7 @@ export default function AuditDashboard({ masterData }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
               <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--crimson)', display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
-                ⚠️ Voted Grants Returned Unspent
+                ⚠️ <GlossaryTooltip termKey="votedGrants">Voted Grants</GlossaryTooltip> Returned Unspent
               </h4>
               <button 
                 onClick={() => {
@@ -243,7 +244,7 @@ export default function AuditDashboard({ masterData }) {
           {/* Column 2: Systemic Compliance Objections Ledger */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h4 style={{ fontSize: '15px', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px', color: 'var(--saffron)' }}>
-              📑 Systemic Utilization Certificates & Suspense Account Objections
+              📑 Systemic <GlossaryTooltip termKey="utilizationCertificates">Utilization Certificates</GlossaryTooltip> & Suspense Account Objections
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[

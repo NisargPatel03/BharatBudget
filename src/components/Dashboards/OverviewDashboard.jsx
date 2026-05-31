@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useBudgetStore } from '../../store/useBudgetStore';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { IndianRupee, ShieldAlert, Award, FileSpreadsheet, Activity, ChevronRight, FileText } from 'lucide-react';
+import GlossaryTooltip from '../GlossaryTooltip';
 
 export default function OverviewDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
@@ -176,7 +177,13 @@ export default function OverviewDashboard({ masterData }) {
             <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: entry.color }}></span>
-                <span style={{ color: 'var(--text-secondary)' }}>{entry.name}</span>
+                <span style={{ color: 'var(--text-secondary)' }}>
+                  {index === 0 ? (
+                    <GlossaryTooltip termKey="revenueExpenditure">Revenue Expenditure (Operational Spends)</GlossaryTooltip>
+                  ) : (
+                    <GlossaryTooltip termKey="capitalExpenditure">Capital Expenditure (Infrastructure Assets)</GlossaryTooltip>
+                  )}
+                </span>
               </div>
               <span style={{ fontWeight: 600 }}>₹{formatLakhCrores(entry.value)} Lakh Cr ({((entry.value/totalEx)*100).toFixed(1)}%)</span>
             </div>
