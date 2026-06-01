@@ -341,11 +341,11 @@ export default function BudgetMitraChat() {
             right: '24px',
             width: '390px',
             height: '540px',
-            background: 'rgba(11, 15, 25, 0.85)',
+            background: 'var(--bg-secondary)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.08)',
+            border: '1px solid var(--border-glass-active)',
             borderRadius: '16px',
-            boxShadow: '0 10px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.02)',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.3), inset 0 0 20px var(--border-glass)',
             display: 'flex',
             flexDirection: 'column',
             zIndex: 1001,
@@ -357,7 +357,7 @@ export default function BudgetMitraChat() {
           <div
             style={{
               padding: '16px',
-              borderBottom: '1px solid rgba(255,255,255,0.06)',
+              borderBottom: '1px solid var(--border-glass)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -372,7 +372,7 @@ export default function BudgetMitraChat() {
                   width: '32px',
                   height: '32px',
                   borderRadius: '50%',
-                  border: '1px solid rgba(255,255,255,0.12)',
+                  border: '1px solid var(--border-glass)',
                   objectFit: 'cover'
                 }}
               />
@@ -388,8 +388,8 @@ export default function BudgetMitraChat() {
             <button
               onClick={() => setIsOpen(false)}
               style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.06)',
+                background: 'var(--border-glass)',
+                border: '1px solid var(--border-glass-active)',
                 borderRadius: '50%',
                 width: '28px',
                 height: '28px',
@@ -400,7 +400,7 @@ export default function BudgetMitraChat() {
                 color: 'var(--text-secondary)',
                 transition: 'all 0.2s'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
               onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
             >
               <X size={14} />
@@ -417,7 +417,7 @@ export default function BudgetMitraChat() {
               display: 'flex',
               flexDirection: 'column',
               gap: '14px',
-              background: 'rgba(0,0,0,0.1)'
+              background: 'var(--border-glass)'
             }}
           >
             {messages.map((m, idx) => (
@@ -445,13 +445,13 @@ export default function BudgetMitraChat() {
                 <div style={{ maxWidth: '80%' }}>
                   <div
                     style={{
-                      background: m.sender === 'user' ? 'var(--saffron)' : 'rgba(255,255,255,0.03)',
-                      color: m.sender === 'user' ? '#fff' : '#e2e8f0',
+                      background: m.sender === 'user' ? 'var(--saffron)' : 'var(--bg-primary)',
+                      color: m.sender === 'user' ? '#fff' : 'var(--text-primary)',
                       padding: '10px 14px',
                       borderRadius: m.sender === 'user' ? '12px 12px 2px 12px' : '2px 12px 12px 12px',
                       fontSize: '12.5px',
                       lineHeight: '1.5',
-                      border: m.sender === 'user' ? 'none' : '1px solid rgba(255,255,255,0.05)',
+                      border: m.sender === 'user' ? 'none' : '1px solid var(--border-glass-active)',
                       boxShadow: m.sender === 'user' ? '0 3px 10px rgba(251,146,60,0.2)' : 'none',
                       whiteSpace: 'pre-line'
                     }}
@@ -474,8 +474,8 @@ export default function BudgetMitraChat() {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '4px',
-                            background: 'rgba(255,255,255,0.04)',
-                            border: '1px solid rgba(255,255,255,0.08)',
+                            background: 'var(--bg-secondary)',
+                            border: '1px solid var(--border-glass)',
                             borderRadius: '4px',
                             padding: '3px 6px',
                             fontSize: '9.5px',
@@ -515,7 +515,7 @@ export default function BudgetMitraChat() {
           <div
             style={{
               padding: '10px 16px 4px 16px',
-              borderTop: '1px solid rgba(255,255,255,0.05)',
+              borderTop: '1px solid var(--border-glass)',
               display: 'flex',
               flexDirection: 'column',
               gap: '6px'
@@ -534,12 +534,12 @@ export default function BudgetMitraChat() {
                   key={qIdx}
                   onClick={() => handleSend(qp)}
                   style={{
-                    background: 'rgba(255,255,255,0.02)',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: 'var(--bg-primary)',
+                    border: '1px solid var(--border-glass-active)',
                     borderRadius: '20px',
                     padding: '5px 12px',
                     fontSize: '11px',
-                    color: '#e2e8f0',
+                    color: 'var(--text-secondary)',
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
                     transition: 'all 0.2s'
@@ -549,8 +549,8 @@ export default function BudgetMitraChat() {
                     e.currentTarget.style.borderColor = 'rgba(251, 146, 60, 0.3)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+                    e.currentTarget.style.background = 'var(--bg-primary)';
+                    e.currentTarget.style.borderColor = 'var(--border-glass-active)';
                   }}
                 >
                   {qp}
@@ -564,7 +564,7 @@ export default function BudgetMitraChat() {
             onSubmit={(e) => { e.preventDefault(); handleSend(); }}
             style={{
               padding: '12px 16px 16px 16px',
-              borderTop: '1px solid rgba(255,255,255,0.05)',
+              borderTop: '1px solid var(--border-glass)',
               display: 'flex',
               gap: '10px',
               position: 'relative'
@@ -578,8 +578,8 @@ export default function BudgetMitraChat() {
                 placeholder={isListening ? "Listening closely..." : "Ask Budget Mitra AI..."}
                 style={{
                   width: '100%',
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--border-glass-active)',
                   borderRadius: '8px',
                   padding: '10px 45px 10px 14px',
                   color: 'var(--text-primary)',
@@ -589,7 +589,7 @@ export default function BudgetMitraChat() {
                   boxSizing: 'border-box'
                 }}
                 onFocus={(e) => e.target.style.borderColor = 'rgba(251, 146, 60, 0.4)'}
-                onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--border-glass-active)'}
               />
               
               {/* Dynamic Animated Pulse Waveforms */}
