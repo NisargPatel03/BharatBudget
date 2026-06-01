@@ -328,6 +328,7 @@ export default function BudgetMitraChat() {
       {/* 2. Global Expanded Chat Panel */}
       {isOpen && (
         <div
+          className="budget-mitra-panel"
           style={{
             position: 'fixed',
             bottom: '24px',
@@ -666,6 +667,15 @@ export default function BudgetMitraChat() {
           0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
           70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
           100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        @media (max-width: 480px) {
+          .budget-mitra-panel {
+            width: calc(100% - 32px) !important;
+            right: 16px !important;
+            bottom: 16px !important;
+            height: 70% !important;
+            max-height: 520px !important;
+          }
         }
       `}</style>
     </>
