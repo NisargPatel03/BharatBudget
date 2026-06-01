@@ -63,7 +63,7 @@ function SankeyFlowDiagram() {
       </div>
 
       <div style={{ position: 'relative', flex: 1, display: 'flex', background: 'rgba(0,0,0,0.15)', borderRadius: '12px', border: '1px solid var(--border-glass)', padding: '20px 24px', overflow: 'hidden' }}>
-        <svg style={{ width: '100%', height: '412px', overflow: 'visible' }}>
+        <svg viewBox="0 0 1000 420" style={{ width: '100%', height: '100%', minHeight: '412px', overflow: 'visible' }}>
           {links.map((link, idx) => {
             let opacity = 0.22;
             let strokeColor = link.color;
@@ -85,7 +85,7 @@ function SankeyFlowDiagram() {
               }
             }
 
-            const pathData = `M 170 ${link.startY} C 310 ${link.startY}, 310 ${link.endY}, 450 ${link.endY}`;
+            const pathData = `M 212 ${link.startY} C 496 ${link.startY}, 496 ${link.endY}, 780 ${link.endY}`;
 
             return (
               <path
@@ -115,7 +115,7 @@ function SankeyFlowDiagram() {
                 style={{ cursor: 'pointer' }}
               >
                 <rect
-                  x="158"
+                  x="200"
                   y={inf.y1}
                   width="12"
                   height={inf.y2 - inf.y1}
@@ -128,7 +128,7 @@ function SankeyFlowDiagram() {
                   }}
                 />
                 <text
-                  x="146"
+                  x="188"
                   y={(inf.y1 + inf.y2) / 2 + 4}
                   fill={isDimmed ? 'var(--text-muted)' : 'var(--text-primary)'}
                   fontSize="11px"
@@ -152,7 +152,7 @@ function SankeyFlowDiagram() {
                 style={{ cursor: 'pointer' }}
               >
                 <rect
-                  x="450"
+                  x="780"
                   y={out.y1}
                   width="12"
                   height={out.y2 - out.y1}
@@ -165,7 +165,7 @@ function SankeyFlowDiagram() {
                   }}
                 />
                 <text
-                  x="470"
+                  x="800"
                   y={(out.y1 + out.y2) / 2 + 4}
                   fill={isDimmed ? 'var(--text-muted)' : 'var(--text-primary)'}
                   fontSize="11px"

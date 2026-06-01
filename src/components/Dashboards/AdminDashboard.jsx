@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useBudgetStore } from '../../store/useBudgetStore';
-import { Upload, Terminal, Play, Save, CheckCircle2, AlertCircle, Download, FileJson, ArrowRight, Database, Trash2, Search, RefreshCw } from 'lucide-react';
+import { Upload, Terminal, Play, Save, CheckCircle2, AlertCircle, Download, FileJson, ArrowRight, Database, Trash2, Search, RefreshCw, FileText } from 'lucide-react';
 import ChartContainer from '../ChartContainer';
 
 export default function AdminDashboard() {
