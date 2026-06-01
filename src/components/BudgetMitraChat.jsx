@@ -125,6 +125,45 @@ function searchLocalCorpus(query) {
   return { answer, citations };
 }
 
+const renderFormattedText = (text) => {
+  if (!text) return null;
+  const lines = text.split('\n');
+  return lines.map((line, lIdx) => {
+    const parts = line.split('**');
+    const formattedLine = parts.map((part, pIdx) => {
+      if (pIdx % 2 === 1) {
+        return <strong key={pIdx} style={{ color: '#fff', fontWeight: 'bold' }}>{part}</strong>;
+      }
+      return part;
+    });
+
+    if (line.trim().startsWith('•')) {
+      // Remove bullet character from text part
+      const listContent = line.replace(/^\s*•\s*/, '');
+      const listParts = listContent.split('**');
+      const formattedListLine = listParts.map((part, pIdx) => {
+        if (pIdx % 2 === 1) {
+          return <strong key={pIdx} style={{ color: '#fff', fontWeight: 'bold' }}>{part}</strong>;
+        }
+        return part;
+      });
+
+      return (
+        <div key={lIdx} style={{ margin: '6px 0 6px 12px', display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
+          <span style={{ color: 'var(--saffron)', fontWeight: 'bold' }}>•</span>
+          <span style={{ flex: 1 }}>{formattedListLine}</span>
+        </div>
+      );
+    }
+
+    return (
+      <p key={lIdx} style={{ margin: line.trim() ? '0 0 10px 0' : '0', minHeight: '6px' }}>
+        {formattedLine}
+      </p>
+    );
+  });
+};
+
 export default function BudgetMitraChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -357,7 +396,7 @@ export default function BudgetMitraChat() {
                       whiteSpace: 'pre-line'
                     }}
                   >
-                    {m.text}
+                    {m.sender === 'user' ? m.text : renderFormattedText(m.text)}
                   </div>
 
                   {/* Citations block for bot RAG outputs */}
