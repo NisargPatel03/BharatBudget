@@ -421,12 +421,30 @@ def save_chunks_to_corpus(filename, pdf_type, pages_text):
         if not text or len(text) < 50:
             continue
         
-        words = text.split()
-        chunk_size = 120
-        chunks = [words[i:i + chunk_size] for i in range(0, len(words), chunk_size)]
+        lines = text.split('\n')
+        current_chunk_words = []
+        current_chunk_lines = []
         
-        for idx, chunk_words in enumerate(chunks):
-            chunk_text = " ".join(chunk_words)
+        for line in lines:
+            line_words = line.strip().split()
+            if not line_words:
+                continue
+            if len(current_chunk_words) + len(line_words) > 150:
+                chunk_text = "\n".join(current_chunk_lines)
+                new_chunks.append({
+                    "text": chunk_text,
+                    "source": f"{filename} (Page {page_num + 1})",
+                    "page": page_num + 1,
+                    "type": pdf_type
+                })
+                current_chunk_words = []
+                current_chunk_lines = []
+            
+            current_chunk_words.extend(line_words)
+            current_chunk_lines.append(line)
+            
+        if current_chunk_lines:
+            chunk_text = "\n".join(current_chunk_lines)
             new_chunks.append({
                 "text": chunk_text,
                 "source": f"{filename} (Page {page_num + 1})",
