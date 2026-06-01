@@ -492,3 +492,28 @@ async def chat_with_budget(payload: ChatRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Similarity synthesis engine error: {str(e)}")
+
+@app.get("/api/chunks")
+def get_all_chunks():
+    init_preseeded_corpus()
+    return {"chunks": BUDGET_CORPUS}
+
+class DeleteChunkRequest(BaseModel):
+    text: str
+
+@app.post("/api/chunks/delete")
+def delete_chunk(payload: DeleteChunkRequest):
+    global BUDGET_CORPUS
+    init_preseeded_corpus()
+    before_len = len(BUDGET_CORPUS)
+    BUDGET_CORPUS = [c for c in BUDGET_CORPUS if c["text"] != payload.text]
+    after_len = len(BUDGET_CORPUS)
+    if before_len == after_len:
+        return {"success": False, "message": "Chunk not found"}
+    json_path = os.path.join(os.path.dirname(__file__), "budget_texts.json")
+    try:
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(BUDGET_CORPUS, f, indent=2)
+    except Exception:
+        pass
+    return {"success": True, "deleted_count": before_len - after_len}
