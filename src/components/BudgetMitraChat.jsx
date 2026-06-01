@@ -315,10 +315,14 @@ export default function BudgetMitraChat() {
     } catch (err) {
       // Flawless, real-time client-side RAG fallback
       const fallbackData = searchLocalCorpus(queryText);
+      const offlineWarning = "⚠️ **Offline Mode Active**: You are currently offline. Budget Mitra is running in offline fallback mode using cached local databases.\n\n";
       setMessages(prev => [...prev, {
         sender: 'bot',
-        text: fallbackData.answer,
-        citations: fallbackData.citations
+        text: offlineWarning + fallbackData.answer,
+        citations: [
+          { source: "Local Offline Cache", page: 1, type: "Offline" },
+          ...(fallbackData.citations || [])
+        ]
       }]);
     } finally {
       setIsLoading(false);

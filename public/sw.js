@@ -40,10 +40,8 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(
       fetch(request).catch(() => {
-        return new Response(JSON.stringify({
-          answer: "⚠️ **Offline Mode Active**: You are currently offline. Budget Mitra is running in offline fallback mode using cached local databases. Please reconnect to the internet for the full ingestion engine.",
-          citations: [{ source: "Local Offline Cache", page: 1, type: "Offline" }]
-        }), {
+        return new Response(JSON.stringify({ error: "Offline" }), {
+          status: 503,
           headers: { 'Content-Type': 'application/json' }
         });
       })
