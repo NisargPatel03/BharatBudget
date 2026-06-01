@@ -48,6 +48,48 @@ export default function SimulatorDashboard() {
   const projectedDebtRatio = 56.2 + (deficitPercentage - 4.3) * 0.85;
 
   // Reset to budget baseline values
+  const getAIAdvisory = () => {
+    let rating = "AA+";
+    let ratingOutlook = "Stable";
+    let ratingColor = "var(--saffron)";
+    
+    if (deficitPercentage < 4.0) {
+      rating = "AAA";
+      ratingOutlook = "Positive";
+      ratingColor = "var(--emerald)";
+    } else if (deficitPercentage >= 4.0 && deficitPercentage <= 4.8) {
+      rating = "AA+";
+      ratingOutlook = "Stable";
+      ratingColor = "var(--saffron)";
+    } else if (deficitPercentage > 4.8 && deficitPercentage <= 5.5) {
+      rating = "AA";
+      ratingOutlook = "Negative";
+      ratingColor = "var(--saffron)";
+    } else {
+      rating = "BBB-";
+      ratingOutlook = "Sovereign Watch";
+      ratingColor = "var(--crimson)";
+    }
+
+    const inflation = 4.1 + (gstRate - 18) * 0.15 + (schemeShift / 10) * 0.15 - (capexShift / 20) * 0.08;
+    const jobGrowth = (capexShift * 0.22) + (schemeShift * 0.12) - (corpTaxRate - 22) * 0.35;
+
+    let memo = "Optimal balanced fiscal policy. Standard policy parameters are well aligned with sovereign growth targets.";
+    if (gstRate > 22) {
+      memo = "High GST rates are suppressing consumer compliance and retail demand. Lowering GST slabs would improve volume turnover.";
+    } else if (corpTaxRate > 28) {
+      memo = "Excessive corporate taxation suppresses capital investment and corporate risk-taking. Lower the rate closer to 22% to trigger commercial capital injections.";
+    } else if (deficitPercentage > 5.0) {
+      memo = "Sovereign fiscal deficit is rising near warning thresholds. Recommended action is to restructure scheme DBT pool payouts or expand tax collection efficiency.";
+    } else if (capexShift < -15) {
+      memo = "Infrastructure investment is in austerity mode. Sustaining high capital outlays (CapEx) is critical to support the 7.5%+ decadal growth projection.";
+    }
+
+    return { rating, ratingOutlook, ratingColor, inflation: inflation.toFixed(2), jobGrowth: jobGrowth.toFixed(1), memo };
+  };
+
+  const advisory = getAIAdvisory();
+
   const handleReset = () => {
     setGstRate(18);
     setCorpTaxRate(22);
@@ -287,6 +329,60 @@ export default function SimulatorDashboard() {
             <span style={{ fontSize: '9px', color: 'var(--text-muted)', marginTop: '4px' }}>
               Sovereign target: &lt;56.0%
             </span>
+          </div>
+        </div>
+
+        {/* AI Sovereign Policy Assessment Bureau */}
+        <div style={{
+          background: 'rgba(251, 146, 60, 0.04)',
+          border: '1px solid var(--border-glass-active)',
+          borderRadius: '12px',
+          padding: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+          position: 'relative',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.15), inset 0 0 10px rgba(251, 146, 60, 0.05)',
+          transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h4 style={{ fontSize: '13px', fontWeight: 800, margin: 0, color: 'var(--text-primary)', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="dot-bounce" style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--saffron)', display: 'inline-block', boxShadow: '0 0 8px var(--saffron)' }} />
+              AI SOVEREIGN POLICY ASSESSMENT BUREAU
+            </h4>
+            <span style={{ fontSize: '9px', background: 'rgba(251, 146, 60, 0.1)', color: 'var(--saffron)', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>
+              DECISION RADAR
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+            <div>
+              <span style={{ fontSize: '9px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>RATING & OUTLOOK</span>
+              <strong style={{ fontSize: '14px', color: advisory.ratingColor }}>{advisory.rating}</strong>
+              <span style={{ fontSize: '9.5px', color: 'var(--text-muted)', display: 'block' }}>({advisory.ratingOutlook})</span>
+            </div>
+            <div>
+              <span style={{ fontSize: '9px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>CPI INFLATION FORECAST</span>
+              <strong style={{ fontSize: '14px', color: Number(advisory.inflation) > 5.0 ? 'var(--crimson)' : 'var(--text-primary)' }}>{advisory.inflation}%</strong>
+              <span style={{ fontSize: '9.5px', color: 'var(--text-muted)', display: 'block' }}>Sovereign target: 4.0%</span>
+            </div>
+            <div>
+              <span style={{ fontSize: '9px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600 }}>JOB MOMENTUM SHIFT</span>
+              <strong style={{ fontSize: '14px', color: Number(advisory.jobGrowth) >= 0 ? 'var(--emerald)' : 'var(--crimson)' }}>{Number(advisory.jobGrowth) >= 0 ? '+' : ''}{advisory.jobGrowth}%</strong>
+              <span style={{ fontSize: '9.5px', color: 'var(--text-muted)', display: 'block' }}>CapEx vs scheme balance</span>
+            </div>
+          </div>
+
+          <div style={{
+            background: 'rgba(255,255,255,0.02)',
+            border: '1px solid rgba(255,255,255,0.05)',
+            borderRadius: '6px',
+            padding: '10px',
+            fontSize: '11.5px',
+            color: 'var(--text-secondary)',
+            lineHeight: '1.4'
+          }}>
+            <strong>Policy Memo:</strong> {advisory.memo}
           </div>
         </div>
 

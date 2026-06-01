@@ -8,6 +8,7 @@ import ChartContainer from '../ChartContainer';
 export default function OverviewDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
   const [userTax, setUserTax] = useState(25000);
+  const [decadeIdx, setDecadeIdx] = useState(9);
   const [ingesting, setIngesting] = useState(false);
   const [ingestLogs, setIngestLogs] = useState([]);
   const [ingestComplete, setIngestComplete] = useState(false);
@@ -148,6 +149,19 @@ export default function OverviewDashboard({ masterData }) {
     { year: '2026-27 BE', fiscal: 16.95, revenue: 5.92, primary: 2.91, fiscalPct: 4.3, revenuePct: 1.5 }
   ];
 
+  const decadalData = [
+    { year: "2017-18", collections: 1919008, fiscal: 591062, welfare: 245000, primary: 62234, gdp: 170.9 },
+    { year: "2018-19", collections: 2080065, fiscal: 647241, welfare: 278000, primary: 66023, gdp: 189.7 },
+    { year: "2019-20", collections: 2010059, fiscal: 933651, welfare: 312000, primary: 321580, gdp: 200.7 },
+    { year: "2020-21", collections: 2027104, fiscal: 1848655, welfare: 489000, primary: 1138379, gdp: 198.8 },
+    { year: "2021-22", collections: 2708300, fiscal: 1584521, welfare: 456000, primary: 779453, gdp: 235.5 },
+    { year: "2022-23", collections: 3054192, fiscal: 1733131, welfare: 485000, primary: 806312, gdp: 272.0 },
+    { year: "2023-24", collections: 3437158, fiscal: 1734763, welfare: 512000, primary: 785421, gdp: 295.4 },
+    { year: "2024-25", collections: 3830789, fiscal: 1653894, welfare: 545000, primary: 653821, gdp: 312.8 },
+    { year: "2025-26 BE", collections: 4125000, fiscal: 1568292, welfare: 588000, primary: 292850, gdp: 326.7 },
+    { year: "2026-27 BE", collections: 4697000, fiscal: 1695421, welfare: 625000, primary: 291530, gdp: 365.4 }
+  ];
+
   const formatLakhCrores = (val) => {
     return (val / 100000).toFixed(2);
   };
@@ -277,6 +291,127 @@ export default function OverviewDashboard({ masterData }) {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </div>
+
+      {/* 10-Year Decadal Timeline Explorer */}
+      <div className="glass-panel col-12 animate-fade-in" style={{
+        padding: '24px',
+        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(139, 92, 246, 0.03) 100%)',
+        border: '1px solid var(--border-glass-active)',
+        borderRadius: '16px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+        marginTop: '8px'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+          <div>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              ⏳ 10-Year Sovereign Decadal Timeline Explorer
+            </h3>
+            <span style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
+              Drag the temporal timeline slider to step through India's macro-fiscal history (2017 to 2027) covering collections, welfare spends, and structural deficits.
+            </span>
+          </div>
+          <span style={{ fontSize: '9px', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--ashoka-blue)', padding: '3px 8px', borderRadius: '10px', fontWeight: 700 }}>
+            DECADE ENGINE v2.0
+          </span>
+        </div>
+
+        {/* Temporal Slider bar */}
+        <div style={{ padding: '0 12px', marginBottom: '24px' }}>
+          <input 
+            type="range" 
+            min="0" 
+            max="9" 
+            step="1" 
+            value={decadeIdx}
+            onChange={(e) => setDecadeIdx(Number(e.target.value))}
+            style={{ width: '100%', accentColor: 'var(--ashoka-blue)', cursor: 'pointer', height: '6px' }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', fontSize: '11px', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+            {decadalData.map((item, idx) => (
+              <span 
+                key={idx} 
+                onClick={() => setDecadeIdx(idx)}
+                style={{ 
+                  cursor: 'pointer', 
+                  color: idx === decadeIdx ? 'var(--ashoka-blue)' : 'inherit',
+                  transition: 'all 0.2s',
+                  transform: idx === decadeIdx ? 'scale(1.15)' : 'none',
+                  textShadow: idx === decadeIdx ? '0 0 8px var(--ashoka-blue)' : 'none'
+                }}
+              >
+                {item.year}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Dual panel Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '28px' }}>
+          {/* Card stats for selected year */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
+              <div>
+                <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', textTransform: 'uppercase' }}>Gross Tax Collections</span>
+                <strong style={{ fontSize: '20px', color: 'var(--saffron)', display: 'block', marginTop: '4px' }}>₹ {formatCrores(decadalData[decadeIdx].collections)} Cr</strong>
+              </div>
+              <span style={{ fontSize: '11px', background: 'rgba(234, 88, 12, 0.1)', color: 'var(--saffron)', padding: '4px 8px', borderRadius: '10px', fontWeight: 'bold' }}>
+                {decadeIdx > 0 
+                  ? `+${(((decadalData[decadeIdx].collections - decadalData[decadeIdx - 1].collections)/decadalData[decadeIdx - 1].collections)*100).toFixed(1)}% YoY`
+                  : 'Baseline'
+                }
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
+              <div>
+                <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', textTransform: 'uppercase' }}>Gross Fiscal Deficit</span>
+                <strong style={{ fontSize: '20px', color: 'var(--crimson)', display: 'block', marginTop: '4px' }}>₹ {formatCrores(decadalData[decadeIdx].fiscal)} Cr</strong>
+              </div>
+              <span style={{ fontSize: '11px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--crimson)', padding: '4px 8px', borderRadius: '10px', fontWeight: 'bold' }}>
+                {((decadalData[decadeIdx].fiscal / (decadalData[decadeIdx].gdp * 100000)) * 100).toFixed(1)}% of GDP
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '12px', border: '1px solid var(--border-glass)' }}>
+              <div>
+                <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', textTransform: 'uppercase' }}>Welfare Outlays & DBT Pools</span>
+                <strong style={{ fontSize: '20px', color: 'var(--emerald)', display: 'block', marginTop: '4px' }}>₹ {formatCrores(decadalData[decadeIdx].welfare)} Cr</strong>
+              </div>
+              <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--emerald)', padding: '4px 8px', borderRadius: '10px', fontWeight: 'bold' }}>
+                {decadeIdx > 0
+                  ? `+${(((decadalData[decadeIdx].welfare - decadalData[decadeIdx - 1].welfare)/decadalData[decadeIdx - 1].welfare)*100).toFixed(1)}% YoY`
+                  : 'Baseline'
+                }
+              </span>
+            </div>
+          </div>
+
+          {/* Decadal trajectory tracking chart with active year highlighted */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ashoka-blue)', margin: 0 }}>
+              Sovereign Historical Trajectory (10-Year Decadal View)
+            </h4>
+            <ChartContainer height={180}>
+              <AreaChart data={decadalData} margin={{ top: 5, right: 10, left: 10, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="decadalCollections" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--ashoka-blue)" stopOpacity="0.35"/>
+                    <stop offset="95%" stopColor="var(--ashoka-blue)" stopOpacity="0"/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+                <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={10} />
+                <YAxis stroke="var(--text-secondary)" fontSize={10} />
+                <Tooltip contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }} formatter={(val) => [`₹ ${val.toLocaleString('en-IN')} Cr`, 'Tax Revenues']} />
+                <Area type="monotone" name="Gross Tax Revenues" dataKey="collections" stroke="var(--ashoka-blue)" fill="url(#decadalCollections)" strokeWidth={2} />
+              </AreaChart>
+            </ChartContainer>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', textAlign: 'center', fontStyle: 'italic' }}>
+              Highlighted Era: <strong>{decadalData[decadeIdx].year}</strong>. Gross Nominal GDP reached <strong>₹ {decadalData[decadeIdx].gdp.toFixed(1)} Lakh Cr</strong>.
+            </span>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import IndiaMap from '../IndiaMap';
 import { ShieldCheck, TrendingUp, HelpCircle, Map, RefreshCw, Sliders, BarChart2, Download } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import { exportToCsv } from '../../utils/exportCsv';
 import ChartContainer from '../ChartContainer';
 import GlossaryTooltip from '../GlossaryTooltip';
@@ -211,6 +211,15 @@ export default function StateDashboard({ masterData }) {
     return "Your devolution sliders closely match the constitutional baseline recommendations of the 16th Finance Commission.";
   };
 
+  // Radar data head-to-head comparison
+  const radarData = [
+    { subject: "DBT Score", A: stateAMeta?.overall_score || 50, B: stateBMeta?.overall_score || 50 },
+    { subject: "Aadhaar %", A: stateAMeta?.aadhaar_saturation || 50, B: stateBMeta?.aadhaar_saturation || 50 },
+    { subject: "OTR Autonomy %", A: rbiStateFinances[compStateA]?.otrRatio || 45, B: rbiStateFinances[compStateB]?.otrRatio || 45 },
+    { subject: "Inverse Debt %", A: Math.max(10, 100 - (rbiStateFinances[compStateA]?.debtGSDP || 25)), B: Math.max(10, 100 - (rbiStateFinances[compStateB]?.debtGSDP || 25)) },
+    { subject: "Portal Compliance %", A: stateAMeta?.portal_compliance || 50, B: stateBMeta?.portal_compliance || 50 },
+  ];
+
   return (
     <>
       <div className="animate-fade-in dashboard-grid col-12">
@@ -325,6 +334,155 @@ export default function StateDashboard({ masterData }) {
               ? " RBI flags elevated debt-to-GSDP parameters, requiring prudent fiscal consolidation."
               : " Debt profiles remain well within standard FRBM sustainability thresholds."}
           </p>
+        </div>
+      </div>
+
+      {/* State-vs-State Sovereign Duel Widget */}
+      <div className="glass-panel col-12 animate-fade-in" style={{
+        padding: '24px',
+        background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.03) 0%, rgba(16, 185, 129, 0.03) 100%)',
+        border: '1px solid var(--border-glass-active)',
+        borderRadius: '16px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+        marginTop: '16px'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+          <div>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              ⚔️ Sovereign State-vs-State Duel Arena
+            </h3>
+            <span style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
+              Execute head-to-head macro-fiscal combat comparisons between any two Indian states across sovereign scores, debt thresholds, and own revenue strength.
+            </span>
+          </div>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <select 
+              value={compStateA} 
+              onChange={(e) => setCompStateA(e.target.value)}
+              style={{ padding: '6px 12px', fontSize: '13px', background: 'rgba(234, 88, 12, 0.1)', color: 'var(--saffron)', border: '1px solid rgba(234, 88, 12, 0.3)', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              {Object.keys(baseDevolutionShares).map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            <span style={{ display: 'flex', alignItems: 'center', fontWeight: 'bold', color: 'var(--text-secondary)' }}>VS</span>
+            <select 
+              value={compStateB} 
+              onChange={(e) => setCompStateB(e.target.value)}
+              style={{ padding: '6px 12px', fontSize: '13px', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--emerald)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              {Object.keys(baseDevolutionShares).map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', alignItems: 'center' }}>
+          
+          {/* State A Stats Panel */}
+          <div className="glass-panel" style={{
+            background: 'rgba(234, 88, 12, 0.02)',
+            border: '1px solid rgba(234, 88, 12, 0.15)',
+            borderRadius: '12px',
+            padding: '20px',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <div style={{ position: 'absolute', right: '-10px', top: '-10px', fontSize: '70px', opacity: 0.03, fontWeight: 'bold', color: 'var(--saffron)' }}>
+              A
+            </div>
+            <span style={{ fontSize: '10px', color: 'var(--saffron)', fontWeight: 'bold', letterSpacing: '1px' }}>CONTENDER ALPHA</span>
+            <h4 style={{ fontSize: '20px', fontWeight: 800, margin: '4px 0', color: 'var(--text-primary)' }}>{compStateA}</h4>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              <span style={{ background: 'rgba(234, 88, 12, 0.1)', color: 'var(--saffron)', fontSize: '11px', padding: '2px 8px', borderRadius: '10px', fontWeight: 'bold' }}>
+                FC Devolution Share: {baseDevolutionShares[compStateA]}%
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '6px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>DBT Efficiency Score</span>
+                <strong style={{ color: 'var(--saffron)' }}>{stateAMeta?.overall_score || 'N/A'}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '6px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Aadhaar Saturation</span>
+                <strong>{stateAMeta?.aadhaar_saturation || 'N/A'}%</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '6px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Own Tax Revenue (OTR) Ratio</span>
+                <strong style={{ color: 'var(--emerald)' }}>{rbiStateFinances[compStateA]?.otrRatio || '25.0'}%</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '6px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Sovereign Debt-to-GSDP</span>
+                <strong style={{ color: (rbiStateFinances[compStateA]?.debtGSDP || 25) >= 35 ? 'var(--crimson)' : 'var(--text-primary)' }}>{rbiStateFinances[compStateA]?.debtGSDP || '25.0'}%</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Top Outlay Focus</span>
+                <strong style={{ fontSize: '11px', color: 'var(--ashoka-blue)' }}>{rbiStateFinances[compStateA]?.topSector || 'General Development'}</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Radar Chart Centerpiece */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            <ChartContainer height={260} style={{ width: '100%' }}>
+              <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
+                <PolarGrid stroke="rgba(255,255,255,0.08)" />
+                <PolarAngleAxis dataKey="subject" stroke="var(--text-secondary)" fontSize={10} />
+                <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="rgba(255,255,255,0.1)" fontSize={8} />
+                <Radar name={compStateA} dataKey="A" stroke="var(--saffron)" fill="var(--saffron)" fillOpacity={0.25} />
+                <Radar name={compStateB} dataKey="B" stroke="var(--emerald)" fill="var(--emerald)" fillOpacity={0.25} />
+                <Tooltip contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }} />
+                <Legend wrapperStyle={{ fontSize: '11.5px', marginTop: '10px' }} />
+              </RadarChart>
+            </ChartContainer>
+          </div>
+
+          {/* State B Stats Panel */}
+          <div className="glass-panel" style={{
+            background: 'rgba(16, 185, 129, 0.02)',
+            border: '1px solid rgba(16, 185, 129, 0.15)',
+            borderRadius: '12px',
+            padding: '20px',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <div style={{ position: 'absolute', right: '-10px', top: '-10px', fontSize: '70px', opacity: 0.03, fontWeight: 'bold', color: 'var(--emerald)' }}>
+              B
+            </div>
+            <span style={{ fontSize: '10px', color: 'var(--emerald)', fontWeight: 'bold', letterSpacing: '1px' }}>CONTENDER BETA</span>
+            <h4 style={{ fontSize: '20px', fontWeight: 800, margin: '4px 0', color: 'var(--text-primary)' }}>{compStateB}</h4>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              <span style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--emerald)', fontSize: '11px', padding: '2px 8px', borderRadius: '10px', fontWeight: 'bold' }}>
+                FC Devolution Share: {baseDevolutionShares[compStateB]}%
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '6px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>DBT Efficiency Score</span>
+                <strong style={{ color: 'var(--emerald)' }}>{stateBMeta?.overall_score || 'N/A'}</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '6px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Aadhaar Saturation</span>
+                <strong>{stateBMeta?.aadhaar_saturation || 'N/A'}%</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '6px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Own Tax Revenue (OTR) Ratio</span>
+                <strong style={{ color: 'var(--emerald)' }}>{rbiStateFinances[compStateB]?.otrRatio || '25.0'}%</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: '6px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Sovereign Debt-to-GSDP</span>
+                <strong style={{ color: (rbiStateFinances[compStateB]?.debtGSDP || 25) >= 35 ? 'var(--crimson)' : 'var(--text-primary)' }}>{rbiStateFinances[compStateB]?.debtGSDP || '25.0'}%</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Top Outlay Focus</span>
+                <strong style={{ fontSize: '11px', color: 'var(--ashoka-blue)' }}>{rbiStateFinances[compStateB]?.topSector || 'General Development'}</strong>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 

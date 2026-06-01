@@ -95,8 +95,8 @@ export default function TaxDashboard({ masterData }) {
           <title>BharatBudget Citizen Tax Receipt</title>
           <style>
             body {
-              background: #fafafa;
-              color: #111827;
+              background: #f4efe2;
+              color: #1a1510;
               font-family: 'Courier New', Courier, monospace;
               padding: 40px 20px;
               margin: 0;
@@ -104,90 +104,105 @@ export default function TaxDashboard({ masterData }) {
               justify-content: center;
             }
             .receipt-box {
-              background: #ffffff;
-              border: 1px dashed #374151;
-              box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+              background: #fffdf5;
+              border: 2px dashed #8b5a2b;
+              box-shadow: 0 8px 24px rgba(139,90,43,0.15);
               padding: 24px;
               width: 100%;
               max-width: 440px;
               box-sizing: border-box;
+              position: relative;
+              overflow: hidden;
             }
             .header {
               text-align: center;
-              border-bottom: 2px dashed #9ca3af;
+              border-bottom: 2px dashed #8b5a2b;
               padding-bottom: 16px;
               margin-bottom: 20px;
             }
             .header h1 {
-              font-size: 18px;
+              font-size: 20px;
               margin: 0 0 4px 0;
               color: #ea580c;
-              letter-spacing: 1px;
+              letter-spacing: 1.5px;
+              font-weight: 900;
             }
             .header p {
               font-size: 11px;
-              color: #4b5563;
+              color: #5c4033;
               margin: 0;
               text-transform: uppercase;
+              font-weight: bold;
             }
             .row {
               display: flex;
               justify-content: space-between;
               margin-bottom: 8px;
               font-size: 13px;
+              position: relative;
+              z-index: 1;
             }
             .row-total {
               display: flex;
               justify-content: space-between;
-              font-size: 15px;
+              font-size: 16px;
               font-weight: bold;
-              color: #059669;
-              border-top: 1px dashed #d1d5db;
-              border-bottom: 1px dashed #d1d5db;
+              color: #065f46;
+              border-top: 1.5px dashed #8b5a2b;
+              border-bottom: 1.5px dashed #8b5a2b;
               padding: 10px 0;
               margin: 16px 0;
+              position: relative;
+              z-index: 1;
             }
             .section-title {
               display: block;
-              font-size: 11px;
-              color: #4b5563;
+              font-size: 11.5px;
+              color: #5c4033;
               margin-bottom: 12px;
               text-align: center;
               font-weight: bold;
               text-transform: uppercase;
+              position: relative;
+              z-index: 1;
             }
             .devolution-list {
-              border-top: 1px dashed #9ca3af;
+              border-top: 1.5px dashed #8b5a2b;
               padding-top: 16px;
               margin-top: 16px;
+              position: relative;
+              z-index: 1;
             }
             .devolution-row {
               display: flex;
               justify-content: space-between;
               margin-bottom: 6px;
               font-size: 12px;
-              color: #374151;
+              color: #1a1510;
             }
             .footer {
               text-align: center;
               margin-top: 24px;
-              border-top: 2px dashed #9ca3af;
+              border-top: 2px dashed #8b5a2b;
               padding-top: 16px;
-              font-size: 10px;
-              color: #6b7280;
+              font-size: 10.5px;
+              color: #5c4033;
+              position: relative;
+              z-index: 1;
             }
             .barcode {
-              height: 40px;
-              margin: 16px auto 8px auto;
-              width: 180px;
+              height: 35px;
+              margin: 12px auto 8px auto;
+              width: 160px;
+              opacity: 0.7;
               background: repeating-linear-gradient(
                 90deg,
-                #111827,
-                #111827 2px,
+                #1a1510,
+                #1a1510 2px,
                 transparent 2px,
                 transparent 5px,
-                #111827 5px,
-                #111827 8px,
+                #1a1510 5px,
+                #1a1510 8px,
                 transparent 8px,
                 transparent 10px
               );
@@ -196,6 +211,16 @@ export default function TaxDashboard({ masterData }) {
         </head>
         <body>
           <div class="receipt-box">
+            <!-- Sarnath Ashoka Chakra Watermark -->
+            <svg viewBox="0 0 100 100" style="position: absolute; top: 50%; left: 50%; width: 260px; height: 260px; transform: translate(-50%, -50%) rotate(15deg); opacity: 0.05; pointer-events: none; z-index: 0;">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#ea580c" stroke-width="2"/>
+              <circle cx="50" cy="50" r="8" fill="none" stroke="#ea580c" stroke-width="1.5"/>
+              ${Array.from({length: 24}, (_, i) => {
+                const angle = (i * 15 * Math.PI) / 180;
+                return `<line x1="50" y1="50" x2="${50 + 40 * Math.cos(angle)}" y2="${50 + 40 * Math.sin(angle)}" stroke="#ea580c" stroke-width="1"/>`;
+              }).join('')}
+            </svg>
+
             <div class="header">
               <h1>GOVERNMENT OF INDIA</h1>
               <p>Sovereign Tax Citizen Record</p>
@@ -226,10 +251,22 @@ export default function TaxDashboard({ masterData }) {
               `).join('')}
             </div>
 
+            <!-- Digital Signature Block -->
+            <div style="margin-top: 24px; text-align: right; display: flex; flex-direction: column; align-items: flex-end; position: relative; z-index: 1;">
+              <span style="font-family: 'Brush Script MT', cursive, sans-serif; font-size: 19px; color: #ea580c; transform: rotate(-3deg); margin-bottom: 2px; letter-spacing: 0.5px;">Sanjay Malhotra</span>
+              <span style="font-size: 8px; border-top: 1px dashed #8b5a2b; padding-top: 4px; color: #5c4033; text-transform: uppercase; font-weight: bold; width: 140px; text-align: center;">Secretary, Dept of Revenue</span>
+            </div>
+
             <div class="footer">
               <p>Thank you for contributing to India's sovereign growth!</p>
+              
+              <!-- Verification QR Code -->
+              <svg viewBox="0 0 21 21" style="width: 60px; height: 60px; margin: 12px auto; display: block; opacity: 0.75;">
+                <path d="M0,0 h7 v7 h-7 z M0,14 h7 v7 h-7 z M14,0 h7 v7 h-7 z M14,14 h7 v7 h-7 z M3,3 h1 v1 h-1 z M3,17 h1 v1 h-1 z M17,3 h1 v1 h-1 z M8,0 h1 v2 h-1 z M10,3 h2 v1 h-2 z M8,8 h3 v1 h-3 z M0,9 h2 v2 h-2 z M12,12 h2 v2 h-2 z" fill="#1a1510"/>
+              </svg>
+
               <div class="barcode"></div>
-              <p style="font-size: 8px;">BharatBudget Ingestor Verified Ledger &bull; RBI Shared Accounts</p>
+              <p style="font-size: 8px; margin-top: 8px;">BharatBudget Ingestor Verified Ledger &bull; RBI Shared Accounts</p>
             </div>
           </div>
           <script>
@@ -410,6 +447,119 @@ export default function TaxDashboard({ masterData }) {
               </>
             )}
           />
+        </div>
+      </div>
+
+      {/* Interactive SVG Sankey Tax Devolution Flow */}
+      <div className="glass-panel col-12 animate-fade-in" style={{
+        padding: '24px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+        background: 'rgba(16, 185, 129, 0.02)',
+        border: '1px solid var(--border-glass-active)',
+        borderRadius: '16px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h3 style={{ fontSize: '16px', fontWeight: 700, margin: 0, color: 'var(--emerald)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="dot-bounce" style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--emerald)', display: 'inline-block', boxShadow: '0 0 8px var(--emerald)' }} />
+              Interactive Sovereign Tax Devolution Flow
+            </h3>
+            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+              Hover over pathways to trace the devolution of capital from sovereign inflows into states and national spending targets.
+            </span>
+          </div>
+          <span style={{ fontSize: '9px', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--emerald)', padding: '3px 8px', borderRadius: '10px', fontWeight: 700 }}>
+            LIVE SANKEY ENGINE
+          </span>
+        </div>
+
+        <div style={{ position: 'relative', width: '100%', overflowX: 'auto', background: 'rgba(0,0,0,0.1)', borderRadius: '12px', padding: '16px' }}>
+          <svg viewBox="0 0 900 300" style={{ width: '100%', minWidth: '750px', height: 'auto', display: 'block' }}>
+            <defs>
+              <linearGradient id="flow-inflow" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="var(--saffron)" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="var(--ashoka-blue)" stopOpacity="0.15" />
+              </linearGradient>
+              <linearGradient id="flow-outflow" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="var(--ashoka-blue)" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="var(--emerald)" stopOpacity="0.45" />
+              </linearGradient>
+            </defs>
+
+            <style>{`
+              .sankey-path {
+                transition: stroke-width 0.3s, stroke-opacity 0.3s;
+                stroke-linecap: round;
+              }
+              .sankey-path:hover {
+                stroke-opacity: 0.8 !important;
+                stroke-width: 14px !important;
+              }
+              .sankey-node {
+                transition: fill 0.3s, transform 0.3s;
+              }
+              .sankey-node:hover {
+                fill: var(--text-primary) !important;
+              }
+            `}</style>
+
+            {/* Flows Left (Inflows) -> Center (Treasury) */}
+            <path d="M 60 40 C 200 40, 250 140, 440 140" fill="none" stroke="url(#flow-inflow)" strokeWidth="8" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 60 90 C 200 90, 250 145, 440 145" fill="none" stroke="url(#flow-inflow)" strokeWidth="8" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 60 140 C 200 140, 250 150, 440 150" fill="none" stroke="url(#flow-inflow)" strokeWidth="7" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 60 190 C 200 190, 250 155, 440 155" fill="none" stroke="url(#flow-inflow)" strokeWidth="6" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 60 240 C 200 240, 250 160, 440 160" fill="none" stroke="url(#flow-inflow)" strokeWidth="5" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+
+            {/* Flows Center (Treasury) -> Right (Outlays) */}
+            <path d="M 460 140 C 650 140, 700 20, 840 20" fill="none" stroke="url(#flow-outflow)" strokeWidth="8" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 460 145 C 650 145, 700 60, 840 60" fill="none" stroke="url(#flow-outflow)" strokeWidth="8" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 460 150 C 650 150, 700 100, 840 100" fill="none" stroke="url(#flow-outflow)" strokeWidth="7" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 460 155 C 650 155, 700 140, 840 140" fill="none" stroke="url(#flow-outflow)" strokeWidth="6" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 460 160 C 650 160, 700 180, 840 180" fill="none" stroke="url(#flow-outflow)" strokeWidth="5" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 460 165 C 650 165, 700 220, 840 220" fill="none" stroke="url(#flow-outflow)" strokeWidth="4" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+            <path d="M 460 170 C 650 170, 700 260, 840 260" fill="none" stroke="url(#flow-outflow)" strokeWidth="5" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+
+            {/* Left Node Circles */}
+            <circle cx="60" cy="40" r="6" fill="var(--saffron)" className="sankey-node" />
+            <circle cx="60" cy="90" r="6" fill="var(--saffron)" className="sankey-node" />
+            <circle cx="60" cy="140" r="6" fill="var(--saffron)" className="sankey-node" />
+            <circle cx="60" cy="190" r="6" fill="var(--saffron)" className="sankey-node" />
+            <circle cx="60" cy="240" r="6" fill="var(--saffron)" className="sankey-node" />
+
+            {/* Center Node */}
+            <rect x="440" y="130" width="20" height="40" rx="3" fill="var(--ashoka-blue)" className="sankey-node" />
+
+            {/* Right Node Circles */}
+            <circle cx="840" cy="20" r="6" fill="var(--emerald)" className="sankey-node" />
+            <circle cx="840" cy="60" r="6" fill="var(--emerald)" className="sankey-node" />
+            <circle cx="840" cy="100" r="6" fill="var(--emerald)" className="sankey-node" />
+            <circle cx="840" cy="140" r="6" fill="var(--emerald)" className="sankey-node" />
+            <circle cx="840" cy="180" r="6" fill="var(--emerald)" className="sankey-node" />
+            <circle cx="840" cy="220" r="6" fill="var(--emerald)" className="sankey-node" />
+            <circle cx="840" cy="260" r="6" fill="var(--emerald)" className="sankey-node" />
+
+            {/* Left Labels */}
+            <text x="50" y="24" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Personal Income Tax (26%)</text>
+            <text x="50" y="74" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">GST & Service Tax (25%)</text>
+            <text x="50" y="124" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Corporate Income Tax (19%)</text>
+            <text x="50" y="174" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Sovereign Borrowings (16%)</text>
+            <text x="50" y="224" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Excise & Customs (14%)</text>
+
+            {/* Center Label */}
+            <text x="450" y="120" textAnchor="middle" fill="var(--text-primary)" fontSize="11" fontWeight="800" letterSpacing="0.5">CENTRAL TREASURY</text>
+
+            {/* Right Labels */}
+            <text x="850" y="24" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Sovereign Interest Servicing (21%)</text>
+            <text x="850" y="64" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">States Share of Devolutions (19%)</text>
+            <text x="850" y="104" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Central Sector Schemes (16%)</text>
+            <text x="850" y="144" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Finance Commission Grants (9%)</text>
+            <text x="850" y="184" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Welfare & DBT Pools (8%)</text>
+            <text x="850" y="224" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">National Defence (8%)</text>
+            <text x="850" y="264" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Subsidies & Pensions (19%)</text>
+          </svg>
         </div>
       </div>
 
@@ -604,52 +754,79 @@ export default function TaxDashboard({ masterData }) {
             <div 
               id="citizen-tax-receipt"
               style={{ 
-                background: 'rgba(255, 255, 255, 0.01)', 
-                border: '1px dashed var(--border-glass)', 
+                background: '#fffdf5', 
+                border: '2px dashed #8b5a2b', 
                 borderRadius: '8px', 
                 padding: '20px', 
                 fontFamily: 'monospace', 
                 fontSize: '12px',
-                boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)',
-                position: 'relative'
+                boxShadow: '0 8px 24px rgba(139,90,43,0.1)',
+                position: 'relative',
+                overflow: 'hidden',
+                color: '#1a1510'
               }}
             >
-              <div style={{ textAlign: 'center', borderBottom: '1px dashed rgba(255,255,255,0.1)', paddingBottom: '12px', marginBottom: '16px' }}>
+              {/* Sarnath Ashoka Chakra Watermark */}
+              <svg viewBox="0 0 100 100" style={{ position: 'absolute', top: '50%', left: '50%', width: '220px', height: '220px', transform: 'translate(-50%, -50%) rotate(15deg)', opacity: 0.05, pointerEvents: 'none', zIndex: 0 }}>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#ea580c" strokeWidth="2"/>
+                <circle cx="50" cy="50" r="8" fill="none" stroke="#ea580c" strokeWidth="1.5"/>
+                {Array.from({length: 24}, (_, i) => {
+                  const angle = (i * 15 * Math.PI) / 180;
+                  return <line key={i} x1="50" y1="50" x2={50 + 40 * Math.cos(angle)} y2={50 + 40 * Math.sin(angle)} stroke="#ea580c" strokeWidth="1"/>;
+                })}
+              </svg>
+
+              <div style={{ textAlign: 'center', borderBottom: '1px dashed #8b5a2b', paddingBottom: '12px', marginBottom: '16px', position: 'relative', zIndex: 1 }}>
                 <strong style={{ color: 'var(--saffron)', fontSize: '14px', letterSpacing: '1px' }}>GOVERNMENT OF INDIA</strong>
-                <span style={{ display: 'block', fontSize: '9.5px', color: 'var(--text-secondary)', marginTop: '3px' }}>SOVEREIGN TAX CITIZEN RECORD</span>
-                <span style={{ display: 'block', fontSize: '8px', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>SYS-REF: BB-{Date.now().toString().slice(-6)}</span>
+                <span style={{ display: 'block', fontSize: '9.5px', color: '#5c4033', marginTop: '3px' }}>SOVEREIGN TAX CITIZEN RECORD</span>
+                <span style={{ display: 'block', fontSize: '8px', color: 'rgba(92,64,51,0.5)', marginTop: '2px' }}>SYS-REF: BB-{Date.now().toString().slice(-6)}</span>
               </div>
               
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', position: 'relative', zIndex: 1 }}>
                 <span>Direct Income Tax (New):</span>
                 <strong>INR {estimatedNewDirect.toLocaleString('en-IN')}</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', borderBottom: '1px dashed rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', borderBottom: '1px dashed #8b5a2b', paddingBottom: '8px', position: 'relative', zIndex: 1 }}>
                 <span>Indirect Taxes (GST):</span>
                 <strong>INR {estimatedIndirect.toLocaleString('en-IN')}</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: 'var(--emerald)', fontWeight: 800, marginBottom: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#065f46', fontWeight: 800, marginBottom: '16px', position: 'relative', zIndex: 1 }}>
                 <span>TOTAL CONTRIBUTION:</span>
                 <span>INR {totalTaxContribution.toLocaleString('en-IN')}</span>
               </div>
-
-              <div style={{ borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '12px' }}>
-                <span style={{ display: 'block', fontSize: '9.5px', color: 'var(--text-secondary)', marginBottom: '10px', textAlign: 'center', fontWeight: 'bold' }}>YOUR PROPORTIONAL RUPEE ALLOCATION</span>
+ 
+              <div style={{ borderTop: '1px dashed #8b5a2b', paddingTop: '12px', position: 'relative', zIndex: 1 }}>
+                <span style={{ display: 'block', fontSize: '9.5px', color: '#5c4033', marginBottom: '10px', textAlign: 'center', fontWeight: 'bold' }}>YOUR PROPORTIONAL RUPEE ALLOCATION</span>
                 {taxDistribution.map((item, idx) => (
                   <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '11px' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>• {item.category}:</span>
+                    <span style={{ color: '#5c4033' }}>• {item.category}:</span>
                     <strong>INR {Math.round(totalTaxContribution * item.share).toLocaleString('en-IN')}</strong>
                   </div>
                 ))}
               </div>
 
+              {/* Digital Signature Block */}
+              <div style={{ marginTop: '20px', textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'relative', zIndex: 1 }}>
+                <span style={{ fontFamily: 'sans-serif', fontStyle: 'italic', fontSize: '15px', color: '#ea580c', transform: 'rotate(-2deg)', marginBottom: '2px', fontWeight: 'bold' }}>Sanjay Malhotra</span>
+                <span style={{ fontSize: '8px', borderTop: '1px dashed #8b5a2b', paddingTop: '4px', color: '#5c4033', textTransform: 'uppercase', fontWeight: 'bold', width: '140px', textAlign: 'center' }}>Secretary, Dept of Revenue</span>
+              </div>
+ 
+              {/* Verification QR Code */}
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0 6px 0', position: 'relative', zIndex: 1 }}>
+                <svg viewBox="0 0 21 21" style={{ width: '45px', height: '45px', opacity: 0.85 }}>
+                  <path d="M0,0 h7 v7 h-7 z M0,14 h7 v7 h-7 z M14,0 h7 v7 h-7 z M14,14 h7 v7 h-7 z M3,3 h1 v1 h-1 z M3,17 h1 v1 h-1 z M17,3 h1 v1 h-1 z M8,0 h1 v2 h-1 z M10,3 h2 v1 h-2 z M8,8 h3 v1 h-3 z M0,9 h2 v2 h-2 z M12,12 h2 v2 h-2 z" fill="#1a1510"/>
+                </svg>
+              </div>
+
               {/* Barcode graphic for realistic vintage thermal receipt look */}
               <div style={{
-                height: '35px',
-                margin: '18px auto 4px auto',
+                height: '25px',
+                margin: '8px auto 4px auto',
                 width: '150px',
-                opacity: 0.25,
-                background: 'repeating-linear-gradient(90deg, #fff, #fff 2px, transparent 2px, transparent 5px, #fff 5px, #fff 8px, transparent 8px, transparent 10px)'
+                opacity: 0.4,
+                background: 'repeating-linear-gradient(90deg, #1a1510, #1a1510 2px, transparent 2px, transparent 5px, #1a1510 5px, #1a1510 8px, transparent 8px, transparent 10px)',
+                position: 'relative',
+                zIndex: 1
               }}></div>
             </div>
           </div>

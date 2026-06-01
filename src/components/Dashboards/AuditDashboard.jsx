@@ -69,6 +69,72 @@ export default function AuditDashboard({ masterData }) {
 
   return (
     <div className="animate-fade-in dashboard-grid col-12">
+      {/* Premium Glowing AI Audit Compliance Briefing Banner */}
+      <div className="glass-panel col-12 animate-fade-in" style={{
+        background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(11, 15, 25, 0.6))',
+        border: '1px solid rgba(239, 68, 68, 0.35)',
+        boxShadow: '0 0 30px rgba(239, 68, 68, 0.15), inset 0 0 20px rgba(239, 68, 68, 0.05)',
+        padding: '20px',
+        borderRadius: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '14px',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+      }}>
+        {/* Subtle crimson scanlines/glow texture */}
+        <div style={{
+          position: 'absolute',
+          top: 0, right: 0, bottom: 0, left: 0,
+          background: 'radial-gradient(circle at 10% 20%, rgba(239, 68, 68, 0.12) 0%, transparent 50%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', zIndex: 1 }}>
+          <div style={{
+            background: 'rgba(239, 68, 68, 0.15)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 0 15px rgba(239, 68, 68, 0.3)'
+          }} className="dot-bounce">
+            <ShieldAlert color="var(--crimson)" size={20} />
+          </div>
+          <div>
+            <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--crimson)', letterSpacing: '2px', textTransform: 'uppercase', textShadow: '0 0 8px rgba(239,68,68,0.4)' }}>
+              SOVEREIGN RISK LEVEL: ELEVATED
+            </span>
+            <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.2px' }}>
+              AI Sovereign Compliance Briefing Bureau
+            </h2>
+          </div>
+        </div>
+
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0, zIndex: 1 }}>
+          <strong>Real-time Audit Assessment:</strong> The model highlights systematic capital bottlenecks. A total of <strong>₹1,16,812 Crores</strong> stands unresolved across Voted Grants and Suspense accounts, primarily centered around Communications spectrum AGR disputes. Our statistical outlier module flags <strong>Communications</strong> as a critical outlier with an active Z-score drift of <strong>+4.82</strong>.
+        </p>
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', zIndex: 1 }}>
+          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>OUTSTANDING COMPLIANCE DEBT</span>
+            <strong style={{ fontSize: '13px', color: 'var(--crimson)' }}>₹ 1,16,812 Crores</strong>
+          </div>
+          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>CRITICAL RISK ANOMALIES</span>
+            <strong style={{ fontSize: '13px', color: 'var(--saffron)' }}>Ministry of Communications (Z-Score: +4.82)</strong>
+          </div>
+          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>UNRECONCILED UCs (3 YRS+)</span>
+            <strong style={{ fontSize: '13px', color: 'var(--emerald)' }}>₹ 14,281 Crores (Jal Shakti Pool)</strong>
+          </div>
+        </div>
+      </div>
+
       {/* 1. Risk Selection Heatmap (Left Column) */}
       <div className="glass-panel col-6" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
         <h3 style={{ fontSize: '17px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crimson)', marginBottom: '4px' }}>

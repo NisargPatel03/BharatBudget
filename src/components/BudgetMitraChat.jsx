@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, User, Send, MessageSquare, X, ShieldAlert, BookOpen, Mic } from 'lucide-react';
+import { Bot, User, Send, MessageSquare, X, ShieldAlert, BookOpen, Mic, Volume2, VolumeX } from 'lucide-react';
 
 // Rich local budget document corpus for 100% offline/static fallback search
 const LOCAL_CORPUS = [
@@ -176,8 +176,43 @@ export default function BudgetMitraChat() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [isSpeechEnabled, setIsSpeechEnabled] = useState(false);
+  const [speechVoice, setSpeechVoice] = useState('en-IN');
   const scrollRef = useRef(null);
   const recognitionRef = useRef(null);
+
+  const speakText = (text) => {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const cleanText = text
+      .replace(/\*\*/g, '')
+      .replace(/•/g, '')
+      .trim();
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    const voices = window.speechSynthesis.getVoices();
+    let selectedVoice = null;
+    if (speechVoice === 'hi-IN') {
+      selectedVoice = voices.find(v => v.lang.startsWith('hi-'));
+    } else if (speechVoice === 'gu-IN') {
+      selectedVoice = voices.find(v => v.lang.startsWith('gu-'));
+    } else {
+      selectedVoice = voices.find(v => v.lang.startsWith('en-IN') || v.lang.startsWith('en-'));
+    }
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    } else {
+      utterance.lang = speechVoice;
+    }
+    window.speechSynthesis.speak(utterance);
+  };
+
+  useEffect(() => {
+    if (!isSpeechEnabled || messages.length === 0) return;
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg.sender === 'bot') {
+      speakText(lastMsg.text);
+    }
+  }, [messages, isSpeechEnabled, speechVoice]);
 
   // Initialize browser-native SpeechRecognition
   useEffect(() => {
@@ -312,11 +347,31 @@ export default function BudgetMitraChat() {
             e.currentTarget.style.boxShadow = '0 0 30px rgba(16, 185, 129, 0.45)';
           }}
         >
-          <img
-            src="/budget_mitra_logo.png"
-            alt="Budget Mitra Logo"
-            style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
-          />
+          <div style={{
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            background: 'var(--bg-secondary)',
+            border: '2px solid var(--emerald)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: 'inset 0 0 15px var(--emerald-glow)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <img
+              src="/budget_mitra_logo.png"
+              alt="Budget Mitra Logo"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                transform: 'scale(1.42)',
+                borderRadius: '50%'
+              }}
+            />
+          </div>
           <span style={{
             position: 'absolute',
             top: '4px',
@@ -365,17 +420,30 @@ export default function BudgetMitraChat() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <img
-                src="/budget_mitra_logo.png"
-                alt="Budget Mitra Logo"
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  border: '1px solid var(--border-glass)',
-                  objectFit: 'cover'
-                }}
-              />
+              <div style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--emerald)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: 'inset 0 0 5px var(--emerald-glow)',
+                overflow: 'hidden'
+              }}>
+                <img
+                  src="/budget_mitra_logo.png"
+                  alt="Budget Mitra Logo"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transform: 'scale(1.42)',
+                    borderRadius: '50%'
+                  }}
+                />
+              </div>
               <div>
                 <h3 style={{ fontSize: '14.5px', fontWeight: 800, margin: 0, color: 'var(--text-primary)', letterSpacing: '0.3px' }}>Budget Mitra AI</h3>
                 <span style={{ fontSize: '10px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
@@ -383,6 +451,52 @@ export default function BudgetMitraChat() {
                   Ingestion Engine Live
                 </span>
               </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto', marginRight: '8px' }}>
+              {/* Voice select dropdown */}
+              <select
+                value={speechVoice}
+                onChange={(e) => setSpeechVoice(e.target.value)}
+                style={{
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--border-glass-active)',
+                  borderRadius: '4px',
+                  color: 'var(--text-primary)',
+                  fontSize: '10px',
+                  padding: '3px 6px',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+                title="Narrator accent selection"
+              >
+                <option value="en-IN">English Voice</option>
+                <option value="hi-IN">Hindi Voice</option>
+                <option value="gu-IN">Gujarati Voice</option>
+              </select>
+
+              {/* Mute/Unmute narration */}
+              <button
+                onClick={() => {
+                  const val = !isSpeechEnabled;
+                  setIsSpeechEnabled(val);
+                  if (!val && window.speechSynthesis) window.speechSynthesis.cancel();
+                }}
+                style={{
+                  background: 'var(--border-glass)',
+                  border: '1px solid var(--border-glass-active)',
+                  borderRadius: '4px',
+                  padding: '4px 6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: isSpeechEnabled ? 'var(--emerald)' : 'var(--text-secondary)',
+                  transition: 'all 0.2s'
+                }}
+                title={isSpeechEnabled ? "Narration on (Mute)" : "Narration off (Unmute)"}
+              >
+                {isSpeechEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />}
+              </button>
             </div>
             
             <button
@@ -459,15 +573,37 @@ export default function BudgetMitraChat() {
                     {m.sender === 'user' ? m.text : renderFormattedText(m.text)}
                   </div>
 
-                  {/* Citations block for bot RAG outputs */}
-                  {m.citations && m.citations.length > 0 && (
+                  {/* Citations & Speaker block for bot outputs */}
+                  {m.sender === 'bot' && (
                     <div style={{
                       display: 'flex',
                       flexWrap: 'wrap',
                       gap: '6px',
-                      marginTop: '6px'
+                      marginTop: '6px',
+                      alignItems: 'center'
                     }}>
-                      {m.citations.map((cit, cIdx) => (
+                      <button
+                        onClick={() => speakText(m.text)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          background: 'var(--bg-secondary)',
+                          border: '1px solid var(--border-glass)',
+                          borderRadius: '4px',
+                          padding: '3px 6px',
+                          fontSize: '9.5px',
+                          color: 'var(--text-secondary)',
+                          cursor: 'pointer',
+                          outline: 'none'
+                        }}
+                        title="Read aloud"
+                      >
+                        <Volume2 size={10} color="var(--emerald)" />
+                        <span>Speak</span>
+                      </button>
+
+                      {m.citations && m.citations.map((cit, cIdx) => (
                         <div
                           key={cIdx}
                           style={{

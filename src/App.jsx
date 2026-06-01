@@ -60,6 +60,7 @@ export default function App() {
   });
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);
   const [animating, setAnimating] = useState(false);
+  const [wipeTheme, setWipeTheme] = useState(null);
 
   const themesList = [
     { id: 'sovereign', name: '🌌 Midnight Sovereign', dotColor: '#ff6b00', secondaryColor: '#00d285' },
@@ -73,6 +74,7 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('bb-theme', theme);
     const root = document.documentElement;
+    root.setAttribute('data-theme', theme);
     
     if (theme === 'sovereign') {
       root.style.setProperty('--bg-primary', '#050811');
@@ -385,13 +387,17 @@ export default function App() {
                   return (
                     <button
                       key={t.id}
-                      onClick={() => {
+                      onClick={(e) => {
+                        setWipeTheme(t.id);
                         setAnimating(true);
-                        setTheme(t.id);
                         setThemeMenuOpen(false);
                         setTimeout(() => {
+                          setTheme(t.id);
+                        }, 300);
+                        setTimeout(() => {
+                          setWipeTheme(null);
                           setAnimating(false);
-                        }, 450);
+                        }, 750);
                       }}
                       style={{
                         display: 'flex',
@@ -534,6 +540,40 @@ export default function App() {
         </main>
       </div>
       <BudgetMitraChat />
+      {wipeTheme && (
+        <div 
+          className="theme-wipe-overlay"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: '-100%',
+            width: '100%',
+            height: '100%',
+            background: `linear-gradient(135deg, ${themesList.find(t => t.id === wipeTheme)?.dotColor} 0%, ${themesList.find(t => t.id === wipeTheme)?.secondaryColor} 100%)`,
+            zIndex: 99999,
+            pointerEvents: 'none',
+            opacity: 0.85,
+            boxShadow: '0 0 50px rgba(0,0,0,0.5)',
+            animation: 'wipe-slide 0.75s cubic-bezier(0.76, 0, 0.24, 1) forwards'
+          }}
+        />
+      )}
+      <style>{`
+        @keyframes wipe-slide {
+          0% {
+            left: -100%;
+          }
+          40% {
+            left: 0;
+          }
+          60% {
+            left: 0;
+          }
+          100% {
+            left: 100%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
