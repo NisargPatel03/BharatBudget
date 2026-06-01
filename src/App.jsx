@@ -10,6 +10,7 @@ const MonthlyDashboard = lazy(() => import('./components/Dashboards/MonthlyDashb
 const AuditDashboard = lazy(() => import('./components/Dashboards/AuditDashboard'));
 const TaxDashboard = lazy(() => import('./components/Dashboards/TaxDashboard'));
 const AdminDashboard = lazy(() => import('./components/Dashboards/AdminDashboard'));
+import BudgetMitraChat from './components/BudgetMitraChat';
 
 // Import compiled data
 import budgetMaster from './data/budget_master.json';
@@ -312,6 +313,7 @@ export default function App() {
           </Suspense>
         </main>
       </div>
+      <BudgetMitraChat />
     </div>
   );
 }
