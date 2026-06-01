@@ -288,12 +288,12 @@ export default function BudgetMitraChat() {
             position: 'fixed',
             bottom: '24px',
             right: '24px',
-            width: '60px',
-            height: '60px',
+            width: '76px',
+            height: '76px',
             borderRadius: '50%',
             background: 'transparent',
             border: 'none',
-            boxShadow: '0 0 25px rgba(16, 185, 129, 0.4)',
+            boxShadow: '0 0 30px rgba(16, 185, 129, 0.45)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -305,11 +305,11 @@ export default function BudgetMitraChat() {
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'scale(1.08) translateY(-4px)';
-            e.currentTarget.style.boxShadow = '0 0 35px rgba(16, 185, 129, 0.6)';
+            e.currentTarget.style.boxShadow = '0 0 40px rgba(16, 185, 129, 0.65)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'scale(1) translateY(0)';
-            e.currentTarget.style.boxShadow = '0 0 25px rgba(16, 185, 129, 0.4)';
+            e.currentTarget.style.boxShadow = '0 0 30px rgba(16, 185, 129, 0.45)';
           }}
         >
           <img
@@ -319,13 +319,14 @@ export default function BudgetMitraChat() {
           />
           <span style={{
             position: 'absolute',
-            top: '2px',
-            right: '2px',
-            width: '12px',
-            height: '12px',
+            top: '4px',
+            right: '4px',
+            width: '14px',
+            height: '14px',
             background: '#10b981',
             borderRadius: '50%',
-            border: '2px solid #000'
+            border: '2.5px solid #0b0f19',
+            boxShadow: '0 0 8px rgba(16, 185, 129, 0.6)'
           }} />
         </button>
       )}
