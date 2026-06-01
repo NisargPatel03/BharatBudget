@@ -343,7 +343,7 @@ export default function TaxDashboard({ masterData }) {
           </h3>
           <button 
             onClick={() => exportToCsv(taxTimeline, "direct_tax_growth_timeline.csv")}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', borderRadius: '6px', padding: '6px 10px', fontSize: '11px', color: '#fff', cursor: 'pointer', fontWeight: 600 }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', borderRadius: '6px', padding: '6px 10px', fontSize: '11px', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: 600 }}
           >
             <Download size={13} /> Export CSV
           </button>
@@ -426,7 +426,7 @@ export default function TaxDashboard({ masterData }) {
               </h3>
               <button 
                 onClick={() => exportToCsv(stateGstRankings, "state_gst_contributions.csv")}
-                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', borderRadius: '6px', padding: '6px 10px', fontSize: '11px', color: '#fff', cursor: 'pointer', fontWeight: 600 }}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', borderRadius: '6px', padding: '6px 10px', fontSize: '11px', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: 600 }}
               >
                 <Download size={13} /> Export CSV
               </button>
@@ -469,7 +469,7 @@ export default function TaxDashboard({ masterData }) {
                   type="number" 
                   value={citizenIncome}
                   onChange={(e) => setCitizenIncome(Number(e.target.value))}
-                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '11.5px', fontWeight: 600 }}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', color: 'var(--text-primary)', fontSize: '11.5px', fontWeight: 600 }}
                 />
               </div>
               <div>
@@ -478,7 +478,7 @@ export default function TaxDashboard({ masterData }) {
                   type="number" 
                   value={citizenDeductions}
                   onChange={(e) => setCitizenDeductions(Number(e.target.value))}
-                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '11.5px', fontWeight: 600 }}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', color: 'var(--text-primary)', fontSize: '11.5px', fontWeight: 600 }}
                 />
               </div>
               <div>
@@ -487,7 +487,7 @@ export default function TaxDashboard({ masterData }) {
                   type="number" 
                   value={citizenSpending}
                   onChange={(e) => setCitizenSpending(Number(e.target.value))}
-                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-glass)', color: '#fff', fontSize: '11.5px', fontWeight: 600 }}
+                  style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', color: 'var(--text-primary)', fontSize: '11.5px', fontWeight: 600 }}
                 />
               </div>
             </div>
@@ -499,11 +499,11 @@ export default function TaxDashboard({ masterData }) {
                 <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)' }}>OLD REGIME (WITH DEDUCTIONS)</span>
                 <div style={{ marginTop: '8px' }}>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Standard Deduction:</div>
-                  <strong style={{ fontSize: '12.5px', color: '#fff' }}>₹ 50,000</strong>
+                  <strong style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>₹ 50,000</strong>
                 </div>
                 <div style={{ marginTop: '6px' }}>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Taxable Income:</div>
-                  <strong style={{ fontSize: '12.5px', color: '#fff' }}>₹ {Math.max(0, citizenIncome - 50000 - citizenDeductions).toLocaleString('en-IN')}</strong>
+                  <strong style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>₹ {Math.max(0, citizenIncome - 50000 - citizenDeductions).toLocaleString('en-IN')}</strong>
                 </div>
                 <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed rgba(255,255,255,0.05)' }}>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Income Tax Liability:</div>
@@ -516,11 +516,11 @@ export default function TaxDashboard({ masterData }) {
                 <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--saffron)' }}>NEW REGIME (REVISED 2026-27)</span>
                 <div style={{ marginTop: '8px' }}>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Standard Deduction:</div>
-                  <strong style={{ fontSize: '12.5px', color: '#fff' }}>₹ 75,000</strong>
+                  <strong style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>₹ 75,000</strong>
                 </div>
                 <div style={{ marginTop: '6px' }}>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Taxable Income:</div>
-                  <strong style={{ fontSize: '12.5px', color: '#fff' }}>₹ {Math.max(0, citizenIncome - 75000).toLocaleString('en-IN')}</strong>
+                  <strong style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>₹ {Math.max(0, citizenIncome - 75000).toLocaleString('en-IN')}</strong>
                 </div>
                 <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed rgba(255,255,255,0.05)' }}>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Income Tax Liability:</div>
@@ -541,7 +541,7 @@ export default function TaxDashboard({ masterData }) {
                 <strong style={{ fontSize: '14px' }}>₹ {(estimatedNewDirect - estimatedOldDirect).toLocaleString('en-IN')}</strong>
               </div>
             ) : (
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px', color: '#fff', fontWeight: 600, textAlign: 'center' }}>
+              <div style={{ background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px', color: 'var(--text-primary)', fontWeight: 600, textAlign: 'center' }}>
                 ⚖️ Both tax regimes result in zero liability for your income bracket.
               </div>
             )}
@@ -584,12 +584,12 @@ export default function TaxDashboard({ masterData }) {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid var(--border-glass)',
+                    background: 'var(--border-glass)',
+                    border: '1px solid var(--border-glass-active)',
                     borderRadius: '6px',
                     padding: '6px 12px',
                     fontSize: '11px',
-                    color: '#fff',
+                    color: 'var(--text-primary)',
                     cursor: 'pointer',
                     fontWeight: 600,
                     transition: 'all 0.2s',

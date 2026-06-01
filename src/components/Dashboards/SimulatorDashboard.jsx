@@ -89,7 +89,7 @@ export default function SimulatorDashboard() {
               borderRadius: '6px',
               padding: '6px 12px',
               fontSize: '11px',
-              color: '#fff',
+              color: 'var(--text-primary)',
               cursor: 'pointer',
               fontWeight: 600,
               transition: 'all 0.2s'
@@ -233,7 +233,7 @@ export default function SimulatorDashboard() {
                   style={{ transition: 'stroke-dasharray 0.3s ease, stroke 0.3s' }}
                 />
               </svg>
-              <strong style={{ position: 'absolute', bottom: '0', left: '0', right: '0', fontSize: '15px', color: '#fff', fontWeight: 800 }}>
+              <strong style={{ position: 'absolute', bottom: '0', left: '0', right: '0', fontSize: '15px', color: 'var(--text-primary)', fontWeight: 800 }}>
                 {deficitPercentage.toFixed(2)}%
               </strong>
             </div>
@@ -302,7 +302,7 @@ export default function SimulatorDashboard() {
             alignItems: 'center'
           }}>
             <AlertTriangle color="var(--crimson)" size={18} style={{ flexShrink: 0 }} />
-            <span style={{ fontSize: '11.5px', color: '#ffc5c5', lineHeight: '1.4' }}>
+            <span style={{ fontSize: '11.5px', color: 'var(--text-primary)', lineHeight: '1.4' }}>
               <strong>AI Economic Threat warning:</strong> High fiscal deficit of <strong>{deficitPercentage.toFixed(2)}%</strong> will trigger sovereign debt rating downgrades and increase treasury yields. We recommend increasing tax compliance yields or checking scheme spends!
             </span>
           </div>

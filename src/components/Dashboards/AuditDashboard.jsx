@@ -209,7 +209,7 @@ export default function AuditDashboard({ masterData }) {
                   ];
                   exportToCsv(unspentData, "cag_unspent_voted_grants.csv");
                 }}
-                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', borderRadius: '6px', padding: '4px 8px', fontSize: '10.5px', color: '#fff', cursor: 'pointer', fontWeight: 600 }}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', borderRadius: '6px', padding: '4px 8px', fontSize: '10.5px', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: 600 }}
               >
                 <Download size={12} /> Export CSV
               </button>
@@ -264,7 +264,7 @@ export default function AuditDashboard({ masterData }) {
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ fontSize: '13px', color: '#fff' }}>{obj.ministry}</strong>
+                    <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{obj.ministry}</strong>
                     <span 
                       style={{ 
                         fontSize: '9px', 
@@ -323,7 +323,7 @@ export default function AuditDashboard({ masterData }) {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <strong style={{ fontSize: '13.5px', color: '#fff', maxWidth: '70%' }}>{min.name}</strong>
+                  <strong style={{ fontSize: '13.5px', color: 'var(--text-primary)', maxWidth: '70%' }}>{min.name}</strong>
                   <span 
                     style={{
                       fontSize: '9px',

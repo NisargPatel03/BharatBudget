@@ -30,7 +30,7 @@ export default function IndiaMap({ data = [], activeState = null, onSelectState 
 
   // Determine choropleth fill based on DBT Overall score
   const getChoroplethColor = (score, hasData) => {
-    if (!hasData) return "rgba(255, 255, 255, 0.08)";  // Soft glassmorphism for unranked territories
+    if (!hasData) return "var(--border-glass-active)";  // Soft dynamic overlay for unranked territories
     if (score >= 80) return "rgba(0, 210, 133, 0.75)"; // Emerald Green (High Performers)
     if (score >= 70) return "rgba(0, 136, 255, 0.75)"; // Ashoka Blue (Stable Performers)
     if (score >= 60) return "rgba(255, 107, 0, 0.7)";  // Saffron Orange (Average)
@@ -44,7 +44,7 @@ export default function IndiaMap({ data = [], activeState = null, onSelectState 
         viewBox={viewBox} 
         style={{ width: '100%', height: '100%', display: 'block', maxHeight: '500px' }}
       >
-        <g stroke="rgba(255, 255, 255, 0.25)" strokeWidth="0.8" fill="none">
+        <g stroke="var(--border-glass-active)" strokeWidth="0.8" fill="none">
           {statePaths.map((state) => {
             const meta = getStateMeta(state.name);
             const isSelected = activeState && activeState.toLowerCase() === state.id;
@@ -58,14 +58,14 @@ export default function IndiaMap({ data = [], activeState = null, onSelectState 
                 name={state.name}
                 d={state.path}
                 fill={isSelected ? "url(#pulseGlow)" : (isHovered ? "rgba(255,255,255,0.35)" : fillColor)}
-                stroke={isHovered || isSelected ? "#ffffff" : "rgba(255, 255, 255, 0.25)"}
+                stroke={isHovered || isSelected ? "var(--text-primary)" : "var(--border-glass-active)"}
                 strokeWidth={isHovered || isSelected ? "1.6" : "0.8"}
                 style={{ 
-                  cursor: 'pointer', 
-                  transition: 'all 0.2s ease',
-                  filter: isSelected 
-                    ? 'drop-shadow(0 0 8px rgba(0, 136, 255, 0.7))' 
-                    : (isHovered ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.45))' : 'none')
+                   cursor: 'pointer', 
+                   transition: 'all 0.2s ease',
+                   filter: isSelected 
+                     ? 'drop-shadow(0 0 8px rgba(0, 136, 255, 0.7))' 
+                     : (isHovered ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.45))' : 'none')
                 }}
                 onClick={() => onSelectState(state.id)}
                 onMouseEnter={() => setHoveredState({ id: state.id, ...meta })}

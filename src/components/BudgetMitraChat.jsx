@@ -132,7 +132,7 @@ const renderFormattedText = (text) => {
     const parts = line.split('**');
     const formattedLine = parts.map((part, pIdx) => {
       if (pIdx % 2 === 1) {
-        return <strong key={pIdx} style={{ color: '#fff', fontWeight: 'bold' }}>{part}</strong>;
+        return <strong key={pIdx} style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{part}</strong>;
       }
       return part;
     });
@@ -143,7 +143,7 @@ const renderFormattedText = (text) => {
       const listParts = listContent.split('**');
       const formattedListLine = listParts.map((part, pIdx) => {
         if (pIdx % 2 === 1) {
-          return <strong key={pIdx} style={{ color: '#fff', fontWeight: 'bold' }}>{part}</strong>;
+          return <strong key={pIdx} style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{part}</strong>;
         }
         return part;
       });
@@ -377,7 +377,7 @@ export default function BudgetMitraChat() {
                 }}
               />
               <div>
-                <h3 style={{ fontSize: '14.5px', fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '0.3px' }}>Budget Mitra AI</h3>
+                <h3 style={{ fontSize: '14.5px', fontWeight: 800, margin: 0, color: 'var(--text-primary)', letterSpacing: '0.3px' }}>Budget Mitra AI</h3>
                 <span style={{ fontSize: '10px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
                   Ingestion Engine Live
@@ -582,7 +582,7 @@ export default function BudgetMitraChat() {
                   border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: '8px',
                   padding: '10px 45px 10px 14px',
-                  color: '#fff',
+                  color: 'var(--text-primary)',
                   fontSize: '13px',
                   outline: 'none',
                   transition: 'all 0.2s',

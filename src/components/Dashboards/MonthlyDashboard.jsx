@@ -212,7 +212,7 @@ export default function MonthlyDashboard({ masterData }) {
                 <div style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '12px' }}>
                   <div>
                     <span style={{ display: 'block' }}>AVG MONTHLY RUN-RATE</span>
-                    <strong style={{ color: '#fff', fontSize: '13px' }}>6.51%</strong>
+                    <strong style={{ color: 'var(--text-primary)', fontSize: '13px' }}>6.51%</strong>
                   </div>
                   <div>
                     <span style={{ display: 'block' }}>MARCH OUTFLOW SPIKE</span>

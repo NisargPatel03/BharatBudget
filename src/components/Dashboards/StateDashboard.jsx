@@ -240,7 +240,7 @@ export default function StateDashboard({ masterData }) {
               ACTIVE STATE SUMMARY
               <button 
                 onClick={() => setShowPrintModal(true)}
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '3px 6px', fontSize: '9.5px', color: '#fff', cursor: 'pointer', fontWeight: 600 }}
+                style={{ background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', borderRadius: '4px', padding: '3px 6px', fontSize: '9.5px', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: 600 }}
               >
                 🖨️ Print Scorecard
               </button>
@@ -452,7 +452,7 @@ export default function StateDashboard({ masterData }) {
 
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-glass)', marginTop: '4px' }}>
               <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', fontWeight: 600, letterSpacing: '0.5px' }}>DYNAMIC SIMULATION FEEDBACK</span>
-              <p style={{ fontSize: '13px', color: '#fff', marginTop: '8px', fontWeight: 500, lineHeight: '1.5' }}>
+              <p style={{ fontSize: '13px', color: 'var(--text-primary)', marginTop: '8px', fontWeight: 500, lineHeight: '1.5' }}>
                 {getDynamicFeedback()}
               </p>
             </div>
@@ -537,10 +537,10 @@ export default function StateDashboard({ masterData }) {
                     exportToCsv(dataToExport, "rbi_state_finances_comparison.csv");
                   }}
                   style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid var(--border-glass)',
+                    background: 'var(--border-glass)',
+                    border: '1px solid var(--border-glass-active)',
                     borderRadius: '6px',
-                    color: '#fff',
+                    color: 'var(--text-primary)',
                     fontSize: '11px',
                     fontWeight: 600,
                     padding: '6px 12px',
@@ -555,10 +555,10 @@ export default function StateDashboard({ masterData }) {
                 <button 
                   onClick={() => setCompareMetric(compareMetric === 'debtGSDP' ? 'otrRatio' : 'debtGSDP')}
                   style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid var(--border-glass)',
+                    background: 'var(--border-glass)',
+                    border: '1px solid var(--border-glass-active)',
                     borderRadius: '6px',
-                    color: '#fff',
+                    color: 'var(--text-primary)',
                     fontSize: '11px',
                     fontWeight: 600,
                     padding: '6px 12px',
@@ -645,15 +645,15 @@ export default function StateDashboard({ masterData }) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
             <div style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
               <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>MGNREGS (Rural Employment Dev)</span>
-              <strong style={{ fontSize: '16px', color: '#fff', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 8500).toFixed(0)} Crores</strong>
+              <strong style={{ fontSize: '16px', color: 'var(--text-primary)', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 8500).toFixed(0)} Crores</strong>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
               <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>Jal Jeevan Mission (Clean Tap Water)</span>
-              <strong style={{ fontSize: '16px', color: '#fff', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 4500).toFixed(0)} Crores</strong>
+              <strong style={{ fontSize: '16px', color: 'var(--text-primary)', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 4500).toFixed(0)} Crores</strong>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
               <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>PMAY-G (Welfare Gramin Housing)</span>
-              <strong style={{ fontSize: '16px', color: '#fff', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 5400).toFixed(0)} Crores</strong>
+              <strong style={{ fontSize: '16px', color: 'var(--text-primary)', display: 'block', marginTop: '4px' }}>₹ {((baseDevolutionShares[activeMeta.state] || 3.0) * 5400).toFixed(0)} Crores</strong>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
               <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>SDRF Disaster Relief Devolutions</span>
@@ -677,7 +677,7 @@ export default function StateDashboard({ masterData }) {
             </button>
 
             {/* Scorecard Content */}
-            <div id="printable-area" style={{ fontFamily: 'monospace', color: '#fff' }}>
+            <div id="printable-area" style={{ fontFamily: 'monospace', color: 'var(--text-primary)' }}>
               <div style={{ textAlign: 'center', borderBottom: '2px dashed var(--border-glass)', paddingBottom: '16px', marginBottom: '20px' }}>
                 <h1 style={{ fontSize: '20px', color: 'var(--saffron)', fontWeight: 800 }}>BHARATBUDGET EXECUTIVE STATE SCORECARD</h1>
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>OFFICIAL SOVEREIGN WELFARE & DEVOLUTION STATISTICS</span>
@@ -699,7 +699,7 @@ export default function StateDashboard({ masterData }) {
                 </div>
                 <div>
                   <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)' }}>DEBT-TO-GSDP BURDEN</span>
-                  <strong style={{ fontSize: '15px', color: stateFinance.debtGSDP >= 35 ? 'var(--crimson)' : '#fff' }}>{stateFinance.debtGSDP}%</strong>
+                  <strong style={{ fontSize: '15px', color: stateFinance.debtGSDP >= 35 ? 'var(--crimson)' : 'var(--text-primary)' }}>{stateFinance.debtGSDP}%</strong>
                 </div>
                 <div>
                   <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)' }}>FISCAL AUTONOMY (OTR)</span>
@@ -732,7 +732,7 @@ export default function StateDashboard({ masterData }) {
                 </button>
                 <button 
                   onClick={() => setShowPrintModal(false)}
-                  style={{ flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-glass)', borderRadius: '6px', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
+                  style={{ flex: 1, padding: '10px', background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', borderRadius: '6px', color: 'var(--text-primary)', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
                 >
                   Cancel
                 </button>

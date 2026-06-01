@@ -503,7 +503,7 @@ export default function OverviewDashboard({ masterData }) {
                     setIngestLogs([]);
                     setUploadedFileName("");
                   }}
-                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '4px', color: '#fff', padding: '4px 8px', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}
+                  style={{ background: 'var(--border-glass)', border: '1px solid var(--border-glass-active)', borderRadius: '4px', color: 'var(--text-primary)', padding: '4px 8px', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}
                 >
                   Reset Baseline
                 </button>

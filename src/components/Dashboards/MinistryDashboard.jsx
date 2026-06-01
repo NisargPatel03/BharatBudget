@@ -418,7 +418,7 @@ export default function MinistryDashboard() {
             <select 
               value={compMinistryA} 
               onChange={(e) => setCompMinistryA(e.target.value)}
-              style={{ padding: '6px 10px', fontSize: '12px', background: 'var(--bg-secondary)', color: '#fff', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
+              style={{ padding: '6px 10px', fontSize: '12px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
             >
               {Object.keys(ministryData).map((k) => (
                 <option key={k} value={k}>{ministryData[k].name}</option>
@@ -428,7 +428,7 @@ export default function MinistryDashboard() {
             <select 
               value={compMinistryB} 
               onChange={(e) => setCompMinistryB(e.target.value)}
-              style={{ padding: '6px 10px', fontSize: '12px', background: 'var(--bg-secondary)', color: '#fff', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
+              style={{ padding: '6px 10px', fontSize: '12px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-glass)', borderRadius: '6px', cursor: 'pointer' }}
             >
               {Object.keys(ministryData).map((k) => (
                 <option key={k} value={k}>{ministryData[k].name}</option>
@@ -453,7 +453,7 @@ export default function MinistryDashboard() {
 
           {/* YoY Growth Divergence Insights */}
           <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '10px', padding: '16px', fontSize: '12px', display: 'flex', flexDirection: 'column', justifyGap: '12px' }}>
-            <h4 style={{ fontSize: '13px', fontWeight: 700, color: '#fff', margin: 0, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
+            <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: 0, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
               📊 Computed Growth Divergence & Capital Devolution Check
             </h4>
             

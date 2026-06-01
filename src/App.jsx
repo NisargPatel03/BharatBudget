@@ -59,14 +59,14 @@ export default function App() {
     return localStorage.getItem('bb-theme') || 'sovereign';
   });
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);
+  const [animating, setAnimating] = useState(false);
 
   const themesList = [
     { id: 'sovereign', name: '🌌 Midnight Sovereign', dotColor: '#ff6b00', secondaryColor: '#00d285' },
     { id: 'ashoka', name: '🏛️ Imperial Ashoka', dotColor: '#f59e0b', secondaryColor: '#2563eb' },
     { id: 'vedic', name: '🌿 Vedic Forest', dotColor: '#f97316', secondaryColor: '#10b981' },
-    { id: 'horizon', name: '🌅 Saffron Horizon', dotColor: '#ea580c', secondaryColor: '#fb923c' },
-    { id: 'alabaster', name: '☀️ Sovereign Alabaster', dotColor: '#ea580c', secondaryColor: '#16a34a' },
-    { id: 'platinum', name: '💎 Platinum Registry', dotColor: '#d97706', secondaryColor: '#1e3a8a' }
+    { id: 'digital', name: '📱 Digital India', dotColor: '#ec4899', secondaryColor: '#a855f7' },
+    { id: 'clay', name: '🎨 Clay & Slate', dotColor: '#c2410c', secondaryColor: '#475569' }
   ];
 
   // Dynamic CSS custom variables injector
@@ -92,6 +92,7 @@ export default function App() {
       root.style.setProperty('--ashoka-blue', '#0088ff');
       root.style.setProperty('--ashoka-glow', 'rgba(0, 136, 255, 0.15)');
       root.style.setProperty('--ashoka-border', 'rgba(0, 136, 255, 0.3)');
+      root.style.setProperty('--tooltip-bg', 'rgba(13, 17, 23, 0.95)');
     } else if (theme === 'ashoka') {
       root.style.setProperty('--bg-primary', '#040a1e');
       root.style.setProperty('--bg-secondary', '#0a122c');
@@ -110,6 +111,7 @@ export default function App() {
       root.style.setProperty('--ashoka-blue', '#2563eb');
       root.style.setProperty('--ashoka-glow', 'rgba(37, 99, 235, 0.15)');
       root.style.setProperty('--ashoka-border', 'rgba(37, 99, 235, 0.3)');
+      root.style.setProperty('--tooltip-bg', 'rgba(13, 17, 23, 0.95)');
     } else if (theme === 'vedic') {
       root.style.setProperty('--bg-primary', '#020e0b');
       root.style.setProperty('--bg-secondary', '#031713');
@@ -128,60 +130,45 @@ export default function App() {
       root.style.setProperty('--ashoka-blue', '#059669');
       root.style.setProperty('--ashoka-glow', 'rgba(5, 150, 105, 0.15)');
       root.style.setProperty('--ashoka-border', 'rgba(5, 150, 105, 0.3)');
-    } else if (theme === 'horizon') {
-      root.style.setProperty('--bg-primary', '#110807');
-      root.style.setProperty('--bg-secondary', '#1c110f');
-      root.style.setProperty('--bg-card', 'rgba(28, 17, 15, 0.7)');
-      root.style.setProperty('--text-primary', '#f8fafc');
-      root.style.setProperty('--text-secondary', '#94a3b8');
-      root.style.setProperty('--text-muted', '#475569');
-      root.style.setProperty('--border-glass', 'rgba(255, 255, 255, 0.04)');
-      root.style.setProperty('--border-glass-active', 'rgba(255, 255, 255, 0.15)');
-      root.style.setProperty('--saffron', '#ea580c');
-      root.style.setProperty('--saffron-glow', 'rgba(234, 88, 12, 0.15)');
-      root.style.setProperty('--saffron-border', 'rgba(234, 88, 12, 0.3)');
-      root.style.setProperty('--emerald', '#fb923c');
-      root.style.setProperty('--emerald-glow', 'rgba(251, 146, 60, 0.15)');
-      root.style.setProperty('--emerald-border', 'rgba(251, 146, 60, 0.3)');
-      root.style.setProperty('--ashoka-blue', '#dc2626');
-      root.style.setProperty('--ashoka-glow', 'rgba(220, 38, 38, 0.15)');
-      root.style.setProperty('--ashoka-border', 'rgba(220, 38, 38, 0.3)');
-    } else if (theme === 'alabaster') {
-      root.style.setProperty('--bg-primary', '#f8fafc');
-      root.style.setProperty('--bg-secondary', '#ffffff');
-      root.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.7)');
-      root.style.setProperty('--border-glass', 'rgba(0, 0, 0, 0.08)');
-      root.style.setProperty('--border-glass-active', 'rgba(0, 0, 0, 0.20)');
-      root.style.setProperty('--text-primary', '#0f172a');
-      root.style.setProperty('--text-secondary', '#475569');
-      root.style.setProperty('--text-muted', '#94a3b8');
-      root.style.setProperty('--saffron', '#ea580c');
-      root.style.setProperty('--saffron-glow', 'rgba(234, 88, 12, 0.1)');
-      root.style.setProperty('--saffron-border', 'rgba(234, 88, 12, 0.2)');
-      root.style.setProperty('--emerald', '#16a34a');
-      root.style.setProperty('--emerald-glow', 'rgba(22, 163, 74, 0.1)');
-      root.style.setProperty('--emerald-border', 'rgba(22, 163, 74, 0.2)');
-      root.style.setProperty('--ashoka-blue', '#2563eb');
-      root.style.setProperty('--ashoka-glow', 'rgba(37, 99, 235, 0.1)');
-      root.style.setProperty('--ashoka-border', 'rgba(37, 99, 235, 0.2)');
-    } else if (theme === 'platinum') {
-      root.style.setProperty('--bg-primary', '#f1f5f9');
-      root.style.setProperty('--bg-secondary', '#ffffff');
-      root.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.75)');
-      root.style.setProperty('--border-glass', 'rgba(0, 0, 0, 0.08)');
-      root.style.setProperty('--border-glass-active', 'rgba(0, 0, 0, 0.20)');
-      root.style.setProperty('--text-primary', '#0f172a');
-      root.style.setProperty('--text-secondary', '#475569');
-      root.style.setProperty('--text-muted', '#94a3b8');
-      root.style.setProperty('--saffron', '#d97706');
-      root.style.setProperty('--saffron-glow', 'rgba(217, 119, 6, 0.1)');
-      root.style.setProperty('--saffron-border', 'rgba(217, 119, 6, 0.2)');
-      root.style.setProperty('--emerald', '#059669');
-      root.style.setProperty('--emerald-glow', 'rgba(5, 150, 105, 0.1)');
-      root.style.setProperty('--emerald-border', 'rgba(5, 150, 105, 0.2)');
-      root.style.setProperty('--ashoka-blue', '#1e3a8a');
-      root.style.setProperty('--ashoka-glow', 'rgba(30, 58, 138, 0.1)');
-      root.style.setProperty('--ashoka-border', 'rgba(30, 58, 138, 0.2)');
+      root.style.setProperty('--tooltip-bg', 'rgba(13, 17, 23, 0.95)');
+    } else if (theme === 'digital') {
+      root.style.setProperty('--bg-primary', '#0f0720');
+      root.style.setProperty('--bg-secondary', '#1a0c36');
+      root.style.setProperty('--bg-card', 'rgba(26, 12, 54, 0.7)');
+      root.style.setProperty('--text-primary', '#fdf2f8');
+      root.style.setProperty('--text-secondary', '#d8b4fe');
+      root.style.setProperty('--text-muted', '#7c3aed');
+      root.style.setProperty('--border-glass', 'rgba(255, 255, 255, 0.05)');
+      root.style.setProperty('--border-glass-active', 'rgba(255, 255, 255, 0.18)');
+      root.style.setProperty('--saffron', '#ec4899');
+      root.style.setProperty('--saffron-glow', 'rgba(236, 72, 153, 0.15)');
+      root.style.setProperty('--saffron-border', 'rgba(236, 72, 153, 0.3)');
+      root.style.setProperty('--emerald', '#a855f7');
+      root.style.setProperty('--emerald-glow', 'rgba(168, 85, 247, 0.15)');
+      root.style.setProperty('--emerald-border', 'rgba(168, 85, 247, 0.3)');
+      root.style.setProperty('--ashoka-blue', '#6366f1');
+      root.style.setProperty('--ashoka-glow', 'rgba(99, 102, 241, 0.15)');
+      root.style.setProperty('--ashoka-border', 'rgba(99, 102, 241, 0.3)');
+      root.style.setProperty('--tooltip-bg', 'rgba(13, 17, 23, 0.95)');
+    } else if (theme === 'clay') {
+      root.style.setProperty('--bg-primary', '#fcfaf7');
+      root.style.setProperty('--bg-secondary', '#f5ede4');
+      root.style.setProperty('--bg-card', 'rgba(245, 237, 228, 0.7)');
+      root.style.setProperty('--text-primary', '#2d2d2a');
+      root.style.setProperty('--text-secondary', '#5c5c56');
+      root.style.setProperty('--text-muted', '#8a8a80');
+      root.style.setProperty('--border-glass', 'rgba(45, 45, 42, 0.08)');
+      root.style.setProperty('--border-glass-active', 'rgba(45, 45, 42, 0.16)');
+      root.style.setProperty('--saffron', '#c2410c');
+      root.style.setProperty('--saffron-glow', 'rgba(194, 65, 12, 0.1)');
+      root.style.setProperty('--saffron-border', 'rgba(194, 65, 12, 0.2)');
+      root.style.setProperty('--emerald', '#475569');
+      root.style.setProperty('--emerald-glow', 'rgba(71, 85, 105, 0.1)');
+      root.style.setProperty('--emerald-border', 'rgba(71, 85, 105, 0.2)');
+      root.style.setProperty('--ashoka-blue', '#7c2d12');
+      root.style.setProperty('--ashoka-glow', 'rgba(124, 45, 18, 0.1)');
+      root.style.setProperty('--ashoka-border', 'rgba(124, 45, 18, 0.2)');
+      root.style.setProperty('--tooltip-bg', '#f5ede4');
     }
   }, [theme]);
 
@@ -211,7 +198,7 @@ export default function App() {
   };
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${animating ? 'scale-snap-active' : ''}`}>
       {/* Mobile Sidebar Overlay Backdrop */}
       <div 
         className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`}
@@ -265,9 +252,9 @@ export default function App() {
                   gap: '12px',
                   width: '100%',
                   padding: '12px 16px 12px 12px',
-                  background: isActive ? 'rgba(255,255,255,0.03)' : 'transparent',
+                  background: isActive ? 'var(--border-glass-active)' : 'transparent',
                   border: '1px solid',
-                  borderColor: isActive ? 'var(--border-glass-active)' : 'transparent',
+                  borderColor: isActive ? 'var(--border-glass)' : 'transparent',
                   borderLeft: isActive ? `3px solid ${item.color}` : '3px solid transparent',
                   borderRadius: '10px',
                   color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
@@ -399,8 +386,12 @@ export default function App() {
                     <button
                       key={t.id}
                       onClick={() => {
+                        setAnimating(true);
                         setTheme(t.id);
                         setThemeMenuOpen(false);
+                        setTimeout(() => {
+                          setAnimating(false);
+                        }, 450);
                       }}
                       style={{
                         display: 'flex',
@@ -408,26 +399,27 @@ export default function App() {
                         gap: '10px',
                         width: '100%',
                         padding: '8px 10px',
-                        background: isActive ? 'rgba(255,255,255,0.05)' : 'transparent',
+                        background: isActive ? 'var(--border-glass-active)' : 'transparent',
                         border: 'none',
                         borderRadius: '8px',
-                        color: isActive ? '#fff' : 'var(--text-secondary)',
-                        fontSize: '12px',
+                        color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                        fontSize: '12.5px',
                         fontWeight: isActive ? 600 : 500,
                         cursor: 'pointer',
                         textAlign: 'left',
                         transition: 'all 0.2s'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-                        e.currentTarget.style.color = '#fff';
+                        e.currentTarget.style.background = 'var(--border-glass-active)';
+                        e.currentTarget.style.color = 'var(--text-primary)';
                       }}
                       onMouseLeave={(e) => {
                         if (!isActive) {
                           e.currentTarget.style.background = 'transparent';
                           e.currentTarget.style.color = 'var(--text-secondary)';
                         } else {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                          e.currentTarget.style.background = 'var(--border-glass-active)';
+                          e.currentTarget.style.color = 'var(--text-primary)';
                         }
                       }}
                     >

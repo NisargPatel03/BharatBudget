@@ -285,12 +285,12 @@ export default function AdminDashboard() {
 
             {uploading ? (
               <div>
-                <strong style={{ display: 'block', fontSize: '14px', color: '#fff' }}>Processing PDF Ingestion...</strong>
+                <strong style={{ display: 'block', fontSize: '14px', color: 'var(--text-primary)' }}>Processing PDF Ingestion...</strong>
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Extracting table grids and token text</span>
               </div>
             ) : (
               <div>
-                <strong style={{ display: 'block', fontSize: '14px', color: '#fff' }}>Drag & Drop Parliamentary PDF here</strong>
+                <strong style={{ display: 'block', fontSize: '14px', color: 'var(--text-primary)' }}>Drag & Drop Parliamentary PDF here</strong>
                 <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginTop: '4px' }}>
                   or click to browse local files
                 </span>
@@ -379,7 +379,7 @@ export default function AdminDashboard() {
                     const item = parsedResult.extracted_data[key];
                     return (
                       <div key={key} style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-glass)', borderRadius: '8px', padding: '10px' }}>
-                        <h4 style={{ margin: '0 0 8px 0', fontSize: '12.5px', color: '#fff' }}>{key.replace("_", " ").toUpperCase()}</h4>
+                        <h4 style={{ margin: '0 0 8px 0', fontSize: '12.5px', color: 'var(--text-primary)' }}>{key.replace("_", " ").toUpperCase()}</h4>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                           {item.values.map((val, idx) => (
                             <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -388,7 +388,7 @@ export default function AdminDashboard() {
                                 type="number" 
                                 value={val} 
                                 onChange={(e) => handleFieldChange(key, idx, "value", e.target.value)}
-                                style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '4px', fontSize: '11px', color: '#fff', width: '100%' }}
+                                style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '4px', fontSize: '11px', color: 'var(--text-primary)', width: '100%' }}
                               />
                             </div>
                           ))}
@@ -400,7 +400,7 @@ export default function AdminDashboard() {
               )}
 
               {parsedResult.pdf_type === "schemes" && (
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11.5px', color: '#fff' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11.5px', color: 'var(--text-primary)' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--border-glass)', textAlign: 'left' }}>
                       <th style={{ padding: '6px' }}>Scheme Name</th>
@@ -418,7 +418,7 @@ export default function AdminDashboard() {
                             type="number" 
                             value={item.val_24_25}
                             onChange={(e) => handleFieldChange(null, idx, "val_24_25", e.target.value)}
-                            style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '3px', fontSize: '10.5px', color: '#fff', width: '70px' }}
+                            style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '3px', fontSize: '10.5px', color: 'var(--text-primary)', width: '70px' }}
                           />
                         </td>
                         <td style={{ padding: '6px' }}>
@@ -426,7 +426,7 @@ export default function AdminDashboard() {
                             type="number" 
                             value={item.val_25_26_be}
                             onChange={(e) => handleFieldChange(null, idx, "val_25_26_be", e.target.value)}
-                            style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '3px', fontSize: '10.5px', color: '#fff', width: '70px' }}
+                            style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '3px', fontSize: '10.5px', color: 'var(--text-primary)', width: '70px' }}
                           />
                         </td>
                         <td style={{ padding: '6px' }}>
@@ -434,7 +434,7 @@ export default function AdminDashboard() {
                             type="number" 
                             value={item.val_26_27_be}
                             onChange={(e) => handleFieldChange(null, idx, "val_26_27_be", e.target.value)}
-                            style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '3px', fontSize: '10.5px', color: '#fff', width: '70px' }}
+                            style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '3px', fontSize: '10.5px', color: 'var(--text-primary)', width: '70px' }}
                           />
                         </td>
                       </tr>
@@ -457,7 +457,7 @@ export default function AdminDashboard() {
                             type="number" 
                             value={vals[3]} 
                             onChange={(e) => handleFieldChange(key, 3, "value", e.target.value)}
-                            style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '4px', fontSize: '11px', color: '#fff', width: '90px', textAlign: 'right' }}
+                            style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)', borderRadius: '4px', padding: '4px', fontSize: '11px', color: 'var(--text-primary)', width: '90px', textAlign: 'right' }}
                           />
                         </div>
                       </div>
@@ -502,10 +502,10 @@ export default function AdminDashboard() {
               justifyContent: 'center',
               gap: '8px',
               padding: '12px 16px',
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid var(--border-glass)',
+              background: 'var(--border-glass)',
+              border: '1px solid var(--border-glass-active)',
               borderRadius: '8px',
-              color: '#fff',
+              color: 'var(--text-primary)',
               fontWeight: 600,
               fontSize: '13px',
               cursor: 'pointer',

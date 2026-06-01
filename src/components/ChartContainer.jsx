@@ -182,7 +182,7 @@ export default function ChartContainer({ height = 240, className = '', style = {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#fff',
+                color: 'var(--text-primary)',
                 padding: '6px 8px',
                 textAlign: 'left',
                 fontSize: '11px',
@@ -191,7 +191,7 @@ export default function ChartContainer({ height = 240, className = '', style = {
                 width: '100%',
                 transition: 'background 0.2s',
               }}
-              onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.05)'}
+              onMouseEnter={(e) => e.target.style.background = 'var(--border-glass)'}
               onMouseLeave={(e) => e.target.style.background = 'none'}
             >
               Export as PNG
@@ -201,7 +201,7 @@ export default function ChartContainer({ height = 240, className = '', style = {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#fff',
+                color: 'var(--text-primary)',
                 padding: '6px 8px',
                 textAlign: 'left',
                 fontSize: '11px',
@@ -210,7 +210,7 @@ export default function ChartContainer({ height = 240, className = '', style = {
                 width: '100%',
                 transition: 'background 0.2s',
               }}
-              onMouseEnter={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.05)'}
+              onMouseEnter={(e) => e.target.style.background = 'var(--border-glass)'}
               onMouseLeave={(e) => e.target.style.background = 'none'}
             >
               Export as SVG
