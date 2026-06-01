@@ -49,7 +49,6 @@ export default function IndiaMap({ data = [], activeState = null, onSelectState 
             const meta = getStateMeta(state.name);
             const isSelected = activeState && activeState.toLowerCase() === state.id;
             const isHovered = hoveredState && hoveredState.id === state.id;
-            
             const fillColor = getChoroplethColor(meta.overall_score, meta.hasData);
             
             return (
@@ -58,11 +57,15 @@ export default function IndiaMap({ data = [], activeState = null, onSelectState 
                 id={state.id}
                 name={state.name}
                 d={state.path}
-                fill={isSelected ? "url(#pulseGlow)" : (isHovered ? "rgba(255,255,255,0.3)" : fillColor)}
+                fill={isSelected ? "url(#pulseGlow)" : (isHovered ? "rgba(255,255,255,0.35)" : fillColor)}
+                stroke={isHovered || isSelected ? "#ffffff" : "rgba(255, 255, 255, 0.25)"}
+                strokeWidth={isHovered || isSelected ? "1.6" : "0.8"}
                 style={{ 
                   cursor: 'pointer', 
                   transition: 'all 0.2s ease',
-                  filter: isSelected ? 'drop-shadow(0 0 8px rgba(0, 136, 255, 0.6))' : 'none'
+                  filter: isSelected 
+                    ? 'drop-shadow(0 0 8px rgba(0, 136, 255, 0.7))' 
+                    : (isHovered ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.45))' : 'none')
                 }}
                 onClick={() => onSelectState(state.id)}
                 onMouseEnter={() => setHoveredState({ id: state.id, ...meta })}

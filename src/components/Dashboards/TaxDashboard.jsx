@@ -85,6 +85,165 @@ export default function TaxDashboard({ masterData }) {
   const estimatedIndirect = Math.round(citizenSpending * 12 * 0.15); // Est 15% GST average
   const totalTaxContribution = estimatedNewDirect + estimatedIndirect;
 
+  const handlePrintReceipt = () => {
+    const printWindow = window.open('', '_blank', 'width=600,height=800');
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>BharatBudget Citizen Tax Receipt</title>
+          <style>
+            body {
+              background: #fafafa;
+              color: #111827;
+              font-family: 'Courier New', Courier, monospace;
+              padding: 40px 20px;
+              margin: 0;
+              display: flex;
+              justify-content: center;
+            }
+            .receipt-box {
+              background: #ffffff;
+              border: 1px dashed #374151;
+              box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+              padding: 24px;
+              width: 100%;
+              max-width: 440px;
+              box-sizing: border-box;
+            }
+            .header {
+              text-align: center;
+              border-bottom: 2px dashed #9ca3af;
+              padding-bottom: 16px;
+              margin-bottom: 20px;
+            }
+            .header h1 {
+              font-size: 18px;
+              margin: 0 0 4px 0;
+              color: #ea580c;
+              letter-spacing: 1px;
+            }
+            .header p {
+              font-size: 11px;
+              color: #4b5563;
+              margin: 0;
+              text-transform: uppercase;
+            }
+            .row {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 8px;
+              font-size: 13px;
+            }
+            .row-total {
+              display: flex;
+              justify-content: space-between;
+              font-size: 15px;
+              font-weight: bold;
+              color: #059669;
+              border-top: 1px dashed #d1d5db;
+              border-bottom: 1px dashed #d1d5db;
+              padding: 10px 0;
+              margin: 16px 0;
+            }
+            .section-title {
+              display: block;
+              font-size: 11px;
+              color: #4b5563;
+              margin-bottom: 12px;
+              text-align: center;
+              font-weight: bold;
+              text-transform: uppercase;
+            }
+            .devolution-list {
+              border-top: 1px dashed #9ca3af;
+              padding-top: 16px;
+              margin-top: 16px;
+            }
+            .devolution-row {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 6px;
+              font-size: 12px;
+              color: #374151;
+            }
+            .footer {
+              text-align: center;
+              margin-top: 24px;
+              border-top: 2px dashed #9ca3af;
+              padding-top: 16px;
+              font-size: 10px;
+              color: #6b7280;
+            }
+            .barcode {
+              height: 40px;
+              margin: 16px auto 8px auto;
+              width: 180px;
+              background: repeating-linear-gradient(
+                90deg,
+                #111827,
+                #111827 2px,
+                transparent 2px,
+                transparent 5px,
+                #111827 5px,
+                #111827 8px,
+                transparent 8px,
+                transparent 10px
+              );
+            }
+          </style>
+        </head>
+        <body>
+          <div class="receipt-box">
+            <div class="header">
+              <h1>GOVERNMENT OF INDIA</h1>
+              <p>Sovereign Tax Citizen Record</p>
+              <p style="font-size: 9px; margin-top: 4px;">Receipt ID: BB-${Date.now()}</p>
+            </div>
+            
+            <div class="row">
+              <span>Direct Income Tax Paid:</span>
+              <strong>INR ${estimatedNewDirect.toLocaleString('en-IN')}</strong>
+            </div>
+            <div class="row">
+              <span>Indirect GST Contribution:</span>
+              <strong>INR ${estimatedIndirect.toLocaleString('en-IN')}</strong>
+            </div>
+            
+            <div class="row-total">
+              <span>TOTAL CONTRIBUTION:</span>
+              <span>INR ${totalTaxContribution.toLocaleString('en-IN')}</span>
+            </div>
+
+            <div class="devolution-list">
+              <span class="section-title">Your Proportional Rupee Spending</span>
+              ${taxDistribution.map(item => `
+                <div class="devolution-row">
+                  <span>&bull; ${item.category}:</span>
+                  <strong>INR ${Math.round(totalTaxContribution * item.share).toLocaleString('en-IN')}</strong>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="footer">
+              <p>Thank you for contributing to India's sovereign growth!</p>
+              <div class="barcode"></div>
+              <p style="font-size: 8px;">BharatBudget Ingestor Verified Ledger &bull; RBI Shared Accounts</p>
+            </div>
+          </div>
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
   // Rupee goes to breakdown
   const taxDistribution = [
     { category: "Sovereign Interest Servicing", share: 0.21 },
@@ -387,35 +546,111 @@ export default function TaxDashboard({ masterData }) {
               </div>
             )}
 
+            {/* Print-style Receipt Card Control Bar */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+              <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)' }}>OFFICIAL CITIZEN STATEMENT</span>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={handlePrintReceipt}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'rgba(251, 146, 60, 0.1)',
+                    border: '1px solid rgba(251, 146, 60, 0.25)',
+                    borderRadius: '6px',
+                    padding: '6px 12px',
+                    fontSize: '11px',
+                    color: 'var(--saffron)',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = 'rgba(251, 146, 60, 0.2)'}
+                  onMouseLeave={(e) => e.target.style.background = 'rgba(251, 146, 60, 0.1)'}
+                >
+                  <Receipt size={13} /> Print Invoice
+                </button>
+                <button
+                  onClick={() => exportToCsv(
+                    taxDistribution.map(item => ({
+                      category: item.category,
+                      share_percentage: `${(item.share * 100).toFixed(0)}%`,
+                      allocated_amount_inr: Math.round(totalTaxContribution * item.share)
+                    })), 
+                    "citizen_tax_allocation_breakdown.csv"
+                  )}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '6px',
+                    padding: '6px 12px',
+                    fontSize: '11px',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  <Download size={13} /> Export allocation
+                </button>
+              </div>
+            </div>
+
             {/* Print-style Receipt Card */}
-            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px dashed var(--border-glass)', borderRadius: '8px', padding: '16px', fontFamily: 'monospace', fontSize: '12px' }}>
-              <div style={{ textAlign: 'center', borderBottom: '1px dashed rgba(255,255,255,0.1)', paddingBottom: '10px', marginBottom: '12px' }}>
-                <strong style={{ color: 'var(--saffron)', fontSize: '13px' }}>GOVERNMENT OF INDIA</strong>
-                <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)', marginTop: '2px' }}>SOVEREIGN TAX CITIZEN RECORD</span>
+            <div 
+              id="citizen-tax-receipt"
+              style={{ 
+                background: 'rgba(255, 255, 255, 0.01)', 
+                border: '1px dashed var(--border-glass)', 
+                borderRadius: '8px', 
+                padding: '20px', 
+                fontFamily: 'monospace', 
+                fontSize: '12px',
+                boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)',
+                position: 'relative'
+              }}
+            >
+              <div style={{ textAlign: 'center', borderBottom: '1px dashed rgba(255,255,255,0.1)', paddingBottom: '12px', marginBottom: '16px' }}>
+                <strong style={{ color: 'var(--saffron)', fontSize: '14px', letterSpacing: '1px' }}>GOVERNMENT OF INDIA</strong>
+                <span style={{ display: 'block', fontSize: '9.5px', color: 'var(--text-secondary)', marginTop: '3px' }}>SOVEREIGN TAX CITIZEN RECORD</span>
+                <span style={{ display: 'block', fontSize: '8px', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>SYS-REF: BB-{Date.now().toString().slice(-6)}</span>
               </div>
               
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span>Direct Income Tax (New Regime):</span>
-                <strong>₹ {estimatedNewDirect.toLocaleString('en-IN')}</strong>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <span>Direct Income Tax (New):</span>
+                <strong>INR {estimatedNewDirect.toLocaleString('en-IN')}</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', borderBottom: '1px dashed rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', borderBottom: '1px dashed rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
                 <span>Indirect Taxes (GST):</span>
-                <strong>₹ {estimatedIndirect.toLocaleString('en-IN')}</strong>
+                <strong>INR {estimatedIndirect.toLocaleString('en-IN')}</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--emerald)', fontWeight: 800, marginBottom: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: 'var(--emerald)', fontWeight: 800, marginBottom: '16px' }}>
                 <span>TOTAL CONTRIBUTION:</span>
-                <span>₹ {totalTaxContribution.toLocaleString('en-IN')}</span>
+                <span>INR {totalTaxContribution.toLocaleString('en-IN')}</span>
               </div>
 
-              <div style={{ borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '10px' }}>
-                <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '8px', textAlign: 'center' }}>YOUR RUPEE ALLOCATION BREAKDOWN</span>
+              <div style={{ borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '12px' }}>
+                <span style={{ display: 'block', fontSize: '9.5px', color: 'var(--text-secondary)', marginBottom: '10px', textAlign: 'center', fontWeight: 'bold' }}>YOUR PROPORTIONAL RUPEE ALLOCATION</span>
                 {taxDistribution.map((item, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '11px' }}>
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '11px' }}>
                     <span style={{ color: 'var(--text-secondary)' }}>• {item.category}:</span>
-                    <strong>₹ {Math.round(totalTaxContribution * item.share).toLocaleString('en-IN')}</strong>
+                    <strong>INR {Math.round(totalTaxContribution * item.share).toLocaleString('en-IN')}</strong>
                   </div>
                 ))}
               </div>
+
+              {/* Barcode graphic for realistic vintage thermal receipt look */}
+              <div style={{
+                height: '35px',
+                margin: '18px auto 4px auto',
+                width: '150px',
+                opacity: 0.25,
+                background: 'repeating-linear-gradient(90deg, #fff, #fff 2px, transparent 2px, transparent 5px, #fff 5px, #fff 8px, transparent 8px, transparent 10px)'
+              }}></div>
             </div>
           </div>
         </div>
