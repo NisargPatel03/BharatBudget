@@ -812,6 +812,16 @@ export default function TaxDashboard({ masterData }) {
         </div>
 
         {/* Dashboard Pipeline Grid */}
+        <style>{`
+          @keyframes pipeline-flow {
+            from { stroke-dashoffset: 20; }
+            to { stroke-dashoffset: 0; }
+          }
+          @keyframes pulse-central {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(14, 165, 233, 0.4); }
+            100% { transform: scale(1.06); box-shadow: 0 0 25px rgba(14, 165, 233, 0.8); }
+          }
+        `}</style>
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1.2fr 0.6fr 1.2fr',
@@ -855,7 +865,7 @@ export default function TaxDashboard({ masterData }) {
               );
             })}
           </div>
-
+ 
           {/* Column 2: Consolidated Treasury Fund */}
           <div style={{
             display: 'flex',
@@ -867,8 +877,35 @@ export default function TaxDashboard({ masterData }) {
             borderRadius: '12px',
             padding: '20px',
             minHeight: '220px',
-            textAlign: 'center'
+            textAlign: 'center',
+            position: 'relative'
           }}>
+            {/* SVG Connecting Flow Pipelines */}
+            <svg style={{ position: 'absolute', left: '-28px', top: '50%', transform: 'translateY(-50%)', width: '28px', height: '140px', pointerEvents: 'none', overflow: 'visible' }}>
+              <path d="M 0,20 L 14,20 Q 28,20 28,70" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
+              <path d="M 0,70 L 28,70" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
+              <path d="M 0,120 L 14,120 Q 28,120 28,70" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
+              {activeInflow && (
+                <>
+                  <path d="M 0,20 L 14,20 Q 28,20 28,70" fill="none" stroke="var(--saffron)" strokeWidth="2.5" strokeDasharray="5 5" style={{ animation: 'pipeline-flow 1.2s linear infinite' }} />
+                  <path d="M 0,70 L 28,70" fill="none" stroke="var(--saffron)" strokeWidth="2.5" strokeDasharray="5 5" style={{ animation: 'pipeline-flow 1.2s linear infinite' }} />
+                  <path d="M 0,120 L 14,120 Q 28,120 28,70" fill="none" stroke="var(--saffron)" strokeWidth="2.5" strokeDasharray="5 5" style={{ animation: 'pipeline-flow 1.2s linear infinite' }} />
+                </>
+              )}
+            </svg>
+ 
+            <svg style={{ position: 'absolute', right: '-28px', top: '50%', transform: 'translateY(-50%)', width: '28px', height: '140px', pointerEvents: 'none', overflow: 'visible' }}>
+              <path d="M 0,70 Q 0,20 14,20 L 28,20" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
+              <path d="M 0,70 L 28,70" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
+              <path d="M 0,70 Q 0,120 14,120 L 28,120" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
+              {activeInflow && (
+                <>
+                  <path d="M 0,70 Q 0,20 14,20 L 28,20" fill="none" stroke="var(--emerald)" strokeWidth="2.5" strokeDasharray="5 5" style={{ animation: 'pipeline-flow 1.2s linear infinite' }} />
+                  <path d="M 0,70 L 28,70" fill="none" stroke="var(--emerald)" strokeWidth="2.5" strokeDasharray="5 5" style={{ animation: 'pipeline-flow 1.2s linear infinite' }} />
+                  <path d="M 0,70 Q 0,120 14,120 L 28,120" fill="none" stroke="var(--emerald)" strokeWidth="2.5" strokeDasharray="5 5" style={{ animation: 'pipeline-flow 1.2s linear infinite' }} />
+                </>
+              )}
+            </svg>
             <div style={{
               width: '56px',
               height: '56px',
