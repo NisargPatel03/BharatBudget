@@ -214,6 +214,18 @@ export default function BudgetMitraChat() {
     }
   }, [messages, isSpeechEnabled, speechVoice]);
 
+  // Silence voice narrator immediately on chat close or unmount
+  useEffect(() => {
+    if (!isOpen && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, [isOpen]);
+
   // Initialize browser-native SpeechRecognition
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

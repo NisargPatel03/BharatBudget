@@ -237,6 +237,8 @@ export default function StateDashboard({ masterData }) {
             data={stateScores} 
             activeState={activeStateId} 
             onSelectState={handleSelectStateFromMap} 
+            duelStateA={compStateA}
+            duelStateB={compStateB}
           />
         </div>
       </div>

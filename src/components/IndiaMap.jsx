@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import indiaMapData from '@svg-maps/india';
 
-export default function IndiaMap({ data = [], activeState = null, onSelectState = () => {} }) {
+export default function IndiaMap({ data = [], activeState = null, onSelectState = () => {}, duelStateA = null, duelStateB = null }) {
   const [hoveredState, setHoveredState] = useState(null);
 
   const statePaths = indiaMapData.locations || [];
@@ -51,21 +51,50 @@ export default function IndiaMap({ data = [], activeState = null, onSelectState 
             const isHovered = hoveredState && hoveredState.id === state.id;
             const fillColor = getChoroplethColor(meta.overall_score, meta.hasData);
             
+            // Check if state is actively competing in the Sovereign Duel Arena
+            const isDuelA = duelStateA && state.name.toLowerCase() === duelStateA.toLowerCase();
+            const isDuelB = duelStateB && state.name.toLowerCase() === duelStateB.toLowerCase();
+            
+            let pathFill = fillColor;
+            let pathStroke = "var(--border-glass-active)";
+            let pathStrokeWidth = "0.8";
+            let pathFilter = "none";
+            
+            if (isDuelA) {
+              pathFill = "url(#duelAGlow)";
+              pathStroke = "var(--saffron)";
+              pathStrokeWidth = "2.2";
+              pathFilter = "drop-shadow(0 0 10px rgba(251, 146, 60, 0.85))";
+            } else if (isDuelB) {
+              pathFill = "url(#duelBGlow)";
+              pathStroke = "var(--emerald)";
+              pathStrokeWidth = "2.2";
+              pathFilter = "drop-shadow(0 0 10px rgba(16, 185, 129, 0.85))";
+            } else if (isSelected) {
+              pathFill = "url(#pulseGlow)";
+              pathStroke = "var(--text-primary)";
+              pathStrokeWidth = "1.8";
+              pathFilter = "drop-shadow(0 0 8px rgba(0, 136, 255, 0.7))";
+            } else if (isHovered) {
+              pathFill = "rgba(255,255,255,0.35)";
+              pathStroke = "var(--text-primary)";
+              pathStrokeWidth = "1.6";
+              pathFilter = "drop-shadow(0 0 6px rgba(255, 255, 255, 0.45))";
+            }
+            
             return (
               <path
                 key={state.id}
                 id={state.id}
                 name={state.name}
                 d={state.path}
-                fill={isSelected ? "url(#pulseGlow)" : (isHovered ? "rgba(255,255,255,0.35)" : fillColor)}
-                stroke={isHovered || isSelected ? "var(--text-primary)" : "var(--border-glass-active)"}
-                strokeWidth={isHovered || isSelected ? "1.6" : "0.8"}
+                fill={pathFill}
+                stroke={pathStroke}
+                strokeWidth={pathStrokeWidth}
                 style={{ 
                    cursor: 'pointer', 
-                   transition: 'all 0.2s ease',
-                   filter: isSelected 
-                     ? 'drop-shadow(0 0 8px rgba(0, 136, 255, 0.7))' 
-                     : (isHovered ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.45))' : 'none')
+                   transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                   filter: pathFilter
                 }}
                 onClick={() => onSelectState(state.id)}
                 onMouseEnter={() => setHoveredState({ id: state.id, ...meta })}
@@ -81,6 +110,16 @@ export default function IndiaMap({ data = [], activeState = null, onSelectState 
             <stop offset="0%" stopColor="#00d285" stopOpacity="0.95" />
             <stop offset="60%" stopColor="#0088ff" stopOpacity="0.8" />
             <stop offset="100%" stopColor="#0055aa" stopOpacity="0.4" />
+          </radialGradient>
+          <radialGradient id="duelAGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="var(--saffron)" stopOpacity="0.95" />
+            <stop offset="60%" stopColor="#ea580c" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#9a3412" stopOpacity="0.4" />
+          </radialGradient>
+          <radialGradient id="duelBGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="var(--emerald)" stopOpacity="0.95" />
+            <stop offset="60%" stopColor="#059669" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#065f46" stopOpacity="0.4" />
           </radialGradient>
         </defs>
       </svg>

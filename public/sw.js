@@ -34,9 +34,24 @@ function isDynamicAsset(url) {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  if (request.method !== 'GET') return;
-
   const url = new URL(request.url);
+
+  // Capture uvicorn API queries and respond with structured offline fallback if server is unreachable
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(request).catch(() => {
+        return new Response(JSON.stringify({
+          answer: "⚠️ **Offline Mode Active**: You are currently offline. Budget Mitra is running in offline fallback mode using cached local databases. Please reconnect to the internet for the full ingestion engine.",
+          citations: [{ source: "Local Offline Cache", page: 1, type: "Offline" }]
+        }), {
+          headers: { 'Content-Type': 'application/json' }
+        });
+      })
+    );
+    return;
+  }
+
+  if (request.method !== 'GET') return;
   if (url.origin !== self.location.origin) return;
 
   // Always fetch fresh HTML and JS/CSS so deploys never reference deleted chunks.

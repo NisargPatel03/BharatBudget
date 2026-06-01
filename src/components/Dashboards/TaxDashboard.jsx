@@ -120,6 +120,8 @@ export default function TaxDashboard({ masterData }) {
     const printWindow = window.open('', '_blank', 'width=600,height=800');
     if (!printWindow) return;
 
+    const receiptId = `BB-${Date.now().toString().slice(-6)}`;
+
     printWindow.document.write(`
       <html>
         <head>
@@ -221,22 +223,36 @@ export default function TaxDashboard({ masterData }) {
               position: relative;
               z-index: 1;
             }
-            .barcode {
-              height: 35px;
+            .barcode-box {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
               margin: 12px auto 8px auto;
               width: 160px;
-              opacity: 0.7;
+              opacity: 0.8;
+            }
+            .barcode-lines {
+              height: 30px;
+              width: 100%;
               background: repeating-linear-gradient(
                 90deg,
                 #1a1510,
                 #1a1510 2px,
                 transparent 2px,
-                transparent 5px,
+                transparent 4px,
+                #1a1510 4px,
                 #1a1510 5px,
-                #1a1510 8px,
-                transparent 8px,
-                transparent 10px
+                transparent 5px,
+                transparent 8px
               );
+            }
+            .barcode-num {
+              font-size: 8.5px;
+              font-family: monospace;
+              letter-spacing: 2px;
+              margin-top: 4px;
+              color: #1a1510;
+              font-weight: bold;
             }
           </style>
         </head>
@@ -255,7 +271,7 @@ export default function TaxDashboard({ masterData }) {
             <div class="header">
               <h1>GOVERNMENT OF INDIA</h1>
               <p>Sovereign Tax Citizen Record</p>
-              <p style="font-size: 9px; margin-top: 4px;">Receipt ID: BB-${Date.now()}</p>
+              <p style="font-size: 9px; margin-top: 4px;">Receipt ID: ${receiptId}</p>
             </div>
             
             <div class="row">
@@ -291,12 +307,50 @@ export default function TaxDashboard({ masterData }) {
             <div class="footer">
               <p>Thank you for contributing to India's sovereign growth!</p>
               
-              <!-- Verification QR Code -->
-              <svg viewBox="0 0 21 21" style="width: 60px; height: 60px; margin: 12px auto; display: block; opacity: 0.75;">
-                <path d="M0,0 h7 v7 h-7 z M0,14 h7 v7 h-7 z M14,0 h7 v7 h-7 z M14,14 h7 v7 h-7 z M3,3 h1 v1 h-1 z M3,17 h1 v1 h-1 z M17,3 h1 v1 h-1 z M8,0 h1 v2 h-1 z M10,3 h2 v1 h-2 z M8,8 h3 v1 h-3 z M0,9 h2 v2 h-2 z M12,12 h2 v2 h-2 z" fill="#1a1510"/>
+              <!-- Verification QR Code (Version 1 Correct Layout) -->
+              <svg viewBox="0 0 21 21" style="width: 50px; height: 50px; margin: 12px auto; display: block; opacity: 0.85;">
+                <rect x="0" y="0" width="7" height="7" fill="#1a1510" />
+                <rect x="1" y="1" width="5" height="5" fill="#fffdf5" />
+                <rect x="2" y="2" width="3" height="3" fill="#1a1510" />
+                <rect x="14" y="0" width="7" height="7" fill="#1a1510" />
+                <rect x="15" y="1" width="5" height="5" fill="#fffdf5" />
+                <rect x="16" y="2" width="3" height="3" fill="#1a1510" />
+                <rect x="0" y="14" width="7" height="7" fill="#1a1510" />
+                <rect x="1" y="15" width="5" height="5" fill="#fffdf5" />
+                <rect x="2" y="16" width="3" height="3" fill="#1a1510" />
+                <rect x="8" y="2" width="1" height="1" fill="#1a1510" />
+                <rect x="10" y="2" width="1" height="1" fill="#1a1510" />
+                <rect x="12" y="2" width="1" height="1" fill="#1a1510" />
+                <rect x="2" y="8" width="1" height="1" fill="#1a1510" />
+                <rect x="2" y="10" width="1" height="1" fill="#1a1510" />
+                <rect x="2" y="12" width="1" height="1" fill="#1a1510" />
+                <rect x="8" y="5" width="2" height="1" fill="#1a1510" />
+                <rect x="9" y="7" width="1" height="2" fill="#1a1510" />
+                <rect x="11" y="6" width="1" height="1" fill="#1a1510" />
+                <rect x="12" y="8" width="2" height="1" fill="#1a1510" />
+                <rect x="14" y="9" width="1" height="2" fill="#1a1510" />
+                <rect x="8" y="14" width="1" height="2" fill="#1a1510" />
+                <rect x="9" y="17" width="2" height="1" fill="#1a1510" />
+                <rect x="12" y="15" width="1" height="3" fill="#1a1510" />
+                <rect x="14" y="14" width="2" height="1" fill="#1a1510" />
+                <rect x="17" y="14" width="1" height="2" fill="#1a1510" />
+                <rect x="15" y="17" width="3" height="1" fill="#1a1510" />
+                <rect x="19" y="15" width="1" height="3" fill="#1a1510" />
+                <rect x="18" y="19" width="2" height="1" fill="#1a1510" />
+                <rect x="14" y="20" width="3" height="1" fill="#1a1510" />
+                <rect x="14" y="8" width="2" height="1" fill="#1a1510" />
+                <rect x="17" y="7" width="1" height="2" fill="#1a1510" />
+                <rect x="19" y="8" width="2" height="1" fill="#1a1510" />
+                <rect x="15" y="10" width="3" height="1" fill="#1a1510" />
+                <rect x="18" y="11" width="1" height="2" fill="#1a1510" />
+                <rect x="20" y="12" width="1" height="1" fill="#1a1510" />
               </svg>
 
-              <div class="barcode"></div>
+              <!-- Indian GS1 Country Code Barcode -->
+              <div class="barcode-box">
+                <div class="barcode-lines"></div>
+                <div class="barcode-num">8901072002627</div>
+              </div>
               <p style="font-size: 8px; margin-top: 8px;">BharatBudget Ingestor Verified Ledger &bull; RBI Shared Accounts</p>
             </div>
           </div>
@@ -310,6 +364,256 @@ export default function TaxDashboard({ masterData }) {
       </html>
     `);
     printWindow.document.close();
+  };
+
+  const handleExportReceipt = () => {
+    const receiptId = `BB-${Date.now().toString().slice(-6)}`;
+    const docText = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>BharatBudget Sovereign Citizen Tax Receipt</title>
+          <style>
+            body {
+              background: #f4efe2;
+              color: #1a1510;
+              font-family: 'Courier New', Courier, monospace;
+              padding: 40px 20px;
+              margin: 0;
+              display: flex;
+              justify-content: center;
+            }
+            .receipt-box {
+              background: #fffdf5;
+              border: 2px dashed #8b5a2b;
+              box-shadow: 0 8px 24px rgba(139,90,43,0.15);
+              padding: 24px;
+              width: 100%;
+              max-width: 440px;
+              box-sizing: border-box;
+              position: relative;
+              overflow: hidden;
+            }
+            .header {
+              text-align: center;
+              border-bottom: 2px dashed #8b5a2b;
+              padding-bottom: 16px;
+              margin-bottom: 20px;
+            }
+            .header h1 {
+              font-size: 20px;
+              margin: 0 0 4px 0;
+              color: #ea580c;
+              letter-spacing: 1.5px;
+              font-weight: 900;
+            }
+            .header p {
+              font-size: 11px;
+              color: #5c4033;
+              margin: 0;
+              text-transform: uppercase;
+              font-weight: bold;
+            }
+            .row {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 8px;
+              font-size: 13px;
+              position: relative;
+              z-index: 1;
+            }
+            .row-total {
+              display: flex;
+              justify-content: space-between;
+              font-size: 16px;
+              font-weight: bold;
+              color: #065f46;
+              border-top: 1.5px dashed #8b5a2b;
+              border-bottom: 1.5px dashed #8b5a2b;
+              padding: 10px 0;
+              margin: 16px 0;
+              position: relative;
+              z-index: 1;
+            }
+            .section-title {
+              display: block;
+              font-size: 11.5px;
+              color: #5c4033;
+              margin-bottom: 12px;
+              text-align: center;
+              font-weight: bold;
+              text-transform: uppercase;
+              position: relative;
+              z-index: 1;
+            }
+            .devolution-list {
+              border-top: 1.5px dashed #8b5a2b;
+              padding-top: 16px;
+              margin-top: 16px;
+              position: relative;
+              z-index: 1;
+            }
+            .devolution-row {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 6px;
+              font-size: 12px;
+              color: #1a1510;
+            }
+            .footer {
+              text-align: center;
+              margin-top: 24px;
+              border-top: 2px dashed #8b5a2b;
+              padding-top: 16px;
+              font-size: 10.5px;
+              color: #5c4033;
+              position: relative;
+              z-index: 1;
+            }
+            .barcode-box {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin: 12px auto 8px auto;
+              width: 160px;
+              opacity: 0.8;
+            }
+            .barcode-lines {
+              height: 30px;
+              width: 100%;
+              background: repeating-linear-gradient(
+                90deg,
+                #1a1510,
+                #1a1510 2px,
+                transparent 2px,
+                transparent 4px,
+                #1a1510 4px,
+                #1a1510 5px,
+                transparent 5px,
+                transparent 8px
+              );
+            }
+            .barcode-num {
+              font-size: 8.5px;
+              font-family: monospace;
+              letter-spacing: 2px;
+              margin-top: 4px;
+              color: #1a1510;
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="receipt-box">
+            <!-- Sarnath Ashoka Chakra Watermark -->
+            <svg viewBox="0 0 100 100" style="position: absolute; top: 50%; left: 50%; width: 260px; height: 260px; transform: translate(-50%, -50%) rotate(15deg); opacity: 0.05; pointer-events: none; z-index: 0;">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#ea580c" stroke-width="2"/>
+              <circle cx="50" cy="50" r="8" fill="none" stroke="#ea580c" stroke-width="1.5"/>
+              ${Array.from({length: 24}, (_, i) => {
+                const angle = (i * 15 * Math.PI) / 180;
+                return `<line x1="50" y1="50" x2="${50 + 40 * Math.cos(angle)}" y2="${50 + 40 * Math.sin(angle)}" stroke="#ea580c" stroke-width="1"/>`;
+              }).join('')}
+            </svg>
+
+            <div class="header">
+              <h1>GOVERNMENT OF INDIA</h1>
+              <p>Sovereign Tax Citizen Record</p>
+              <p style="font-size: 9px; margin-top: 4px;">Receipt ID: ${receiptId}</p>
+            </div>
+            
+            <div class="row">
+              <span>Direct Income Tax Paid:</span>
+              <strong>INR ${estimatedNewDirect.toLocaleString('en-IN')}</strong>
+            </div>
+            <div class="row">
+              <span>Indirect GST Contribution:</span>
+              <strong>INR ${estimatedIndirect.toLocaleString('en-IN')}</strong>
+            </div>
+            
+            <div class="row-total">
+              <span>TOTAL CONTRIBUTION:</span>
+              <span>INR ${totalTaxContribution.toLocaleString('en-IN')}</span>
+            </div>
+
+            <div class="devolution-list">
+              <span class="section-title">Your Proportional Rupee Spending</span>
+              ${taxDistribution.map(item => `
+                <div class="devolution-row">
+                  <span>&bull; ${item.category}:</span>
+                  <strong>INR ${Math.round(totalTaxContribution * item.share).toLocaleString('en-IN')}</strong>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Digital Signature Block -->
+            <div style="margin-top: 24px; text-align: right; display: flex; flex-direction: column; align-items: flex-end; position: relative; z-index: 1;">
+              <span style="font-family: 'Brush Script MT', cursive, sans-serif; font-size: 19px; color: #ea580c; transform: rotate(-3deg); margin-bottom: 2px; letter-spacing: 0.5px;">Sanjay Malhotra</span>
+              <span style="font-size: 8px; border-top: 1px dashed #8b5a2b; padding-top: 4px; color: #5c4033; text-transform: uppercase; font-weight: bold; width: 140px; text-align: center;">Secretary, Dept of Revenue</span>
+            </div>
+
+            <div class="footer">
+              <p>Thank you for contributing to India's sovereign growth!</p>
+              
+              <!-- Verification QR Code (Version 1 Correct Layout) -->
+              <svg viewBox="0 0 21 21" style="width: 50px; height: 50px; margin: 12px auto; display: block; opacity: 0.85;">
+                <rect x="0" y="0" width="7" height="7" fill="#1a1510" />
+                <rect x="1" y="1" width="5" height="5" fill="#fffdf5" />
+                <rect x="2" y="2" width="3" height="3" fill="#1a1510" />
+                <rect x="14" y="0" width="7" height="7" fill="#1a1510" />
+                <rect x="15" y="1" width="5" height="5" fill="#fffdf5" />
+                <rect x="16" y="2" width="3" height="3" fill="#1a1510" />
+                <rect x="0" y="14" width="7" height="7" fill="#1a1510" />
+                <rect x="1" y="15" width="5" height="5" fill="#fffdf5" />
+                <rect x="2" y="16" width="3" height="3" fill="#1a1510" />
+                <rect x="8" y="2" width="1" height="1" fill="#1a1510" />
+                <rect x="10" y="2" width="1" height="1" fill="#1a1510" />
+                <rect x="12" y="2" width="1" height="1" fill="#1a1510" />
+                <rect x="2" y="8" width="1" height="1" fill="#1a1510" />
+                <rect x="2" y="10" width="1" height="1" fill="#1a1510" />
+                <rect x="2" y="12" width="1" height="1" fill="#1a1510" />
+                <rect x="8" y="5" width="2" height="1" fill="#1a1510" />
+                <rect x="9" y="7" width="1" height="2" fill="#1a1510" />
+                <rect x="11" y="6" width="1" height="1" fill="#1a1510" />
+                <rect x="12" y="8" width="2" height="1" fill="#1a1510" />
+                <rect x="14" y="9" width="1" height="2" fill="#1a1510" />
+                <rect x="8" y="14" width="1" height="2" fill="#1a1510" />
+                <rect x="9" y="17" width="2" height="1" fill="#1a1510" />
+                <rect x="12" y="15" width="1" height="3" fill="#1a1510" />
+                <rect x="14" y="14" width="2" height="1" fill="#1a1510" />
+                <rect x="17" y="14" width="1" height="2" fill="#1a1510" />
+                <rect x="15" y="17" width="3" height="1" fill="#1a1510" />
+                <rect x="19" y="15" width="1" height="3" fill="#1a1510" />
+                <rect x="18" y="19" width="2" height="1" fill="#1a1510" />
+                <rect x="14" y="20" width="3" height="1" fill="#1a1510" />
+                <rect x="14" y="8" width="2" height="1" fill="#1a1510" />
+                <rect x="17" y="7" width="1" height="2" fill="#1a1510" />
+                <rect x="19" y="8" width="2" height="1" fill="#1a1510" />
+                <rect x="15" y="10" width="3" height="1" fill="#1a1510" />
+                <rect x="18" y="11" width="1" height="2" fill="#1a1510" />
+                <rect x="20" y="12" width="1" height="1" fill="#1a1510" />
+              </svg>
+
+              <!-- Indian GS1 Country Code Barcode -->
+              <div class="barcode-box">
+                <div class="barcode-lines"></div>
+                <div class="barcode-num">8901072002627</div>
+              </div>
+              <p style="font-size: 8px; margin-top: 8px;">BharatBudget Ingestor Verified Ledger &bull; RBI Shared Accounts</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const blob = new Blob([docText], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `SOVEREIGN_TAX_RECEIPT_${receiptId}.html`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   // Rupee goes to breakdown
@@ -801,6 +1105,27 @@ export default function TaxDashboard({ masterData }) {
                   onMouseLeave={(e) => e.target.style.background = 'rgba(251, 146, 60, 0.1)'}
                 >
                   <Receipt size={13} /> Print Invoice
+                </button>
+                <button
+                  onClick={handleExportReceipt}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'rgba(16, 185, 129, 0.1)',
+                    border: '1px solid rgba(16, 185, 129, 0.25)',
+                    borderRadius: '6px',
+                    padding: '6px 12px',
+                    fontSize: '11px',
+                    color: 'var(--emerald)',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = 'rgba(16, 185, 129, 0.2)'}
+                  onMouseLeave={(e) => e.target.style.background = 'rgba(16, 185, 129, 0.1)'}
+                >
+                  <Download size={13} /> Export Digital Receipt
                 </button>
                 <button
                   onClick={() => exportToCsv(
