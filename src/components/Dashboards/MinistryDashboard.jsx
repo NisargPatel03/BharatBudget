@@ -258,7 +258,7 @@ export default function MinistryDashboard() {
             <h4 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--emerald)' }}>₹ {formatCrores(data.actual)} Cr</h4>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>YoY ALLOCATION TREND</span>
+            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>YoY GROWTH</span>
             <h4 style={{ fontSize: '20px', fontWeight: 800, color: data.growth >= 0 ? 'var(--emerald)' : 'var(--crimson)' }}>
               {data.growth >= 0 ? `+${data.growth}%` : `${data.growth}%`}
             </h4>
