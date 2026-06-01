@@ -8,6 +8,13 @@ import ChartContainer from '../ChartContainer';
 function SankeyFlowDiagram() {
   const [hoveredNode, setHoveredNode] = useState(null); // { type: 'inflow'|'outflow', id }
   const [hoveredLink, setHoveredLink] = useState(null); // { from, to, val, fromLabel, toLabel }
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const INFLOWS = [
     { id: 'direct', label: 'Direct Tax', val: 32, labelVal: '₹17.1L Cr', color: '#ea580c', y1: 20, y2: 120 },
@@ -50,6 +57,131 @@ function SankeyFlowDiagram() {
       });
     });
   });
+
+  if (isMobile) {
+    return (
+      <div className="glass-panel col-12 animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px', minHeight: 'auto', padding: '16px' }}>
+        <div>
+          <h3 style={{ fontSize: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)', margin: 0 }}>
+            📊 Sovereign Cash DeVolution Ledger
+          </h3>
+          <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)', display: 'block', marginTop: '4px' }}>
+            Interactive flow ledger. Tap any Inflow Source (Top) to see its dynamic devolution into National Outflows (Bottom).
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Inflows Deck */}
+          <div>
+            <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>
+              SOVEREIGN INFLOWS (TAP SOURCE)
+            </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {INFLOWS.map((inf) => {
+                const isSelected = hoveredNode?.type === 'inflow' && hoveredNode.id === inf.id;
+                return (
+                  <div
+                    key={inf.id}
+                    onClick={() => {
+                      if (hoveredNode?.type === 'inflow' && hoveredNode.id === inf.id) {
+                        setHoveredNode(null);
+                      } else {
+                        setHoveredNode({ type: 'inflow', id: inf.id });
+                      }
+                    }}
+                    style={{
+                      background: isSelected ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.01)',
+                      border: isSelected ? '1px solid ' + inf.color : '1px solid var(--border-glass)',
+                      borderRadius: '8px',
+                      padding: '10px 12px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '6px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                        <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: inf.color, marginRight: '6px' }} />
+                        {inf.label}
+                      </span>
+                      <strong style={{ fontSize: '12px', color: inf.color }}>{inf.labelVal} ({inf.val}%)</strong>
+                    </div>
+                    {/* Tiny visual bar */}
+                    <div style={{ height: '3px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: inf.val + '%', background: inf.color }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Connected Outflows */}
+          <div>
+            <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>
+              DEVOLVED OUTFLOW ALLOCATIONS
+            </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {OUTFLOWS.map((out) => {
+                let proportionalAmt = 0;
+                
+                if (hoveredNode?.type === 'inflow') {
+                  const selectedInflow = INFLOWS.find(i => i.id === hoveredNode.id);
+                  if (selectedInflow) {
+                    const totalOutlayVal = 5347315; // 53.47 Lakh Crores
+                    const inflowAmt = totalOutlayVal * (selectedInflow.val / 100);
+                    proportionalAmt = (inflowAmt * (out.val / 100)) / 100000; // in Lakh Crores
+                  }
+                } else {
+                  const totalOutlayVal = 5347315;
+                  proportionalAmt = (totalOutlayVal * (out.val / 100)) / 100000;
+                }
+
+                return (
+                  <div
+                    key={out.id}
+                    style={{
+                      background: 'rgba(0,0,0,0.15)',
+                      border: '1px solid var(--border-glass)',
+                      borderRadius: '8px',
+                      padding: '10px 12px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      opacity: hoveredNode ? 0.9 : 1,
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <div>
+                      <span style={{ display: 'block', fontSize: '11.5px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                        <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: out.color, marginRight: '6px' }} />
+                        {out.label}
+                      </span>
+                      {hoveredNode?.type === 'inflow' && (
+                        <span style={{ fontSize: '9.5px', color: 'var(--text-muted)' }}>
+                          Funded by {INFLOWS.find(i => i.id === hoveredNode.id)?.label}
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <strong style={{ fontSize: '12px', color: 'var(--emerald)', display: 'block' }}>
+                        ₹{proportionalAmt.toFixed(2)}L Cr
+                      </strong>
+                      <span style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>
+                        {hoveredNode?.type === 'inflow' ? `${(INFLOWS.find(i => i.id === hoveredNode.id).val * out.val / 100).toFixed(2)}% of budget` : `${out.val}% outlay`}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="glass-panel col-12 animate-fade-in animate-pulse- 중앙" style={{ display: 'flex', flexDirection: 'column', gap: '16px', minHeight: '480px' }}>
