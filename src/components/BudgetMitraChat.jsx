@@ -164,6 +164,41 @@ const renderFormattedText = (text) => {
   });
 };
 
+const translateToHindi = (text) => {
+  if (!text) return "";
+  let translated = text;
+  
+  const translationPairs = [
+    { eng: "Namaste! I am Budget Mitra, your dedicated AI Assistant. I can scan parliament budget documents in real-time to answer your questions about scheme allocations, deficit metrics, or tax collections. Ask me anything!", hin: "नमस्ते! मैं आपका बजट मित्र AI सहायक हूँ। मैं घाटे के आँकड़ों, योजनाओं और कर संग्रह के बारे में आपके प्रश्नों का उत्तर देने के लिए वास्तविक समय में संसदीय बजट दस्तावेजों को स्कैन कर सकता हूँ। मुझसे कुछ भी पूछें!" },
+    { eng: "Offline Mode Active", hin: "ऑफलाइन मोड सक्रिय" },
+    { eng: "You are currently offline", hin: "आप अभी ऑफलाइन हैं" },
+    { eng: "Budget Mitra is running in offline fallback mode using cached local databases", hin: "बजट मित्र कैश्ड लोकल डेटाबेस का उपयोग करके ऑफलाइन मोड में काम कर रहा है" },
+    { eng: "What is the Fiscal Deficit target?", hin: "राजकोषीय घाटा (Fiscal Deficit) का लक्ष्य क्या है?" },
+    { eng: "The Fiscal Deficit is projected to be reduced from", hin: "राजकोषीय घाटा निरंतर कम होने का अनुमान है, जो" },
+    { eng: "in FY25 to", hin: "वित्त वर्ष 2024-25 में" },
+    { eng: "in FY26, and further to", hin: "से घटकर वित्त वर्ष 2025-26 में" },
+    { eng: "in FY27 BE", hin: "और आगे वित्त वर्ष 2026-27 के बजट अनुमान में" },
+    { eng: "representing a consistent fiscal consolidation pathway.", hin: "होने का संकेत देता है जो निरंतर राजकोषीय मजबूती को दर्शाता है।" },
+    { eng: "How much is allocated to Railways CapEx?", hin: "रेलवे पूंजीगत व्यय (CapEx) के लिए कितना आवंटित किया गया है?" },
+    { eng: "The Capital Expenditure of", hin: "पूंजीगत व्यय" },
+    { eng: "for Indian Railways to accelerate track laying, electrification, and safety upgrades.", hin: "भारतीय रेलवे के लिए पटरियों को बिछाने, विद्युतीकरण और सुरक्षा उन्नयन में तेजी लाने के लिए आवंटित किया गया है।" },
+    { eng: "This represents an increase over the previous year allocation of", hin: "यह पिछले वर्ष के आवंटन से अधिक की वृद्धि दर्शाता है जो" },
+    { eng: "reflecting key asset-creation focus.", hin: "है और प्रमुख संपत्ति-निर्माण पर जोर देता है।" },
+    { eng: "How much is interest payment outgo?", hin: "ब्याज भुगतान व्यय कितना है?" },
+    { eng: "Interest payment liability consumes", hin: "ब्याज भुगतान की देयता में कुल" },
+    { eng: "amounting to approximately", hin: "का व्यय होता है जो लगभग" },
+    { eng: "of the entire budget expenditure, reflecting legacy borrowing servicing charges.", hin: "कुल बजट व्यय का हिस्सा है, जो पिछले ऋणों के भुगतान को दर्शाता है।" },
+    { eng: "Namaste! I am Budget Mitra", hin: "नमस्ते! मैं आपका बजट मित्र हूँ" }
+  ];
+
+  translationPairs.forEach(pair => {
+    const regex = new RegExp(pair.eng.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
+    translated = translated.replace(regex, pair.hin);
+  });
+
+  return translated;
+};
+
 export default function BudgetMitraChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -186,10 +221,13 @@ export default function BudgetMitraChat() {
   const speakText = (text) => {
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
-    const cleanText = text
+    let cleanText = text
       .replace(/\*\*/g, '')
       .replace(/•/g, '')
       .trim();
+    if (speechVoice === 'hi-IN') {
+      cleanText = translateToHindi(cleanText);
+    }
     const utterance = new SpeechSynthesisUtterance(cleanText);
     const voices = window.speechSynthesis.getVoices();
     let selectedVoice = null;
@@ -606,7 +644,7 @@ export default function BudgetMitraChat() {
                       whiteSpace: 'pre-line'
                     }}
                   >
-                    {m.sender === 'user' ? m.text : renderFormattedText(m.text)}
+                    {m.sender === 'user' ? m.text : renderFormattedText(speechVoice === 'hi-IN' ? translateToHindi(m.text) : m.text)}
                   </div>
 
                   {/* Citations & Speaker block for bot outputs */}

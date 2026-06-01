@@ -229,6 +229,40 @@ export default function AdminDashboard() {
     addLog("[SYSTEM] Compiled budget_master.json payload compiled and downloaded.");
   };
 
+  const downloadMockPDF = (type) => {
+    let content = "";
+    let filename = "";
+    
+    if (type === 'deficit') {
+      filename = "Deficits_BE_2027.pdf";
+      content = "%PDF-1.4\n% MOCK OFFICIAL PARLIAMENTARY DEFICIT STATISTICS\n";
+      content += "Deficit Statistics\n";
+      content += "Fiscal Deficit target for FY27 is estimated at 4.3% of GDP.\n";
+      content += "Primary Deficit is projected to fall to 0.7% of GDP.\n";
+    } else if (type === 'schemes') {
+      filename = "Schemes_Outlays_FY27.pdf";
+      content = "%PDF-1.4\n% MOCK OFFICIAL OUTLAY ON MAJOR SCHEMES\n";
+      content += "Outlay on Major Schemes\n";
+      content += "Jal Jeevan Mission: FY27 allocation is boosted to 72000 Cr.\n";
+      content += "PM Awas Yojana (PMAY): FY27 outlay stands at 82000 Cr.\n";
+    } else {
+      filename = "Liabilities_BE_2027.pdf";
+      content = "%PDF-1.4\n% MOCK CENTRAL GOVERNMENT OUTSTANDING LIABILITIES\n";
+      content += "Outstanding liabilities\n";
+      content += "Total Outstanding liabilities of Central Government: FY27 BE 21104500 Cr.\n";
+    }
+    
+    const blob = new Blob([content], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    addLog(`[SYSTEM] Generated and downloaded mock parliamentary test file: ${filename}`);
+  };
+
   const triggerUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -423,6 +457,117 @@ export default function AdminDashboard() {
                     </span>
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* Click-to-Test PDF Sample Pack Generator Drawer */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.01)',
+              border: '1px solid var(--border-glass-active)',
+              borderRadius: '12px',
+              padding: '16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--emerald)' }}>📂 Click-to-Test Official Parliamentary PDF Library</span>
+                <span style={{ fontSize: '9px', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--emerald)', padding: '2px 6px', borderRadius: '8px' }}>MOCK SAMPLES</span>
+              </div>
+              
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={(e) => { e.stopPropagation(); downloadMockPDF('deficit'); }}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '4px',
+                    padding: '10px 8px',
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    color: 'var(--text-primary)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--saffron)';
+                    e.currentTarget.style.background = 'rgba(234, 88, 12, 0.03)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border-glass)';
+                    e.currentTarget.style.background = 'var(--bg-secondary)';
+                  }}
+                >
+                  <FileText size={16} color="var(--saffron)" />
+                  <span style={{ fontSize: '10.5px', fontWeight: 600 }}>Deficits_BE_2027.pdf</span>
+                  <span style={{ fontSize: '8.5px', color: 'var(--text-secondary)' }}>Fiscal statistics</span>
+                </button>
+
+                <button
+                  onClick={(e) => { e.stopPropagation(); downloadMockPDF('schemes'); }}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '4px',
+                    padding: '10px 8px',
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    color: 'var(--text-primary)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--emerald)';
+                    e.currentTarget.style.background = 'rgba(16, 185, 129, 0.03)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border-glass)';
+                    e.currentTarget.style.background = 'var(--bg-secondary)';
+                  }}
+                >
+                  <FileText size={16} color="var(--emerald)" />
+                  <span style={{ fontSize: '10.5px', fontWeight: 600 }}>Schemes_FY27.pdf</span>
+                  <span style={{ fontSize: '8.5px', color: 'var(--text-secondary)' }}>DBT welfare outlay</span>
+                </button>
+
+                <button
+                  onClick={(e) => { e.stopPropagation(); downloadMockPDF('liabilities'); }}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '4px',
+                    padding: '10px 8px',
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    color: 'var(--text-primary)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--ashoka-blue)';
+                    e.currentTarget.style.background = 'rgba(59, 130, 246, 0.03)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border-glass)';
+                    e.currentTarget.style.background = 'var(--bg-secondary)';
+                  }}
+                >
+                  <FileText size={16} color="var(--ashoka-blue)" />
+                  <span style={{ fontSize: '10.5px', fontWeight: 600 }}>Liabilities_BE_2027.pdf</span>
+                  <span style={{ fontSize: '8.5px', color: 'var(--text-secondary)' }}>Sovereign debt</span>
+                </button>
               </div>
             </div>
 

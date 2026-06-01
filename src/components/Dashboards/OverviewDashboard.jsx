@@ -5,6 +5,216 @@ import { IndianRupee, ShieldAlert, Award, FileSpreadsheet, Activity, ChevronRigh
 import GlossaryTooltip from '../GlossaryTooltip';
 import ChartContainer from '../ChartContainer';
 
+function SankeyFlowDiagram() {
+  const [hoveredNode, setHoveredNode] = useState(null); // { type: 'inflow'|'outflow', id }
+  const [hoveredLink, setHoveredLink] = useState(null); // { from, to, val, fromLabel, toLabel }
+
+  const INFLOWS = [
+    { id: 'direct', label: 'Direct Tax', val: 32, labelVal: '₹17.1L Cr', color: '#ea580c', y1: 20, y2: 120 },
+    { id: 'indirect', label: 'Indirect Tax', val: 28, labelVal: '₹15.0L Cr', color: '#f59e0b', y1: 140, y2: 230 },
+    { id: 'borrowing', label: 'Borrowings', val: 27, labelVal: '₹14.4L Cr', color: '#9ca3af', y1: 250, y2: 335 },
+    { id: 'nontax', label: 'Non-Tax Revenue', val: 13, labelVal: '₹6.9L Cr', color: '#0284c7', y1: 355, y2: 395 }
+  ];
+
+  const OUTFLOWS = [
+    { id: 'interest', label: 'Interest Payouts', val: 20, labelVal: '₹10.7L Cr', color: '#ef4444', y1: 20, y2: 80 },
+    { id: 'devolution', label: 'State Devolution', val: 22, labelVal: '₹11.8L Cr', color: '#10b981', y1: 92, y2: 158 },
+    { id: 'schemes', label: 'Central Schemes', val: 16, labelVal: '₹8.5L Cr', color: '#059669', y1: 170, y2: 218 },
+    { id: 'defence', label: 'Defence Modernization', val: 8, labelVal: '₹4.3L Cr', color: '#3b82f6', y1: 230, y2: 254 },
+    { id: 'subsidies', label: 'Welfare Subsidies', val: 9, labelVal: '₹4.8L Cr', color: '#d97706', y1: 266, y2: 293 },
+    { id: 'commission', label: 'FC Grants', val: 9, labelVal: '₹4.8L Cr', color: '#6366f1', y1: 305, y2: 332 },
+    { id: 'admin', label: 'Administrative Spend', val: 16, labelVal: '₹8.5L Cr', color: '#6b7280', y1: 344, y2: 392 }
+  ];
+
+  const links = [];
+  INFLOWS.forEach(inf => {
+    OUTFLOWS.forEach(out => {
+      const flowVal = (inf.val * out.val) / 100;
+      const infIndex = OUTFLOWS.findIndex(o => o.id === out.id);
+      const outIndex = INFLOWS.findIndex(i => i.id === inf.id);
+      const infStep = (inf.y2 - inf.y1) / OUTFLOWS.length;
+      const outStep = (out.y2 - out.y1) / INFLOWS.length;
+      const startY = inf.y1 + infStep * (infIndex + 0.5);
+      const endY = out.y1 + outStep * (outIndex + 0.5);
+      
+      links.push({
+        from: inf.id,
+        to: out.id,
+        fromLabel: inf.label,
+        toLabel: out.label,
+        val: flowVal,
+        thickness: Math.max(1, flowVal * 0.9),
+        startY,
+        endY,
+        color: inf.color
+      });
+    });
+  });
+
+  return (
+    <div className="glass-panel col-12 animate-fade-in animate-pulse- 중앙" style={{ display: 'flex', flexDirection: 'column', gap: '16px', minHeight: '480px' }}>
+      <div>
+        <h3 style={{ fontSize: '16px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--saffron)', margin: 0 }}>
+          📊 Sovereign Cash DeVolution Sankey Flow Canvas
+        </h3>
+        <span style={{ fontSize: '12.5px', color: 'var(--text-secondary)', display: 'block', marginTop: '4px' }}>
+          Interactive macroeconomic ledger linking Indian Inflow Assets (Left) to National Allocations & Outflows (Right). Hover nodes to isolate flowlines.
+        </span>
+      </div>
+
+      <div style={{ position: 'relative', flex: 1, display: 'flex', background: 'rgba(0,0,0,0.15)', borderRadius: '12px', border: '1px solid var(--border-glass)', padding: '20px 24px', overflow: 'hidden' }}>
+        <svg style={{ width: '100%', height: '412px', overflow: 'visible' }}>
+          {links.map((link, idx) => {
+            let opacity = 0.22;
+            let strokeColor = link.color;
+
+            if (hoveredNode) {
+              if (hoveredNode.type === 'inflow' && hoveredNode.id === link.from) {
+                opacity = 0.75;
+              } else if (hoveredNode.type === 'outflow' && hoveredNode.id === link.to) {
+                opacity = 0.75;
+                strokeColor = OUTFLOWS.find(o => o.id === link.to)?.color || link.color;
+              } else {
+                opacity = 0.04;
+              }
+            } else if (hoveredLink) {
+              if (hoveredLink.from === link.from && hoveredLink.to === link.to) {
+                opacity = 0.85;
+              } else {
+                opacity = 0.05;
+              }
+            }
+
+            const pathData = `M 170 ${link.startY} C 310 ${link.startY}, 310 ${link.endY}, 450 ${link.endY}`;
+
+            return (
+              <path
+                key={idx}
+                d={pathData}
+                fill="none"
+                stroke={strokeColor}
+                strokeWidth={link.thickness}
+                style={{
+                  opacity,
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={() => setHoveredLink({ from: link.from, to: link.to, val: link.val, fromLabel: link.fromLabel, toLabel: link.toLabel })}
+                onMouseLeave={() => setHoveredLink(null)}
+              />
+            );
+          })}
+
+          {INFLOWS.map((inf) => {
+            const isDimmed = hoveredNode && (hoveredNode.type !== 'inflow' || hoveredNode.id !== inf.id);
+            return (
+              <g 
+                key={inf.id}
+                onMouseEnter={() => setHoveredNode({ type: 'inflow', id: inf.id })}
+                onMouseLeave={() => setHoveredNode(null)}
+                style={{ cursor: 'pointer' }}
+              >
+                <rect
+                  x="158"
+                  y={inf.y1}
+                  width="12"
+                  height={inf.y2 - inf.y1}
+                  fill={inf.color}
+                  rx="3"
+                  style={{
+                    opacity: isDimmed ? 0.3 : 1,
+                    filter: isDimmed ? 'none' : 'drop-shadow(0 0 4px ' + inf.color + ')',
+                    transition: 'all 0.2s'
+                  }}
+                />
+                <text
+                  x="146"
+                  y={(inf.y1 + inf.y2) / 2 + 4}
+                  fill={isDimmed ? 'var(--text-muted)' : 'var(--text-primary)'}
+                  fontSize="11px"
+                  fontWeight="700"
+                  textAnchor="end"
+                  style={{ transition: 'all 0.2s' }}
+                >
+                  {inf.label} ({inf.labelVal})
+                </text>
+              </g>
+            );
+          })}
+
+          {OUTFLOWS.map((out) => {
+            const isDimmed = hoveredNode && (hoveredNode.type !== 'outflow' || hoveredNode.id !== out.id);
+            return (
+              <g 
+                key={out.id}
+                onMouseEnter={() => setHoveredNode({ type: 'outflow', id: out.id })}
+                onMouseLeave={() => setHoveredNode(null)}
+                style={{ cursor: 'pointer' }}
+              >
+                <rect
+                  x="450"
+                  y={out.y1}
+                  width="12"
+                  height={out.y2 - out.y1}
+                  fill={out.color}
+                  rx="3"
+                  style={{
+                    opacity: isDimmed ? 0.3 : 1,
+                    filter: isDimmed ? 'none' : 'drop-shadow(0 0 4px ' + out.color + ')',
+                    transition: 'all 0.2s'
+                  }}
+                />
+                <text
+                  x="470"
+                  y={(out.y1 + out.y2) / 2 + 4}
+                  fill={isDimmed ? 'var(--text-muted)' : 'var(--text-primary)'}
+                  fontSize="11px"
+                  fontWeight="700"
+                  textAnchor="start"
+                  style={{ transition: 'all 0.2s' }}
+                >
+                  {out.label} ({out.labelVal})
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+
+        {hoveredLink && (
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: 'var(--bg-secondary)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid var(--border-glass-active)',
+            padding: '12px 18px',
+            borderRadius: '10px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+            zIndex: 100,
+            pointerEvents: 'none',
+            textAlign: 'center',
+            minWidth: '240px'
+          }}>
+            <span style={{ fontSize: '9px', textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'block', letterSpacing: '0.5px' }}>FLOW DECONSTRUCTION</span>
+            <strong style={{ fontSize: '12px', color: 'var(--text-primary)', display: 'block', marginTop: '4px' }}>
+              {hoveredLink.fromLabel} ➔ {hoveredLink.toLabel}
+            </strong>
+            <div style={{ height: '1px', background: 'var(--border-glass)', margin: '8px 0' }} />
+            <span style={{ fontSize: '13px', color: 'var(--emerald)', fontWeight: 'bold' }}>
+              ₹ {((5347315 * (hoveredLink.val / 100)) / 100000).toFixed(2)} Lakh Crores
+            </span>
+            <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', marginTop: '2px' }}>
+              ({hoveredLink.val.toFixed(2)}% of total Outlay)
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function OverviewDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
   const [userTax, setUserTax] = useState(25000);
@@ -202,6 +412,9 @@ export default function OverviewDashboard({ masterData }) {
           <h2 style={{ fontSize: '24px', fontWeight: 800, marginTop: '2px' }}>₹{formatLakhCrores(totalLiabilities)} Lakh Cr</h2>
         </div>
       </div>
+
+      {/* Sankey Flow centerpiece */}
+      <SankeyFlowDiagram />
 
       {/* 2. Concentric Spending Chart */}
       <div className="glass-panel col-6" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
