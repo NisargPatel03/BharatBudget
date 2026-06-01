@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, User, Send, MessageSquare, X, ShieldAlert, BookOpen } from 'lucide-react';
+import { Bot, User, Send, MessageSquare, X, ShieldAlert, BookOpen, Mic } from 'lucide-react';
 
 // Rich local budget document corpus for 100% offline/static fallback search
 const LOCAL_CORPUS = [
@@ -175,7 +175,57 @@ export default function BudgetMitraChat() {
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const scrollRef = useRef(null);
+  const recognitionRef = useRef(null);
+
+  // Initialize browser-native SpeechRecognition
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const rec = new SpeechRecognition();
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.lang = 'en-IN'; // Optimized for Indian accented queries
+
+      rec.onstart = () => {
+        setIsListening(true);
+      };
+
+      rec.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          setInput(transcript);
+          handleSend(transcript);
+        }
+      };
+
+      rec.onerror = (e) => {
+        console.error("Voice recognition fault:", e);
+        setIsListening(false);
+      };
+
+      rec.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = rec;
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      alert("Microphone Speech Recognition is not supported by your current browser. We recommend using Chrome or Edge.");
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+    } else {
+      setInput('');
+      recognitionRef.current.start();
+    }
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -506,28 +556,76 @@ export default function BudgetMitraChat() {
               padding: '12px 16px 16px 16px',
               borderTop: '1px solid rgba(255,255,255,0.05)',
               display: 'flex',
-              gap: '10px'
+              gap: '10px',
+              position: 'relative'
             }}
           >
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask Budget Mitra AI..."
+            <div style={{ flex: 1, position: 'relative' }}>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={isListening ? "Listening closely..." : "Ask Budget Mitra AI..."}
+                style={{
+                  width: '100%',
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '8px',
+                  padding: '10px 45px 10px 14px',
+                  color: '#fff',
+                  fontSize: '13px',
+                  outline: 'none',
+                  transition: 'all 0.2s',
+                  boxSizing: 'border-box'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'rgba(251, 146, 60, 0.4)'}
+                onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+              />
+              
+              {/* Dynamic Animated Pulse Waveforms */}
+              {isListening && (
+                <div style={{
+                  position: 'absolute',
+                  right: '14px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  background: 'rgba(0,0,0,0.5)',
+                  padding: '4px 6px',
+                  borderRadius: '10px'
+                }}>
+                  <span className="wave-bar" style={{ width: '2px', height: '8px', background: 'var(--saffron)', animation: 'wave-pulse 0.8s infinite alternate' }} />
+                  <span className="wave-bar" style={{ width: '2px', height: '14px', background: 'var(--saffron)', animation: 'wave-pulse 0.8s infinite alternate 0.2s' }} />
+                  <span className="wave-bar" style={{ width: '2px', height: '6px', background: 'var(--saffron)', animation: 'wave-pulse 0.8s infinite alternate 0.4s' }} />
+                </div>
+              )}
+            </div>
+
+            {/* Pulsing Voice Assistant Trigger */}
+            <button
+              type="button"
+              onClick={toggleListening}
               style={{
-                flex: 1,
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: isListening ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255,255,255,0.03)',
+                border: '1px solid',
+                borderColor: isListening ? 'var(--crimson)' : 'rgba(255,255,255,0.08)',
                 borderRadius: '8px',
-                padding: '10px 14px',
-                color: '#fff',
-                fontSize: '13px',
-                outline: 'none',
-                transition: 'all 0.2s'
+                width: '40px',
+                height: '40px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: isListening ? 'var(--crimson)' : 'var(--text-secondary)',
+                transition: 'all 0.2s',
+                animation: isListening ? 'mic-pulse 1.2s infinite ease-in-out' : 'none'
               }}
-              onFocus={(e) => e.target.style.borderColor = 'rgba(251, 146, 60, 0.4)'}
-              onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
-            />
+              title="Speak your question"
+            >
+              <Mic size={16} />
+            </button>
             
             <button
               type="submit"
@@ -559,6 +657,15 @@ export default function BudgetMitraChat() {
         }
         .dot-bounce {
           animation: bounce 0.5s infinite alternate;
+        }
+        @keyframes wave-pulse {
+          from { transform: scaleY(0.4); }
+          to { transform: scaleY(1.3); }
+        }
+        @keyframes mic-pulse {
+          0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+          70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
       `}</style>
     </>

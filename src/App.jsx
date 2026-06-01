@@ -10,13 +10,14 @@ const MonthlyDashboard = lazy(() => import('./components/Dashboards/MonthlyDashb
 const AuditDashboard = lazy(() => import('./components/Dashboards/AuditDashboard'));
 const TaxDashboard = lazy(() => import('./components/Dashboards/TaxDashboard'));
 const AdminDashboard = lazy(() => import('./components/Dashboards/AdminDashboard'));
+const SimulatorDashboard = lazy(() => import('./components/Dashboards/SimulatorDashboard'));
 import BudgetMitraChat from './components/BudgetMitraChat';
 
 // Import compiled data
 import budgetMaster from './data/budget_master.json';
 
 // Core icons from lucide
-import { Home, Landmark, Map, Calendar, AlertOctagon, IndianRupee, FileText, ChevronRight, Menu, X, Shield } from 'lucide-react';
+import { Home, Landmark, Map, Calendar, AlertOctagon, IndianRupee, FileText, ChevronRight, Menu, X, Shield, Cpu } from 'lucide-react';
 
 // Premium Loading Spinner fallback component
 function LoadingSpinner() {
@@ -70,6 +71,7 @@ export default function App() {
     { id: 'monthly', name: 'Monthly Burn Matrix', icon: Calendar, color: 'var(--ashoka-blue)' },
     { id: 'audit', name: 'CAG Audit Objections', icon: AlertOctagon, color: 'var(--crimson)' },
     { id: 'tax', name: 'Tax Inflow Receipts', icon: IndianRupee, color: 'var(--emerald)' },
+    { id: 'simulator', name: 'AI Fiscal Simulator', icon: Cpu, color: 'var(--emerald)' },
     { id: 'admin', name: 'Admin Portal', icon: Shield, color: 'var(--saffron)' }
   ];
 
@@ -309,6 +311,7 @@ export default function App() {
             {activeTab === 'monthly' && <MonthlyDashboard masterData={masterData} />}
             {activeTab === 'audit' && <AuditDashboard masterData={masterData} />}
             {activeTab === 'tax' && <TaxDashboard masterData={masterData} />}
+            {activeTab === 'simulator' && <SimulatorDashboard />}
             {activeTab === 'admin' && <AdminDashboard />}
           </Suspense>
         </main>
