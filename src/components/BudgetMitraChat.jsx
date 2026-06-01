@@ -169,7 +169,58 @@ const translateToHindi = (text) => {
   let translated = text;
   
   const translationPairs = [
-    { eng: "Namaste! I am Budget Mitra, your dedicated AI Assistant. I can scan parliament budget documents in real-time to answer your questions about scheme allocations, deficit metrics, or tax collections. Ask me anything!", hin: "नमस्ते! मैं आपका बजट मित्र AI सहायक हूँ। मैं घाटे के आँकड़ों, योजनाओं और कर संग्रह के बारे में आपके प्रश्नों का उत्तर देने के लिए वास्तविक समय में संसदीय बजट दस्तावेजों को स्कैन कर सकता हूँ। मुझसे कुछ भी पूछें!" },
+    {
+      eng: "Namaste! I am Budget Mitra, your dedicated AI Assistant. I can scan parliament budget documents in real-time to answer your questions about scheme allocations, deficit metrics, or tax collections. Ask me anything!",
+      hin: "नमस्ते! मैं आपका बजट मित्र AI सहायक हूँ। मैं घाटे के आँकड़ों, योजनाओं और कर संग्रह के बारे में आपके प्रश्नों का उत्तर देने के लिए वास्तविक समय में संसदीय बजट दस्तावेजों को स्कैन कर सकता हूँ। मुझसे कुछ भी पूछें!"
+    },
+    {
+      eng: "The Union Budget of India for the fiscal year 2026-27 (FY27) projects a total estimated outlay of INR 53,47,315 Crores (53.47 Lakh Crores). This represents a direct progressive increase in sovereign capital expenditure outlays to anchor national infrastructure and service debt interests.",
+      hin: "वित्त वर्ष 2026-27 (FY27) के लिए भारत का केंद्रीय बजट ₹53,47,315 करोड़ (53.47 लाख करोड़) के कुल अनुमानित परिव्यय का अनुमान लगाता है। यह राष्ट्रीय बुनियादी ढांचे को मजबूत करने और ऋण हितों को पूरा करने के लिए संप्रभु पूंजीगत व्यय में प्रत्यक्ष प्रगतिशील वृद्धि का प्रतिनिधित्व करता है।"
+    },
+    {
+      eng: "The Fiscal Deficit target for FY27 is estimated at 4.3% of GDP, amounting to INR 16,95,768 Crores. The revised estimate (RE) for FY26 settled at 4.4% of GDP. Primary Deficit is projected to fall to 0.7% of GDP (INR 2,91,796 Crores) indicating high fiscal stability.",
+      hin: "वित्त वर्ष 27 के लिए राजकोषीय घाटे का लक्ष्य सकल घरेलू उत्पाद (GDP) का 4.3% अनुमानित है, जो कि ₹16,95,768 करोड़ है। वित्त वर्ष 26 का संशोधित अनुमान (RE) सकल घरेलू उत्पाद का 4.4% रहा। प्राथमिक घाटा घटकर सकल घरेलू उत्पाद का 0.7% (₹2,91,796 करोड़) रहने का अनुमान है, जो उच्च राजकोषीय स्थिरता को दर्शाता है।"
+    },
+    {
+      eng: "Total Tax Inflow Receipts for the sovereign year 2026-27 BE project Corporation Tax receipts of INR 12,31,000 Crores, Personal Income Tax receipts of INR 14,66,000 Crores, and Union GST receipts of INR 10,19,020 Crores. Union Excise Duties contribute INR 3,88,910 Crores and Customs contribute INR 2,71,200 Crores.",
+      hin: "वित्त वर्ष 2026-27 (बजट अनुमान) के लिए कुल कर राजस्व आवक में कॉर्पोरेट कर से ₹12,31,000 करोड़, व्यक्तिगत आयकर से ₹14,66,000 करोड़, और केंद्रीय जीएसटी (GST) से ₹10,19,020 करोड़ का अनुमान है। केंद्रीय उत्पाद शुल्क ₹3,88,910 करोड़ और सीमा शुल्क ₹2,71,200 करोड़ का योगदान करते हैं।"
+    },
+    {
+      eng: "Expenditure allocations for 2026-27 BE allocate Establishment Expenditures of INR 8,24,114 Crores, Outlays on Major Schemes & Projects of INR 17,71,928 Crores, and Capital Expenditure of INR 12,21,821 Crores. Interest payments comprise the largest single sovereign outgo at INR 14,03,972 Crores.",
+      hin: "वित्त वर्ष 2026-27 के बजट अनुमानों में स्थापना व्यय के लिए ₹8,24,114 करोड़, प्रमुख योजनाओं और परियोजनाओं के लिए ₹17,71,928 करोड़, और पूंजीगत व्यय के लिए ₹12,21,821 करोड़ आवंटित किए गए हैं। ब्याज भुगतान कुल ₹14,03,972 करोड़ के साथ सबसे बड़ा एकल संप्रभु खर्च है।"
+    },
+    {
+      eng: "Resource transfers to States and Union Territories project a grand total transfer of INR 26,20,769 Crores. This is comprised of Devolution of States' share of taxes at INR 15,26,255 Crores, Finance Commission Grants of INR 1,29,397 Crores, and Centrally Sponsored Schemes of INR 5,20,333 Crores.",
+      hin: "राज्यों और केंद्र शासित प्रदेशों को संसाधन हस्तांतरण में कुल ₹26,20,769 करोड़ का हस्तांतरण अनुमानित है। इसमें करों में राज्यों की हिस्सेदारी का हस्तांतरण ₹15,26,255 करोड़, वित्त आयोग का अनुदान ₹1,29,397 करोड़, और केंद्र प्रायोजित योजनाएं ₹5,20,333 करोड़ शामिल हैं।"
+    },
+    {
+      eng: "The Ministry of Agriculture and Farmers Welfare receives a total scheme outlay of INR 1,32,000 Crores under key sub-schemes including PM-KISAN, Krishionnati Yojana, and Crop Insurance. The Ministry of Railways is allocated a record CapEx outlay of INR 2,62,000 Crores.",
+      hin: "कृषि और किसान कल्याण मंत्रालय को पीएम-किसान, कृष्णोन्नति योजना और फसल बीमा सहित प्रमुख योजनाओं के तहत ₹1,32,000 करोड़ का कुल बजटीय परिव्यय प्राप्त होता है। रेलवे मंत्रालय को ₹2,62,000 करोड़ का रिकॉर्ड पूंजीगत व्यय (CapEx) आवंटित किया गया है।"
+    },
+    {
+      eng: "Statewise Direct Benefit Transfer (DBT) rankings place Maharashtra as the top performer with a compliance score of 82.4% and total GST contribution of INR 32,410 Crores. Karnataka is second at 78.9% score, followed closely by Gujarat at 77.2% and Tamil Nadu at 76.5%.",
+      hin: "राज्यवार प्रत्यक्ष लाभ हस्तांतरण (DBT) रैंकिंग में महाराष्ट्र 82.4% के अनुपालन स्कोर और ₹32,410 करोड़ के कुल जीएसटी (GST) योगदान के साथ शीर्ष पर है। कर्नाटक 78.9% स्कोर के साथ दूसरे स्थान पर है, जिसके ठीक बाद गुजरात 77.2% और तमिलनाडु 76.5% पर है।"
+    },
+    {
+      eng: "The Comptroller and Auditor General (CAG) of India flagged specific expenditure deviations in the revised estimates, noting that interest liabilities on outstanding national debt arose by 11.2% over early predictions due to dynamic global treasury fluctuations.",
+      hin: "भारत के नियंत्रक एवं महालेखा परीक्षक (CAG) ने संशोधित अनुमानों में विशिष्ट व्यय विचलनों को चिह्नित किया, यह देखते हुए कि वैश्विक खजाना उतार-चढ़ाव के कारण बकाया राष्ट्रीय ऋण पर ब्याज देनदारियां शुरुआती अनुमानों से 11.2% बढ़ गईं।"
+    },
+    {
+      eng: "Based on the Union Budget ledger documentation, here is what I found:",
+      hin: "केंद्रीय बजट लेजर दस्तावेजों के आधार पर, मुझे यह जानकारी मिली है:"
+    },
+    {
+      eng: "Additional relevant budget disclosures:",
+      hin: "अतिरिक्त प्रासंगिक बजट प्रकटीकरण:"
+    },
+    {
+      eng: "I scanned all available Union Budget documents but could not locate highly relevant segments matching your search.",
+      hin: "मैंने सभी उपलब्ध केंद्रीय बजट दस्तावेजों को स्कैन किया लेकिन आपके खोज से मेल खाने वाले प्रासंगिक खंड नहीं मिल सके।"
+    },
+    {
+      eng: "Please try asking about 'railway CapEx allocation', 'statewise DBT compliance ranking', 'deficit statistics target', or 'direct tax receipts growth timeline'.",
+      hin: "कृपया 'रेलवे पूंजीगत आवंटन', 'राज्यवार डीबीटी अनुपालन रैंकिंग', 'घाटा सांख्यिकी लक्ष्य', या 'प्रत्यक्ष कर रसीद विकास समयरेखा' के बारे में पूछने का प्रयास करें।"
+    },
     { eng: "Offline Mode Active", hin: "ऑफलाइन मोड सक्रिय" },
     { eng: "You are currently offline", hin: "आप अभी ऑफलाइन हैं" },
     { eng: "Budget Mitra is running in offline fallback mode using cached local databases", hin: "बजट मित्र कैश्ड लोकल डेटाबेस का उपयोग करके ऑफलाइन मोड में काम कर रहा है" },
