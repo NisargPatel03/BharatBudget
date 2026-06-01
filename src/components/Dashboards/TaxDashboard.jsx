@@ -25,6 +25,37 @@ export default function TaxDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
   const rawMonthly = masterData.monthly_tax_collections || [];
 
+  const [activeInflow, setActiveInflow] = useState('gst');
+
+  const inflowSources = [
+    { id: 'income', name: '✏️ Personal Income Tax', share: 26 },
+    { id: 'gst', name: '🛍️ GST & Service Tax', share: 25 },
+    { id: 'corp', name: '🏢 Corporate Income Tax', share: 19 },
+    { id: 'borrowing', name: '📈 Sovereign Borrowings', share: 16 },
+    { id: 'excise', name: '⚓ Excise & Customs', share: 14 }
+  ];
+
+  const outlayDestinations = [
+    { id: 'interest', name: '🏛️ Sovereign Interest Servicing', share: 21 },
+    { id: 'devolution', name: '🗺️ States Share of Devolutions', share: 19 },
+    { id: 'central', name: '🛸 Central Sector Schemes', share: 16 },
+    { id: 'commission', name: '🤝 Finance Commission Grants', share: 9 },
+    { id: 'welfare', name: '💎 Welfare & DBT Pools', share: 8 },
+    { id: 'defence', name: '🛡️ National Defence', share: 8 },
+    { id: 'subsidy', name: '🌾 Subsidies & Pensions', share: 19 }
+  ];
+
+  const calculateDynamicSplit = (inflowId, outlayId) => {
+    const splits = {
+      income: { interest: 25, devolution: 18, central: 15, commission: 8, welfare: 12, defence: 6, subsidy: 16 },
+      gst: { interest: 15, devolution: 24, central: 18, commission: 10, welfare: 10, defence: 5, subsidy: 18 },
+      corp: { interest: 28, devolution: 14, central: 14, commission: 8, welfare: 8, defence: 12, subsidy: 16 },
+      borrowing: { interest: 35, devolution: 10, central: 15, commission: 6, welfare: 6, defence: 10, subsidy: 18 },
+      excise: { interest: 10, devolution: 20, central: 20, commission: 10, welfare: 8, defence: 12, subsidy: 20 }
+    };
+    return splits[inflowId]?.[outlayId] || 10;
+  };
+
   const timelineLabels = ['Actuals 24-25', 'BE 2025-26', 'RE 2025-26', 'BE 2026-27'];
   const activeYearLabel = timelineLabels[activeYearIndex] || 'BE 2026-27';
 
@@ -450,13 +481,13 @@ export default function TaxDashboard({ masterData }) {
         </div>
       </div>
 
-      {/* Interactive SVG Sankey Tax Devolution Flow */}
+      {/* Interactive Sovereign Tax Devolution Pipeline Ledger */}
       <div className="glass-panel col-12 animate-fade-in" style={{
         padding: '24px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '12px',
-        background: 'rgba(16, 185, 129, 0.02)',
+        gap: '20px',
+        background: 'rgba(16, 185, 129, 0.01)',
         border: '1px solid var(--border-glass-active)',
         borderRadius: '16px',
         boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
@@ -465,102 +496,152 @@ export default function TaxDashboard({ masterData }) {
           <div>
             <h3 style={{ fontSize: '16px', fontWeight: 700, margin: 0, color: 'var(--emerald)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span className="dot-bounce" style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--emerald)', display: 'inline-block', boxShadow: '0 0 8px var(--emerald)' }} />
-              Interactive Sovereign Tax Devolution Flow
+              Interactive Sovereign Tax Devolution Pipeline Ledger
             </h3>
             <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-              Hover over pathways to trace the devolution of capital from sovereign inflows into states and national spending targets.
+              Click any inflow source on the left to trace its visual flow and distribution into national spending outlays on the right.
             </span>
           </div>
           <span style={{ fontSize: '9px', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--emerald)', padding: '3px 8px', borderRadius: '10px', fontWeight: 700 }}>
-            LIVE SANKEY ENGINE
+            INTERACTIVE LEDGER v2.0
           </span>
         </div>
 
-        <div style={{ position: 'relative', width: '100%', overflowX: 'auto', background: 'rgba(0,0,0,0.1)', borderRadius: '12px', padding: '16px' }}>
-          <svg viewBox="0 0 900 300" style={{ width: '100%', minWidth: '750px', height: 'auto', display: 'block' }}>
-            <defs>
-              <linearGradient id="flow-inflow" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="var(--saffron)" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="var(--ashoka-blue)" stopOpacity="0.15" />
-              </linearGradient>
-              <linearGradient id="flow-outflow" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="var(--ashoka-blue)" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="var(--emerald)" stopOpacity="0.45" />
-              </linearGradient>
-            </defs>
+        {/* Dashboard Pipeline Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1.2fr 0.6fr 1.2fr',
+          gap: '28px',
+          alignItems: 'stretch',
+          marginTop: '10px'
+        }} className="flex-responsive-stack">
+          
+          {/* Column 1: Tax Inflow Sources */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--saffron)', borderBottom: '1px solid var(--border-glass-active)', paddingBottom: '8px', display: 'flex', justifyContent: 'space-between', margin: 0 }}>
+              <span>📥 TAX INFLOW SOURCE</span>
+              <span>PORTION SHARE</span>
+            </h4>
+            {inflowSources.map((inf) => {
+              const isActive = activeInflow === inf.id;
+              return (
+                <div
+                  key={inf.id}
+                  onClick={() => setActiveInflow(inf.id)}
+                  style={{
+                    padding: '12px 16px',
+                    background: isActive ? 'rgba(251, 146, 60, 0.12)' : 'var(--bg-secondary)',
+                    border: '1.5px solid',
+                    borderColor: isActive ? 'var(--saffron)' : 'var(--border-glass)',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow: isActive ? '0 4px 16px rgba(251, 146, 60, 0.1)' : 'none',
+                    transform: isActive ? 'scale(1.02)' : 'scale(1)'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{inf.name}</span>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--saffron)' }}>{inf.share}%</span>
+                  </div>
+                  <div style={{ height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ width: `${inf.share}%`, height: '100%', background: 'var(--saffron)', borderRadius: '3px' }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
-            <style>{`
-              .sankey-path {
-                transition: stroke-width 0.3s, stroke-opacity 0.3s;
-                stroke-linecap: round;
-              }
-              .sankey-path:hover {
-                stroke-opacity: 0.8 !important;
-                stroke-width: 14px !important;
-              }
-              .sankey-node {
-                transition: fill 0.3s, transform 0.3s;
-              }
-              .sankey-node:hover {
-                fill: var(--text-primary) !important;
-              }
-            `}</style>
+          {/* Column 2: Consolidated Treasury Fund */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--bg-secondary)',
+            border: '1.5px dashed var(--border-glass-active)',
+            borderRadius: '12px',
+            padding: '20px',
+            minHeight: '220px',
+            textAlign: 'center'
+          }}>
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'var(--bg-primary)',
+              border: '2px solid var(--ashoka-blue)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 0 20px var(--ashoka-glow)',
+              marginBottom: '12px',
+              animation: activeInflow ? 'pulse-central 1s infinite alternate' : 'none'
+            }}>
+              <Landmark size={24} color="var(--ashoka-blue)" />
+            </div>
+            <strong style={{ fontSize: '11px', color: 'var(--text-primary)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Consolidated Fund</strong>
+            <span style={{ fontSize: '9px', color: 'var(--text-secondary)', marginTop: '2px' }}>of the Sovereign</span>
+            
+            {activeInflow ? (
+              <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
+                <span className="dot-bounce" style={{ fontSize: '10px', color: 'var(--emerald)', fontWeight: 800, display: 'block' }}>⚡ Devolution Active</span>
+                <span style={{ fontSize: '9px', color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.03)', padding: '2px 6px', borderRadius: '4px' }}>
+                  {inflowSources.find(i => i.id === activeInflow)?.name.split(' ').slice(1).join(' ')}
+                </span>
+              </div>
+            ) : (
+              <span style={{ fontSize: '9px', color: 'var(--text-secondary)', marginTop: '20px' }}>Select Inflow to trace flow</span>
+            )}
+          </div>
 
-            {/* Flows Left (Inflows) -> Center (Treasury) */}
-            <path d="M 60 40 C 200 40, 250 140, 440 140" fill="none" stroke="url(#flow-inflow)" strokeWidth="8" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 60 90 C 200 90, 250 145, 440 145" fill="none" stroke="url(#flow-inflow)" strokeWidth="8" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 60 140 C 200 140, 250 150, 440 150" fill="none" stroke="url(#flow-inflow)" strokeWidth="7" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 60 190 C 200 190, 250 155, 440 155" fill="none" stroke="url(#flow-inflow)" strokeWidth="6" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 60 240 C 200 240, 250 160, 440 160" fill="none" stroke="url(#flow-inflow)" strokeWidth="5" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
+          {/* Column 3: Devolution Outlays */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--emerald)', borderBottom: '1px solid var(--border-glass-active)', paddingBottom: '8px', display: 'flex', justifyContent: 'space-between', margin: 0 }}>
+              <span>📤 EXPENDITURE OUTLAY</span>
+              <span>DYNAMIC WEIGHT</span>
+            </h4>
+            {outlayDestinations.map((out) => {
+              const dynamicShare = activeInflow 
+                ? calculateDynamicSplit(activeInflow, out.id)
+                : out.share;
+              return (
+                <div
+                  key={out.id}
+                  style={{
+                    padding: '12px 16px',
+                    background: activeInflow ? 'rgba(16, 185, 129, 0.04)' : 'var(--bg-secondary)',
+                    border: '1.5px solid var(--border-glass)',
+                    borderRadius: '10px',
+                    transition: 'all 0.25s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--text-primary)' }}>{out.name}</span>
+                    <span style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--emerald)' }}>{dynamicShare}%</span>
+                  </div>
+                  <div style={{ height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{
+                      width: `${dynamicShare}%`,
+                      height: '100%',
+                      background: 'var(--emerald)',
+                      borderRadius: '3px',
+                      transition: 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
-            {/* Flows Center (Treasury) -> Right (Outlays) */}
-            <path d="M 460 140 C 650 140, 700 20, 840 20" fill="none" stroke="url(#flow-outflow)" strokeWidth="8" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 460 145 C 650 145, 700 60, 840 60" fill="none" stroke="url(#flow-outflow)" strokeWidth="8" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 460 150 C 650 150, 700 100, 840 100" fill="none" stroke="url(#flow-outflow)" strokeWidth="7" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 460 155 C 650 155, 700 140, 840 140" fill="none" stroke="url(#flow-outflow)" strokeWidth="6" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 460 160 C 650 160, 700 180, 840 180" fill="none" stroke="url(#flow-outflow)" strokeWidth="5" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 460 165 C 650 165, 700 220, 840 220" fill="none" stroke="url(#flow-outflow)" strokeWidth="4" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-            <path d="M 460 170 C 650 170, 700 260, 840 260" fill="none" stroke="url(#flow-outflow)" strokeWidth="5" className="sankey-path" style={{ strokeOpacity: 0.35 }} />
-
-            {/* Left Node Circles */}
-            <circle cx="60" cy="40" r="6" fill="var(--saffron)" className="sankey-node" />
-            <circle cx="60" cy="90" r="6" fill="var(--saffron)" className="sankey-node" />
-            <circle cx="60" cy="140" r="6" fill="var(--saffron)" className="sankey-node" />
-            <circle cx="60" cy="190" r="6" fill="var(--saffron)" className="sankey-node" />
-            <circle cx="60" cy="240" r="6" fill="var(--saffron)" className="sankey-node" />
-
-            {/* Center Node */}
-            <rect x="440" y="130" width="20" height="40" rx="3" fill="var(--ashoka-blue)" className="sankey-node" />
-
-            {/* Right Node Circles */}
-            <circle cx="840" cy="20" r="6" fill="var(--emerald)" className="sankey-node" />
-            <circle cx="840" cy="60" r="6" fill="var(--emerald)" className="sankey-node" />
-            <circle cx="840" cy="100" r="6" fill="var(--emerald)" className="sankey-node" />
-            <circle cx="840" cy="140" r="6" fill="var(--emerald)" className="sankey-node" />
-            <circle cx="840" cy="180" r="6" fill="var(--emerald)" className="sankey-node" />
-            <circle cx="840" cy="220" r="6" fill="var(--emerald)" className="sankey-node" />
-            <circle cx="840" cy="260" r="6" fill="var(--emerald)" className="sankey-node" />
-
-            {/* Left Labels */}
-            <text x="50" y="24" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Personal Income Tax (26%)</text>
-            <text x="50" y="74" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">GST & Service Tax (25%)</text>
-            <text x="50" y="124" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Corporate Income Tax (19%)</text>
-            <text x="50" y="174" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Sovereign Borrowings (16%)</text>
-            <text x="50" y="224" textAnchor="end" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Excise & Customs (14%)</text>
-
-            {/* Center Label */}
-            <text x="450" y="120" textAnchor="middle" fill="var(--text-primary)" fontSize="11" fontWeight="800" letterSpacing="0.5">CENTRAL TREASURY</text>
-
-            {/* Right Labels */}
-            <text x="850" y="24" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Sovereign Interest Servicing (21%)</text>
-            <text x="850" y="64" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">States Share of Devolutions (19%)</text>
-            <text x="850" y="104" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Central Sector Schemes (16%)</text>
-            <text x="850" y="144" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Finance Commission Grants (9%)</text>
-            <text x="850" y="184" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Welfare & DBT Pools (8%)</text>
-            <text x="850" y="224" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">National Defence (8%)</text>
-            <text x="850" y="264" textAnchor="start" fill="var(--text-secondary)" fontSize="10.5" fontWeight="bold">Subsidies & Pensions (19%)</text>
-          </svg>
         </div>
+        
+        <style>{`
+          @keyframes pulse-central {
+            from { box-shadow: 0 0 10px var(--ashoka-glow); }
+            to { box-shadow: 0 0 25px rgba(0, 136, 255, 0.6); transform: scale(1.05); }
+          }
+        `}</style>
       </div>
 
       {/* 3. Bottom Row: SGST Ranking & Citizen Tax Receipt Generator */}
@@ -811,23 +892,78 @@ export default function TaxDashboard({ masterData }) {
                 <span style={{ fontSize: '8px', borderTop: '1px dashed #8b5a2b', paddingTop: '4px', color: '#5c4033', textTransform: 'uppercase', fontWeight: 'bold', width: '140px', textAlign: 'center' }}>Secretary, Dept of Revenue</span>
               </div>
  
-              {/* Verification QR Code */}
+              {/* Verification QR Code (Authentic Version 1 Finder Corners) */}
               <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0 6px 0', position: 'relative', zIndex: 1 }}>
                 <svg viewBox="0 0 21 21" style={{ width: '45px', height: '45px', opacity: 0.85 }}>
-                  <path d="M0,0 h7 v7 h-7 z M0,14 h7 v7 h-7 z M14,0 h7 v7 h-7 z M14,14 h7 v7 h-7 z M3,3 h1 v1 h-1 z M3,17 h1 v1 h-1 z M17,3 h1 v1 h-1 z M8,0 h1 v2 h-1 z M10,3 h2 v1 h-2 z M8,8 h3 v1 h-3 z M0,9 h2 v2 h-2 z M12,12 h2 v2 h-2 z" fill="#1a1510"/>
+                  {/* Top-Left Finder */}
+                  <rect x="0" y="0" width="7" height="7" fill="#1a1510" />
+                  <rect x="1" y="1" width="5" height="5" fill="#fffdf5" />
+                  <rect x="2" y="2" width="3" height="3" fill="#1a1510" />
+
+                  {/* Top-Right Finder */}
+                  <rect x="14" y="0" width="7" height="7" fill="#1a1510" />
+                  <rect x="15" y="1" width="5" height="5" fill="#fffdf5" />
+                  <rect x="16" y="2" width="3" height="3" fill="#1a1510" />
+
+                  {/* Bottom-Left Finder */}
+                  <rect x="0" y="14" width="7" height="7" fill="#1a1510" />
+                  <rect x="1" y="15" width="5" height="5" fill="#fffdf5" />
+                  <rect x="2" y="16" width="3" height="3" fill="#1a1510" />
+
+                  {/* Timing Patterns */}
+                  <rect x="8" y="2" width="1" height="1" fill="#1a1510" />
+                  <rect x="10" y="2" width="1" height="1" fill="#1a1510" />
+                  <rect x="12" y="2" width="1" height="1" fill="#1a1510" />
+                  <rect x="2" y="8" width="1" height="1" fill="#1a1510" />
+                  <rect x="2" y="10" width="1" height="1" fill="#1a1510" />
+                  <rect x="2" y="12" width="1" height="1" fill="#1a1510" />
+
+                  {/* Scattered Data Bits */}
+                  <rect x="8" y="5" width="2" height="1" fill="#1a1510" />
+                  <rect x="9" y="7" width="1" height="2" fill="#1a1510" />
+                  <rect x="11" y="6" width="1" height="1" fill="#1a1510" />
+                  <rect x="12" y="8" width="2" height="1" fill="#1a1510" />
+                  <rect x="14" y="9" width="1" height="2" fill="#1a1510" />
+                  
+                  <rect x="8" y="14" width="1" height="2" fill="#1a1510" />
+                  <rect x="9" y="17" width="2" height="1" fill="#1a1510" />
+                  <rect x="12" y="15" width="1" height="3" fill="#1a1510" />
+                  <rect x="14" y="14" width="2" height="1" fill="#1a1510" />
+                  <rect x="17" y="14" width="1" height="2" fill="#1a1510" />
+                  <rect x="15" y="17" width="3" height="1" fill="#1a1510" />
+                  <rect x="19" y="15" width="1" height="3" fill="#1a1510" />
+                  <rect x="18" y="19" width="2" height="1" fill="#1a1510" />
+                  <rect x="14" y="20" width="3" height="1" fill="#1a1510" />
+                  
+                  <rect x="14" y="8" width="2" height="1" fill="#1a1510" />
+                  <rect x="17" y="7" width="1" height="2" fill="#1a1510" />
+                  <rect x="19" y="8" width="2" height="1" fill="#1a1510" />
+                  <rect x="15" y="10" width="3" height="1" fill="#1a1510" />
+                  <rect x="18" y="11" width="1" height="2" fill="#1a1510" />
+                  <rect x="20" y="12" width="1" height="1" fill="#1a1510" />
                 </svg>
               </div>
 
-              {/* Barcode graphic for realistic vintage thermal receipt look */}
+              {/* Barcode graphic with official Indian Country Code prefix (890) */}
               <div style={{
-                height: '25px',
-                margin: '8px auto 4px auto',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                margin: '12px auto 4px auto',
                 width: '150px',
-                opacity: 0.4,
-                background: 'repeating-linear-gradient(90deg, #1a1510, #1a1510 2px, transparent 2px, transparent 5px, #1a1510 5px, #1a1510 8px, transparent 8px, transparent 10px)',
+                opacity: 0.6,
                 position: 'relative',
                 zIndex: 1
-              }}></div>
+              }}>
+                <div style={{
+                  height: '20px',
+                  width: '100%',
+                  background: 'repeating-linear-gradient(90deg, #1a1510, #1a1510 2px, transparent 2px, transparent 4px, #1a1510 4px, #1a1510 5px, transparent 5px, transparent 8px)',
+                }} />
+                <span style={{ fontSize: '7.5px', fontFamily: 'monospace', letterSpacing: '2.5px', marginTop: '3px', color: '#1a1510', fontWeight: 'bold' }}>
+                  8901072002627
+                </span>
+              </div>
             </div>
           </div>
         </div>
