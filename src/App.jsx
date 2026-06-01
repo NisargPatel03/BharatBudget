@@ -61,10 +61,12 @@ export default function App() {
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);
 
   const themesList = [
-    { id: 'sovereign', name: 'Midnight Sovereign', dotColor: '#ff6b00', secondaryColor: '#00d285' },
-    { id: 'ashoka', name: 'Imperial Ashoka', dotColor: '#f59e0b', secondaryColor: '#2563eb' },
-    { id: 'vedic', name: 'Vedic Forest', dotColor: '#f97316', secondaryColor: '#10b981' },
-    { id: 'horizon', name: 'Saffron Horizon', dotColor: '#ea580c', secondaryColor: '#fb923c' }
+    { id: 'sovereign', name: '🌌 Midnight Sovereign', dotColor: '#ff6b00', secondaryColor: '#00d285' },
+    { id: 'ashoka', name: '🏛️ Imperial Ashoka', dotColor: '#f59e0b', secondaryColor: '#2563eb' },
+    { id: 'vedic', name: '🌿 Vedic Forest', dotColor: '#f97316', secondaryColor: '#10b981' },
+    { id: 'horizon', name: '🌅 Saffron Horizon', dotColor: '#ea580c', secondaryColor: '#fb923c' },
+    { id: 'alabaster', name: '☀️ Sovereign Alabaster', dotColor: '#ea580c', secondaryColor: '#16a34a' },
+    { id: 'platinum', name: '💎 Platinum Registry', dotColor: '#d97706', secondaryColor: '#1e3a8a' }
   ];
 
   // Dynamic CSS custom variables injector
@@ -76,6 +78,11 @@ export default function App() {
       root.style.setProperty('--bg-primary', '#050811');
       root.style.setProperty('--bg-secondary', '#0b1120');
       root.style.setProperty('--bg-card', 'rgba(11, 17, 32, 0.65)');
+      root.style.setProperty('--text-primary', '#f8fafc');
+      root.style.setProperty('--text-secondary', '#94a3b8');
+      root.style.setProperty('--text-muted', '#475569');
+      root.style.setProperty('--border-glass', 'rgba(255, 255, 255, 0.04)');
+      root.style.setProperty('--border-glass-active', 'rgba(255, 255, 255, 0.15)');
       root.style.setProperty('--saffron', '#ff6b00');
       root.style.setProperty('--saffron-glow', 'rgba(255, 107, 0, 0.15)');
       root.style.setProperty('--saffron-border', 'rgba(255, 107, 0, 0.3)');
@@ -89,6 +96,11 @@ export default function App() {
       root.style.setProperty('--bg-primary', '#040a1e');
       root.style.setProperty('--bg-secondary', '#0a122c');
       root.style.setProperty('--bg-card', 'rgba(10, 18, 44, 0.7)');
+      root.style.setProperty('--text-primary', '#f8fafc');
+      root.style.setProperty('--text-secondary', '#94a3b8');
+      root.style.setProperty('--text-muted', '#475569');
+      root.style.setProperty('--border-glass', 'rgba(255, 255, 255, 0.04)');
+      root.style.setProperty('--border-glass-active', 'rgba(255, 255, 255, 0.15)');
       root.style.setProperty('--saffron', '#f59e0b');
       root.style.setProperty('--saffron-glow', 'rgba(245, 158, 11, 0.15)');
       root.style.setProperty('--saffron-border', 'rgba(245, 158, 11, 0.3)');
@@ -102,6 +114,11 @@ export default function App() {
       root.style.setProperty('--bg-primary', '#020e0b');
       root.style.setProperty('--bg-secondary', '#031713');
       root.style.setProperty('--bg-card', 'rgba(3, 23, 19, 0.7)');
+      root.style.setProperty('--text-primary', '#f8fafc');
+      root.style.setProperty('--text-secondary', '#94a3b8');
+      root.style.setProperty('--text-muted', '#475569');
+      root.style.setProperty('--border-glass', 'rgba(255, 255, 255, 0.04)');
+      root.style.setProperty('--border-glass-active', 'rgba(255, 255, 255, 0.15)');
       root.style.setProperty('--saffron', '#f97316');
       root.style.setProperty('--saffron-glow', 'rgba(249, 115, 22, 0.15)');
       root.style.setProperty('--saffron-border', 'rgba(249, 115, 22, 0.3)');
@@ -115,6 +132,11 @@ export default function App() {
       root.style.setProperty('--bg-primary', '#110807');
       root.style.setProperty('--bg-secondary', '#1c110f');
       root.style.setProperty('--bg-card', 'rgba(28, 17, 15, 0.7)');
+      root.style.setProperty('--text-primary', '#f8fafc');
+      root.style.setProperty('--text-secondary', '#94a3b8');
+      root.style.setProperty('--text-muted', '#475569');
+      root.style.setProperty('--border-glass', 'rgba(255, 255, 255, 0.04)');
+      root.style.setProperty('--border-glass-active', 'rgba(255, 255, 255, 0.15)');
       root.style.setProperty('--saffron', '#ea580c');
       root.style.setProperty('--saffron-glow', 'rgba(234, 88, 12, 0.15)');
       root.style.setProperty('--saffron-border', 'rgba(234, 88, 12, 0.3)');
@@ -124,6 +146,42 @@ export default function App() {
       root.style.setProperty('--ashoka-blue', '#dc2626');
       root.style.setProperty('--ashoka-glow', 'rgba(220, 38, 38, 0.15)');
       root.style.setProperty('--ashoka-border', 'rgba(220, 38, 38, 0.3)');
+    } else if (theme === 'alabaster') {
+      root.style.setProperty('--bg-primary', '#f8fafc');
+      root.style.setProperty('--bg-secondary', '#ffffff');
+      root.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.7)');
+      root.style.setProperty('--border-glass', 'rgba(0, 0, 0, 0.08)');
+      root.style.setProperty('--border-glass-active', 'rgba(0, 0, 0, 0.20)');
+      root.style.setProperty('--text-primary', '#0f172a');
+      root.style.setProperty('--text-secondary', '#475569');
+      root.style.setProperty('--text-muted', '#94a3b8');
+      root.style.setProperty('--saffron', '#ea580c');
+      root.style.setProperty('--saffron-glow', 'rgba(234, 88, 12, 0.1)');
+      root.style.setProperty('--saffron-border', 'rgba(234, 88, 12, 0.2)');
+      root.style.setProperty('--emerald', '#16a34a');
+      root.style.setProperty('--emerald-glow', 'rgba(22, 163, 74, 0.1)');
+      root.style.setProperty('--emerald-border', 'rgba(22, 163, 74, 0.2)');
+      root.style.setProperty('--ashoka-blue', '#2563eb');
+      root.style.setProperty('--ashoka-glow', 'rgba(37, 99, 235, 0.1)');
+      root.style.setProperty('--ashoka-border', 'rgba(37, 99, 235, 0.2)');
+    } else if (theme === 'platinum') {
+      root.style.setProperty('--bg-primary', '#f1f5f9');
+      root.style.setProperty('--bg-secondary', '#ffffff');
+      root.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.75)');
+      root.style.setProperty('--border-glass', 'rgba(0, 0, 0, 0.08)');
+      root.style.setProperty('--border-glass-active', 'rgba(0, 0, 0, 0.20)');
+      root.style.setProperty('--text-primary', '#0f172a');
+      root.style.setProperty('--text-secondary', '#475569');
+      root.style.setProperty('--text-muted', '#94a3b8');
+      root.style.setProperty('--saffron', '#d97706');
+      root.style.setProperty('--saffron-glow', 'rgba(217, 119, 6, 0.1)');
+      root.style.setProperty('--saffron-border', 'rgba(217, 119, 6, 0.2)');
+      root.style.setProperty('--emerald', '#059669');
+      root.style.setProperty('--emerald-glow', 'rgba(5, 150, 105, 0.1)');
+      root.style.setProperty('--emerald-border', 'rgba(5, 150, 105, 0.2)');
+      root.style.setProperty('--ashoka-blue', '#1e3a8a');
+      root.style.setProperty('--ashoka-glow', 'rgba(30, 58, 138, 0.1)');
+      root.style.setProperty('--ashoka-border', 'rgba(30, 58, 138, 0.2)');
     }
   }, [theme]);
 
@@ -316,22 +374,25 @@ export default function App() {
             </button>
 
             {themeMenuOpen && (
-              <div style={{
-                position: 'absolute',
-                top: '44px',
-                right: '12px',
-                background: 'rgba(11, 15, 25, 0.95)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '12px',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                padding: '8px',
-                width: '190px',
-                zIndex: 1000,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px'
-              }}>
+              <div 
+                className="theme-dropdown-ani"
+                style={{
+                  position: 'absolute',
+                  top: '44px',
+                  right: '12px',
+                  background: 'var(--bg-secondary)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid var(--border-glass-active)',
+                  borderRadius: '12px',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                  padding: '8px',
+                  width: '210px',
+                  zIndex: 1000,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px'
+                }}
+              >
                 {themesList.map((t) => {
                   const isActive = theme === t.id;
                   return (
