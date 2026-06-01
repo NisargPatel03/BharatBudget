@@ -164,6 +164,31 @@ const renderFormattedText = (text) => {
   });
 };
 
+const BudgetMitraLogo = ({ size = 24 }) => (
+  <svg viewBox="0 0 100 100" width={size} height={size} xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+    <defs>
+      <linearGradient id="tricolorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#f97316" />
+        <stop offset="50%" stopColor="#ffffff" />
+        <stop offset="100%" stopColor="#10b981" />
+      </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="46" fill="rgba(11, 15, 25, 0.6)" stroke="url(#tricolorGrad)" strokeWidth="4.5" />
+    {/* Shield of Sovereign Audit Trust */}
+    <path d="M30 32 H70 V52 C70 64 50 74 50 74 C50 74 30 64 30 52 Z" fill="rgba(15, 23, 42, 0.95)" stroke="#38bdf8" strokeWidth="4" strokeLinejoin="round" />
+    {/* Growth trendline curve mouth */}
+    <path d="M41 55 L47 51 L53 57 L59 52" fill="none" stroke="#10b981" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+    {/* Glowing Smart Eyes */}
+    <circle cx="43" cy="42" r="4.5" fill="#38bdf8" />
+    <circle cx="43" cy="42" r="2" fill="#fff" />
+    <circle cx="57" cy="42" r="4.5" fill="#38bdf8" />
+    <circle cx="57" cy="42" r="2" fill="#fff" />
+    {/* Antenna Node */}
+    <path d="M50 32 V20" stroke="#38bdf8" strokeWidth="3.5" strokeLinecap="round" />
+    <circle cx="50" cy="17" r="5" fill="#f97316" />
+  </svg>
+);
+
 export default function BudgetMitraChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -311,7 +336,7 @@ export default function BudgetMitraChat() {
             e.currentTarget.style.boxShadow = '0 0 20px rgba(251, 146, 60, 0.4)';
           }}
         >
-          <MessageSquare color="#fff" size={26} />
+          <BudgetMitraLogo size={34} />
           <span style={{
             position: 'absolute',
             top: '2px',
@@ -360,12 +385,15 @@ export default function BudgetMitraChat() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div style={{
-                background: 'rgba(251, 146, 60, 0.1)',
-                padding: '6px',
+                background: 'rgba(11, 15, 25, 0.5)',
+                padding: '4px',
                 borderRadius: '8px',
-                border: '1px solid rgba(251, 146, 60, 0.2)'
+                border: '1px solid rgba(255,255,255,0.08)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}>
-                <Bot size={20} color="var(--saffron)" />
+                <BudgetMitraLogo size={22} />
               </div>
               <div>
                 <h3 style={{ fontSize: '14.5px', fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '0.3px' }}>Budget Mitra AI</h3>
