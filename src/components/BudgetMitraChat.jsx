@@ -221,6 +221,38 @@ const translateToHindi = (text) => {
       eng: "Please try asking about 'railway CapEx allocation', 'statewise DBT compliance ranking', 'deficit statistics target', or 'direct tax receipts growth timeline'.",
       hin: "कृपया 'रेलवे पूंजीगत आवंटन', 'राज्यवार डीबीटी अनुपालन रैंकिंग', 'घाटा सांख्यिकी लक्ष्य', या 'प्रत्यक्ष कर रसीद विकास समयरेखा' के बारे में पूछने का प्रयास करें।"
     },
+    {
+      eng: "The Union Budget of India for the fiscal year 2026-27 (FY27) projects a total estimated outlay of INR 53,47,315 Crores (53.47 Lakh Crores). ...",
+      hin: "वित्त वर्ष 2026-27 (FY27) के लिए भारत का केंद्रीय बजट ₹53,47,315 करोड़ (53.47 लाख करोड़) के कुल अनुमानित परिव्यय का अनुमान लगाता है। ..."
+    },
+    {
+      eng: "The Fiscal Deficit target for FY27 is estimated at 4.3% of GDP, amounting to INR 16,95,768 Crores. The revised estimate (RE) for FY26 settle...",
+      hin: "वित्त वर्ष 27 के लिए राजकोषीय घाटे का लक्ष्य सकल घरेलू उत्पाद (GDP) का 4.3% अनुमानित है, जो कि ₹16,95,768 करोड़ है। वित्त वर्ष 26 का संशोधित ..."
+    },
+    {
+      eng: "Total Tax Inflow Receipts for the sovereign year 2026-27 BE project Corporation Tax receipts of INR 12,31,000 Crores, Personal Income Tax r...",
+      hin: "वित्त वर्ष 2026-27 (बजट अनुमान) के लिए कुल कर राजस्व आवक में कॉर्पोरेट कर से ₹12,31,000 करोड़, व्यक्तिगत आयकर से ₹14,66,000 करोड़, ..."
+    },
+    {
+      eng: "Expenditure allocations for 2026-27 BE allocate Establishment Expenditures of INR 8,24,114 Crores, Outlays on Major Schemes & Projects of ...",
+      hin: "वित्त वर्ष 2026-27 के बजट अनुमानों में स्थापना व्यय के लिए ₹8,24,114 करोड़, प्रमुख योजनाओं और परियोजनाओं के लिए ₹17,71,928 करोड़, ..."
+    },
+    {
+      eng: "Resource transfers to States and Union Territories project a grand total transfer of INR 26,20,769 Crores. This is comprised of Devolution o...",
+      hin: "राज्यों और केंद्र शासित प्रदेशों को संसाधन हस्तांतरण में कुल ₹26,20,769 करोड़ का हस्तांतरण अनुमानित है। इसमें करों में राज्यों ..."
+    },
+    {
+      eng: "The Ministry of Agriculture and Farmers Welfare receives a total scheme outlay of INR 1,32,000 Crores under key sub-schemes including PM-KI...",
+      hin: "कृषि और किसान कल्याण मंत्रालय को पीएम-किसान, कृष्णोन्नति योजना और फसल बीमा सहित प्रमुख योजनाओं के तहत ₹1,32,000 करोड़ का कुल ..."
+    },
+    {
+      eng: "Statewise Direct Benefit Transfer (DBT) rankings place Maharashtra as the top performer with a compliance score of 82.4% and total GST cont...",
+      hin: "राज्यवार प्रत्यक्ष लाभ हस्तांतरण (DBT) रैंकिंग में महाराष्ट्र 82.4% के अनुपालन स्कोर और ₹32,410 करोड़ के कुल जीएसटी (GST) ..."
+    },
+    {
+      eng: "The Comptroller and Auditor General (CAG) of India flagged specific expenditure deviations in the revised estimates, noting that interest li...",
+      hin: "भारत के नियंत्रक एवं महालेखा परीक्षक (CAG) ने संशोधित अनुमानों में विशिष्ट व्यय विचलनों को चिह्नित किया, यह देखते हुए ..."
+    },
     { eng: "Offline Mode Active", hin: "ऑफलाइन मोड सक्रिय" },
     { eng: "You are currently offline", hin: "आप अभी ऑफलाइन हैं" },
     { eng: "Budget Mitra is running in offline fallback mode using cached local databases", hin: "बजट मित्र कैश्ड लोकल डेटाबेस का उपयोग करके ऑफलाइन मोड में काम कर रहा है" },
