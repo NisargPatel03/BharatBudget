@@ -166,15 +166,16 @@ export default function ChartContainer({ height = 240, className = '', style = {
               position: 'absolute',
               right: 0,
               top: '28px',
-              background: '#0e1322',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-glass-active)',
               borderRadius: '6px',
               padding: '4px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
               minWidth: '110px',
               display: 'flex',
               flexDirection: 'column',
               gap: '2px',
+              zIndex: 99,
             }}
           >
             <button

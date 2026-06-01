@@ -679,8 +679,11 @@ body {
   .glass-panel {
     padding: 16px !important;
     border-radius: 12px !important;
-    overflow-x: hidden;
-    overflow-y: visible;
+    overflow: visible !important;
+  }
+
+  .glossary-tooltip-box {
+    width: 220px !important;
   }
 
   .chart-row {

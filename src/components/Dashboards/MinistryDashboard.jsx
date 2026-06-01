@@ -228,7 +228,8 @@ export default function MinistryDashboard() {
             onChange={(e) => setSelectedKey(e.target.value)}
             style={{ 
               display: 'block',
-              width: '320px',
+              width: '100%',
+              maxWidth: '320px',
               padding: '10px 14px', 
               background: 'var(--bg-secondary)', 
               color: 'var(--text-primary)', 
