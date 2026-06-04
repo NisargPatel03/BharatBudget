@@ -39,11 +39,31 @@ export default function SpeechDashboard() {
     { text: 'Direct Transfer', size: 22, count: 27, color: 'var(--saffron)' }
   ];
 
-  // Filter snippets based on query
+  // Filter snippets based on query with synonym mapping
   const filteredSnippets = speechSnippets.filter(snippet => {
-    const term = searchQuery || selectedWord || '';
-    return snippet.text.toLowerCase().includes(term.toLowerCase()) || 
-           snippet.category.toLowerCase().includes(term.toLowerCase());
+    const term = (searchQuery || selectedWord || '').toLowerCase().trim();
+    if (!term) return true;
+
+    const synonyms = {
+      capex: ['infrastructure', 'capital expenditure', 'cap-ex'],
+      infra: ['infrastructure'],
+      dbt: ['direct benefit', 'welfare'],
+      solar: ['green energy', 'harit urja', 'solarize'],
+      tax: ['taxation', 'income tax', 'tax slabs', 'exemptions']
+    };
+
+    if (snippet.text.toLowerCase().includes(term) || snippet.category.toLowerCase().includes(term)) {
+      return true;
+    }
+
+    for (const [key, list] of Object.entries(synonyms)) {
+      if (term.includes(key) || key.includes(term)) {
+        if (list.some(syn => snippet.text.toLowerCase().includes(syn) || snippet.category.toLowerCase().includes(syn))) {
+          return true;
+        }
+      }
+    }
+    return false;
   });
 
   const handleWordClick = (word) => {
