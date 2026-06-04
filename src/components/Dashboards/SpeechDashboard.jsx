@@ -108,7 +108,7 @@ export default function SpeechDashboard() {
             SPEECH THEMATIC FOCUS DISTRIBUTION (%)
           </span>
           <ChartContainer height={180}>
-            <BarChart data={focusAreasData} layout="vertical" margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+            <BarChart data={focusAreasData} layout="vertical" margin={{ top: 5, right: 40, left: 10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.02)" />
               <XAxis type="number" stroke="var(--text-secondary)" fontSize={10} hide />
               <YAxis dataKey="name" type="category" stroke="var(--text-secondary)" fontSize={10} width={120} />
