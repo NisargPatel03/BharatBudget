@@ -1,5 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, User, Send, MessageSquare, X, ShieldAlert, BookOpen, Mic, Volume2, VolumeX } from 'lucide-react';
+import { Bot, User, Send, MessageSquare, X, ShieldAlert, BookOpen, Mic, Volume2, VolumeX, Download } from 'lucide-react';
+import { GLOSSARY } from '../utils/glossary';
+
+const GLOSSARY_FLAT_TERMS = [];
+Object.values(GLOSSARY).forEach(g => {
+  g.aliases.forEach(alias => {
+    GLOSSARY_FLAT_TERMS.push({
+      alias,
+      term: g.term,
+      definition: g.definition
+    });
+  });
+});
+GLOSSARY_FLAT_TERMS.sort((a, b) => b.alias.length - a.alias.length);
 
 // Rich local budget document corpus for 100% offline/static fallback search
 const LOCAL_CORPUS = [
@@ -125,6 +138,79 @@ function searchLocalCorpus(query) {
   return { answer, citations };
 }
 
+const tokenizeTextWithGlossary = (text) => {
+  if (!text) return text;
+  const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const patterns = GLOSSARY_FLAT_TERMS.map(item => escapeRegExp(item.alias));
+  const regex = new RegExp(`(${patterns.join('|')})`, 'gi');
+  const parts = text.split(regex);
+  if (parts.length <= 1) return text;
+
+  return parts.map((part, index) => {
+    const matchedItem = GLOSSARY_FLAT_TERMS.find(
+      item => item.alias.toLowerCase() === part.toLowerCase()
+    );
+
+    if (matchedItem) {
+      return (
+        <span
+          key={index}
+          className="glossary-term-wrapper"
+          style={{ position: 'relative', display: 'inline-block' }}
+        >
+          <button
+            type="button"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              borderBottom: '1.2px dashed var(--saffron)',
+              color: 'var(--text-primary)',
+              font: 'inherit',
+              padding: 0,
+              cursor: 'help',
+              fontWeight: '600',
+              outline: 'none'
+            }}
+          >
+            {part}
+          </button>
+          <span
+            className="glossary-term-tooltip"
+            style={{
+              visibility: 'hidden',
+              opacity: 0,
+              position: 'absolute',
+              bottom: '125%',
+              left: '50%',
+              transform: 'translateX(-50%) translateY(4px)',
+              background: 'var(--bg-secondary)',
+              color: 'var(--text-primary)',
+              padding: '10px 14px',
+              borderRadius: '10px',
+              border: '1px solid var(--border-glass-active)',
+              width: '190px',
+              fontSize: '11px',
+              lineHeight: '1.45',
+              zIndex: 9999,
+              boxShadow: '0 6px 20px rgba(0,0,0,0.5)',
+              pointerEvents: 'none',
+              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+              textAlign: 'left',
+              backdropFilter: 'blur(10px)'
+            }}
+          >
+            <strong style={{ display: 'block', color: 'var(--saffron)', marginBottom: '4px', fontSize: '11.5px' }}>
+              {matchedItem.term}
+            </strong>
+            {matchedItem.definition}
+          </span>
+        </span>
+      );
+    }
+    return part;
+  });
+};
+
 const renderFormattedText = (text) => {
   if (!text) return null;
   const lines = text.split('\n');
@@ -132,9 +218,9 @@ const renderFormattedText = (text) => {
     const parts = line.split('**');
     const formattedLine = parts.map((part, pIdx) => {
       if (pIdx % 2 === 1) {
-        return <strong key={pIdx} style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{part}</strong>;
+        return <strong key={pIdx} style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{tokenizeTextWithGlossary(part)}</strong>;
       }
-      return part;
+      return tokenizeTextWithGlossary(part);
     });
 
     if (line.trim().startsWith('•')) {
@@ -142,9 +228,9 @@ const renderFormattedText = (text) => {
       const listParts = listContent.split('**');
       const formattedListLine = listParts.map((part, pIdx) => {
         if (pIdx % 2 === 1) {
-          return <strong key={pIdx} style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{part}</strong>;
+          return <strong key={pIdx} style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{tokenizeTextWithGlossary(part)}</strong>;
         }
-        return part;
+        return tokenizeTextWithGlossary(part);
       });
 
       return (
@@ -414,6 +500,42 @@ export default function BudgetMitraChat() {
     }
   };
 
+  const handleExportChat = () => {
+    if (messages.length <= 1) {
+      alert("No conversation history to export yet.");
+      return;
+    }
+    
+    let content = "==================================================\n";
+    content += "   BUDGET MITRA AI - CHAT HISTORY EXPORT\n";
+    content += `   Generated: ${new Date().toLocaleString()}\n`;
+    content += "==================================================\n\n";
+    
+    messages.forEach((msg, idx) => {
+      if (idx === 0) return; // Skip welcome message
+      const role = msg.sender === 'user' ? 'USER' : 'BUDGET MITRA AI';
+      content += `[${role}]:\n${msg.text}\n\n`;
+      if (msg.citations && msg.citations.length > 0) {
+        content += "Citations:\n";
+        msg.citations.forEach((c) => {
+          content += `  - ${c.source} (Page ${c.page})\n`;
+        });
+        content += "\n";
+      }
+      content += "--------------------------------------------------\n\n";
+    });
+    
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Budget_Mitra_Chat_Export_${new Date().toISOString().slice(0,10)}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -652,6 +774,27 @@ export default function BudgetMitraChat() {
                 title={isSpeechEnabled ? "Narration on (Mute)" : "Narration off (Unmute)"}
               >
                 {isSpeechEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />}
+              </button>
+
+              {/* Export Chat history */}
+              <button
+                onClick={handleExportChat}
+                style={{
+                  background: 'var(--border-glass)',
+                  border: '1px solid var(--border-glass-active)',
+                  borderRadius: '4px',
+                  padding: '4px 6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'var(--text-secondary)',
+                  transition: 'all 0.2s'
+                }}
+                title="Export Chat Session"
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--saffron)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >
+                <Download size={13} />
               </button>
             </div>
             
@@ -1131,6 +1274,12 @@ export default function BudgetMitraChat() {
             z-index: 1002 !important;
             animation: slide-up-drawer 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
           }
+        }
+        .glossary-term-wrapper:hover .glossary-term-tooltip,
+        .glossary-term-wrapper:focus-within .glossary-term-tooltip {
+          visibility: visible !important;
+          opacity: 1 !important;
+          transform: translateX(-50%) translateY(0) !important;
         }
       `}</style>
     </>

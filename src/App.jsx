@@ -12,6 +12,7 @@ const TaxDashboard = lazy(() => import('./components/Dashboards/TaxDashboard'));
 const AdminDashboard = lazy(() => import('./components/Dashboards/AdminDashboard'));
 const SimulatorDashboard = lazy(() => import('./components/Dashboards/SimulatorDashboard'));
 import BudgetMitraChat from './components/BudgetMitraChat';
+import CommandPalette from './components/CommandPalette';
 
 // Import compiled data
 import budgetMaster from './data/budget_master.json';
@@ -540,6 +541,18 @@ export default function App() {
         </main>
       </div>
       <BudgetMitraChat />
+      <CommandPalette currentTheme={theme} onChangeTheme={(newTheme) => {
+        setWipeTheme(newTheme);
+        setAnimating(true);
+        setThemeMenuOpen(false);
+        setTimeout(() => {
+          setTheme(newTheme);
+        }, 300);
+        setTimeout(() => {
+          setWipeTheme(null);
+          setAnimating(false);
+        }, 750);
+      }} />
       {wipeTheme && (
         <div 
           className="theme-wipe-overlay"

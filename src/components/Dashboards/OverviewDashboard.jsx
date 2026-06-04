@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useBudgetStore } from '../../store/useBudgetStore';
-import { PieChart, Pie, Cell, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend, BarChart, Bar } from 'recharts';
 import { IndianRupee, ShieldAlert, Award, FileSpreadsheet, Activity, ChevronRight, FileText } from 'lucide-react';
 import GlossaryTooltip from '../GlossaryTooltip';
 import ChartContainer from '../ChartContainer';
@@ -350,6 +350,7 @@ function SankeyFlowDiagram() {
 export default function OverviewDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
   const [userTax, setUserTax] = useState(25000);
+  const [compareMode, setCompareMode] = useState(false);
   const [decadeIdx, setDecadeIdx] = useState(9);
   const [ingesting, setIngesting] = useState(false);
   const [ingestLogs, setIngestLogs] = useState([]);
@@ -447,6 +448,21 @@ export default function OverviewDashboard({ masterData }) {
     { name: 'Revenue Expenditure (Operational Spends)', value: revEx, color: 'var(--saffron)' },
     { name: 'Capital Expenditure (Infrastructure Assets)', value: capEx, color: 'var(--emerald)' }
   ];
+
+  const multiYearSpendingData = timelineLabels.map((lbl, idx) => {
+    const rawCap = masterData.expenditure_stats?.capital_exp?.[idx] || 1221821;
+    const rawTot = masterData.expenditure_stats?.grand_total?.[idx] || 5347315;
+    const activeBoost = pdfBoosted && idx === activeYearIndex;
+    const yearCap = activeBoost ? rawCap * 1.25 : rawCap;
+    const yearTot = activeBoost ? rawTot * 1.158 : rawTot;
+    const yearRev = yearTot - yearCap;
+    
+    return {
+      year: lbl,
+      'Revenue Expenditure': parseFloat((yearRev / 100000).toFixed(2)),
+      'Capital Expenditure': parseFloat((yearCap / 100000).toFixed(2))
+    };
+  });
 
   // Dynamic Paisa-per-Rupee Math from actual parsed outlays
   // Map index to transfers array size of 3 (24-25 = 0, 25-26 BE = 1, 25-26 RE = 1, 26-27 BE = 2)
@@ -550,11 +566,59 @@ export default function OverviewDashboard({ masterData }) {
 
       {/* 2. Concentric Spending Chart */}
       <div className="glass-panel col-6" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <FileSpreadsheet size={18} color="var(--emerald)" />
-          Operational Spending vs. Asset Creation Outlay
-        </h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+          <h3 style={{ fontSize: '16.5px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+            <FileSpreadsheet size={18} color="var(--emerald)" />
+            Operational Spending vs. Asset Creation Outlay
+          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 700 }}>COMPARE HISTORICAL TRENDS</span>
+            <button 
+              onClick={() => setCompareMode(!compareMode)}
+              style={{
+                width: '36px',
+                height: '18px',
+                borderRadius: '9px',
+                background: compareMode ? 'var(--emerald)' : 'rgba(255,255,255,0.05)',
+                border: '1px solid var(--border-glass-active)',
+                position: 'relative',
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'background 0.2s',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+              title="Toggle multi-year historical trend comparisons"
+            >
+              <div style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                background: '#fff',
+                position: 'absolute',
+                top: '2px',
+                left: compareMode ? '21px' : '2px',
+                transition: 'left 0.2s'
+              }} />
+            </button>
+          </div>
+        </div>
+
         <ChartContainer height={230} style={{ flex: 1 }}>
+          {compareMode ? (
+            <BarChart data={multiYearSpendingData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={10} />
+              <YAxis stroke="var(--text-secondary)" fontSize={10} unit="L" />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                formatter={(value, name) => [`₹ ${value} Lakh Cr`, name]}
+              />
+              <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+              <Bar dataKey="Revenue Expenditure" name="Revenue Outlays" stackId="a" fill="var(--saffron)" />
+              <Bar dataKey="Capital Expenditure" name="Capital Infrastructure" stackId="a" fill="var(--emerald)" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          ) : (
             <PieChart>
               <Pie
                 data={spendingSplit}
@@ -574,23 +638,31 @@ export default function OverviewDashboard({ masterData }) {
                 contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
               />
             </PieChart>
+          )}
         </ChartContainer>
+        
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '12px' }}>
-          {spendingSplit.map((entry, index) => (
-            <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: entry.color }}></span>
-                <span style={{ color: 'var(--text-secondary)' }}>
-                  {index === 0 ? (
-                    <GlossaryTooltip termKey="revenueExpenditure">Revenue Expenditure (Operational Spends)</GlossaryTooltip>
-                  ) : (
-                    <GlossaryTooltip termKey="capitalExpenditure">Capital Expenditure (Infrastructure Assets)</GlossaryTooltip>
-                  )}
-                </span>
-              </div>
-              <span style={{ fontWeight: 600 }}>₹{formatLakhCrores(entry.value)} Lakh Cr ({((entry.value/totalEx)*100).toFixed(1)}%)</span>
+          {compareMode ? (
+            <div style={{ fontSize: '11px', color: 'var(--text-secondary)', textAlign: 'center' }}>
+              💡 Historical comparison highlights a steady increase in <strong>Capital Expenditure (Infrastructure)</strong> allocations.
             </div>
-          ))}
+          ) : (
+            spendingSplit.map((entry, index) => (
+              <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: entry.color }}></span>
+                  <span style={{ color: 'var(--text-secondary)' }}>
+                    {index === 0 ? (
+                      <GlossaryTooltip termKey="revenueExpenditure">Revenue Expenditure (Operational Spends)</GlossaryTooltip>
+                    ) : (
+                      <GlossaryTooltip termKey="capitalExpenditure">Capital Expenditure (Infrastructure Assets)</GlossaryTooltip>
+                    )}
+                  </span>
+                </div>
+                <span style={{ fontWeight: 600 }}>₹{formatLakhCrores(entry.value)} Lakh Cr ({((entry.value/totalEx)*100).toFixed(1)}%)</span>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

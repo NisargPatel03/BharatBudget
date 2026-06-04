@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useBudgetStore } from '../../store/useBudgetStore';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 import { IndianRupee, Landmark, TrendingUp, Download, Receipt } from 'lucide-react';
 import { exportToCsv } from '../../utils/exportCsv';
 import ChartContainer from '../ChartContainer';
@@ -23,6 +23,7 @@ function PieLegendList({ items, renderValue }) {
 
 export default function TaxDashboard({ masterData }) {
   const activeYearIndex = useBudgetStore((state) => state.activeYearIndex);
+  const [compareMode, setCompareMode] = useState(false);
   const rawMonthly = masterData.monthly_tax_collections || [];
 
   const [activeInflow, setActiveInflow] = useState('gst');
@@ -672,6 +673,36 @@ export default function TaxDashboard({ masterData }) {
     { name: "Customs Tariffs & Duties", value: pCust, color: "#ec4899" }
   ];
 
+  const multiYearInflowData = timelineLabels.map((lbl, idx) => {
+    const corpVal = masterData.receipt_stats?.corporation_tax?.[idx] || 1231000;
+    const incVal = masterData.receipt_stats?.income_tax?.[idx] || 1466000;
+    const gstVal = masterData.receipt_stats?.gst?.[idx] || 1019020;
+    const exciseVal = masterData.receipt_stats?.excise?.[idx] || 388910;
+    const custVal = masterData.receipt_stats?.customs?.[idx] || 271200;
+    const nonTaxVal = masterData.receipt_stats?.non_tax?.[idx] || 666228;
+    const totalVal = masterData.receipt_stats?.total_receipts?.[idx] || 5347315;
+
+    const calculatePct = (val) => Math.max(1, Math.round((val / totalVal) * 100));
+
+    const pCorp = calculatePct(corpVal);
+    const pInc = calculatePct(incVal);
+    const pGst = calculatePct(gstVal);
+    const pExcise = calculatePct(exciseVal);
+    const pCust = calculatePct(custVal);
+    const pNonTax = calculatePct(nonTaxVal);
+    const pBorrowings = Math.max(1, 100 - (pCorp + pInc + pGst + pExcise + pCust + pNonTax));
+
+    return {
+      year: lbl,
+      "Borrowings": pBorrowings,
+      "Income Tax": pInc,
+      "GST": pGst,
+      "Corporate Tax": pCorp,
+      "Excise & Customs": pExcise + pCust,
+      "Non-Tax Revenue": pNonTax
+    };
+  });
+
   // Top state GST rankings (State of State Finances 2025)
   const stateGstRankings = [
     { state: "Maharashtra", gst: 32410 },
@@ -741,47 +772,103 @@ export default function TaxDashboard({ masterData }) {
  
       {/* 2. Concentric Pie of Inflows (Rupee Comes From) */}
       <div className="glass-panel col-5" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-          <Landmark size={20} color="var(--saffron)" />
-          "Rupee Comes From" Inflow Receipt Split
-        </h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+            <Landmark size={20} color="var(--saffron)" />
+            "Rupee Comes From" Inflow Receipt Split
+          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 700 }}>COMPARE HISTORICAL TRENDS</span>
+            <button 
+              onClick={() => setCompareMode(!compareMode)}
+              style={{
+                width: '36px',
+                height: '18px',
+                borderRadius: '9px',
+                background: compareMode ? 'var(--emerald)' : 'rgba(255,255,255,0.05)',
+                border: '1px solid var(--border-glass-active)',
+                position: 'relative',
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'background 0.2s',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+              title="Toggle multi-year historical trend comparisons"
+            >
+              <div style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                background: '#fff',
+                position: 'absolute',
+                top: '2px',
+                left: compareMode ? '21px' : '2px',
+                transition: 'left 0.2s'
+              }} />
+            </button>
+          </div>
+        </div>
         <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
           Percentage breakdown of every 100 Paise of national treasury income ({activeYearLabel}).
         </p>
  
         <div className="pie-with-legend" style={{ flex: 1 }}>
-          <ChartContainer height={200} className="chart-pie-slot">
-            <PieChart>
-              <Pie
-                data={inflowDistribution}
-                cx="50%"
-                cy="50%"
-                innerRadius={48}
-                outerRadius={72}
-                paddingAngle={2}
-                dataKey="value"
-                label={pieSliceLabel}
-                labelLine={false}
-              >
-                {inflowDistribution.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value) => [`${value}% (${value} Paise)`, 'Inflow Portion']}
-                contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+          {compareMode ? (
+            <ChartContainer height={250}>
+              <BarChart data={multiYearInflowData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="year" stroke="var(--text-secondary)" fontSize={10} />
+                <YAxis stroke="var(--text-secondary)" fontSize={10} unit="%" />
+                <Tooltip
+                  contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                  formatter={(value) => [`${value}%`, '']}
+                />
+                <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '10px' }} />
+                <Bar dataKey="Borrowings" name="Borrowings" stackId="a" fill="var(--crimson)" />
+                <Bar dataKey="Income Tax" name="Income Tax" stackId="a" fill="var(--saffron)" />
+                <Bar dataKey="GST" name="GST & Services" stackId="a" fill="var(--emerald)" />
+                <Bar dataKey="Corporate Tax" name="Corporate Tax" stackId="a" fill="var(--ashoka-blue)" />
+                <Bar dataKey="Excise & Customs" name="Excise & Customs" stackId="a" fill="#eab308" />
+                <Bar dataKey="Non-Tax Revenue" name="Non-Tax" stackId="a" fill="#a855f7" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ChartContainer>
+          ) : (
+            <>
+              <ChartContainer height={200} className="chart-pie-slot">
+                <PieChart>
+                  <Pie
+                    data={inflowDistribution}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={48}
+                    outerRadius={72}
+                    paddingAngle={2}
+                    dataKey="value"
+                    label={pieSliceLabel}
+                    labelLine={false}
+                  >
+                    {inflowDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value) => [`${value}% (${value} Paise)`, 'Inflow Portion']}
+                    contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
+                  />
+                </PieChart>
+              </ChartContainer>
+              <PieLegendList
+                items={inflowDistribution}
+                renderValue={(item) => (
+                  <>
+                    {item.value}%
+                    <span className="pie-legend-pct">{item.value} Paise per ₹1</span>
+                  </>
+                )}
               />
-            </PieChart>
-          </ChartContainer>
-          <PieLegendList
-            items={inflowDistribution}
-            renderValue={(item) => (
-              <>
-                {item.value}%
-                <span className="pie-legend-pct">{item.value} Paise per ₹1</span>
-              </>
-            )}
-          />
+            </>
+          )}
         </div>
       </div>
 
