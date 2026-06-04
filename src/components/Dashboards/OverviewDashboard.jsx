@@ -579,8 +579,8 @@ export default function OverviewDashboard({ masterData }) {
                 width: '36px',
                 height: '18px',
                 borderRadius: '9px',
-                background: compareMode ? 'var(--emerald)' : 'rgba(255,255,255,0.05)',
-                border: '1px solid var(--border-glass-active)',
+                background: compareMode ? 'var(--saffron)' : 'rgba(128,128,128,0.2)',
+                border: '1.2px solid var(--text-secondary)',
                 position: 'relative',
                 cursor: 'pointer',
                 padding: 0,
@@ -591,13 +591,13 @@ export default function OverviewDashboard({ masterData }) {
               title="Toggle multi-year historical trend comparisons"
             >
               <div style={{
-                width: '12px',
-                height: '12px',
+                width: '10px',
+                height: '10px',
                 borderRadius: '50%',
-                background: '#fff',
+                background: compareMode ? '#fff' : 'var(--text-secondary)',
                 position: 'absolute',
-                top: '2px',
-                left: compareMode ? '21px' : '2px',
+                top: '3px',
+                left: compareMode ? '21px' : '3px',
                 transition: 'left 0.2s'
               }} />
             </button>

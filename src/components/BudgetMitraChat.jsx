@@ -1274,12 +1274,35 @@ export default function BudgetMitraChat() {
             z-index: 1002 !important;
             animation: slide-up-drawer 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
           }
+          .glossary-term-tooltip {
+            position: fixed !important;
+            bottom: 24px !important;
+            left: 24px !important;
+            right: 24px !important;
+            width: auto !important;
+            max-width: none !important;
+            transform: translateY(10px) !important;
+            z-index: 12000 !important;
+            background: rgba(13, 22, 48, 0.96) !important;
+            border: 1.5px solid var(--border-glass-active) !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65) !important;
+          }
+          .glossary-term-wrapper:hover .glossary-term-tooltip,
+          .glossary-term-wrapper:focus-within .glossary-term-tooltip {
+            transform: translateY(0) !important;
+          }
         }
         .glossary-term-wrapper:hover .glossary-term-tooltip,
         .glossary-term-wrapper:focus-within .glossary-term-tooltip {
           visibility: visible !important;
           opacity: 1 !important;
           transform: translateX(-50%) translateY(0) !important;
+        }
+        @media (max-width: 768px) {
+          .glossary-term-wrapper:hover .glossary-term-tooltip,
+          .glossary-term-wrapper:focus-within .glossary-term-tooltip {
+            transform: translateY(0) !important;
+          }
         }
       `}</style>
     </>

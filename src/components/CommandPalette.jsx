@@ -7,9 +7,19 @@ export default function CommandPalette({ currentTheme, onChangeTheme }) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [toast, setToast] = useState(null);
+  const toastTimeoutRef = useRef(null);
   const { setActiveTab, setActiveYearIndex } = useBudgetStore();
   const containerRef = useRef(null);
   const inputRef = useRef(null);
+
+  const showToast = (title, message) => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    setToast({ title, message });
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+    }, 8000);
+  };
 
   // Global toggle listener
   useEffect(() => {
@@ -91,7 +101,7 @@ export default function CommandPalette({ currentTheme, onChangeTheme }) {
     icon: BookOpen,
     description: g.definition,
     action: () => {
-      alert(`[${g.term}]: ${g.definition}`);
+      showToast(g.term, g.definition);
     }
   }));
 
@@ -128,40 +138,89 @@ export default function CommandPalette({ currentTheme, onChangeTheme }) {
 
   if (!isOpen) {
     return (
-      <button
-        onClick={() => setIsOpen(true)}
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          left: '24px',
-          background: 'rgba(255,255,255,0.03)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid var(--border-glass-active)',
-          borderRadius: '30px',
-          padding: '8px 16px',
-          color: 'var(--text-primary)',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          fontSize: '11px',
-          fontWeight: 600,
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-          zIndex: 999,
-          fontFamily: 'Inter, sans-serif'
-        }}
-        className="command-palette-trigger"
-      >
-        <Command size={12} color="var(--saffron)" />
-        <span>Command Menu</span>
-        <span style={{
-          background: 'rgba(255,255,255,0.1)',
-          padding: '2px 6px',
-          borderRadius: '4px',
-          fontSize: '9px',
-          color: 'var(--text-secondary)'
-        }}>Ctrl+K</span>
-      </button>
+      <>
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            left: '24px',
+            background: 'rgba(255,255,255,0.03)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid var(--border-glass-active)',
+            borderRadius: '30px',
+            padding: '8px 16px',
+            color: 'var(--text-primary)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '11px',
+            fontWeight: 600,
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+            zIndex: 999,
+            fontFamily: 'Inter, sans-serif'
+          }}
+          className="command-palette-trigger"
+        >
+          <Command size={12} color="var(--saffron)" />
+          <span>Command Menu</span>
+          <span style={{
+            background: 'rgba(255,255,255,0.1)',
+            padding: '2px 6px',
+            borderRadius: '4px',
+            fontSize: '9px',
+            color: 'var(--text-secondary)'
+          }}>Ctrl+K</span>
+        </button>
+
+        {toast && (
+          <div style={{
+            position: 'fixed',
+            top: '24px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'var(--bg-secondary)',
+            backdropFilter: 'blur(25px)',
+            border: '1.5px solid var(--border-glass-active)',
+            borderRadius: '12px',
+            padding: '14px 18px',
+            boxShadow: '0 16px 36px rgba(0,0,0,0.4)',
+            zIndex: 11000,
+            width: '90%',
+            maxWidth: '420px',
+            animation: 'palette-scale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '6px',
+            borderLeft: '4px solid var(--saffron)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <strong style={{ fontSize: '13.5px', color: 'var(--saffron)', fontWeight: 700 }}>
+                💡 {toast.title}
+              </strong>
+              <button 
+                onClick={() => setToast(null)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  padding: '0 4px',
+                  outline: 'none'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-primary)', lineHeight: '1.5', textAlign: 'left' }}>
+              {toast.message}
+            </p>
+          </div>
+        )}
+      </>
     );
   }
 
@@ -194,7 +253,7 @@ export default function CommandPalette({ currentTheme, onChangeTheme }) {
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          animation: 'palette-scale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+          animation: 'palette-scale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards'
         }}
       >
         {/* Input Bar */}
@@ -336,6 +395,53 @@ export default function CommandPalette({ currentTheme, onChangeTheme }) {
         </div>
       </div>
 
+      {toast && (
+        <div style={{
+          position: 'fixed',
+          top: '24px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'var(--bg-secondary)',
+          backdropFilter: 'blur(25px)',
+          border: '1.5px solid var(--border-glass-active)',
+          borderRadius: '12px',
+          padding: '14px 18px',
+          boxShadow: '0 16px 36px rgba(0,0,0,0.4)',
+          zIndex: 11000,
+          width: '90%',
+          maxWidth: '420px',
+          animation: 'palette-scale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px',
+          borderLeft: '4px solid var(--saffron)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <strong style={{ fontSize: '13.5px', color: 'var(--saffron)', fontWeight: 700 }}>
+              💡 {toast.title}
+            </strong>
+            <button 
+              onClick={() => setToast(null)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-secondary)',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                padding: '0 4px',
+                outline: 'none'
+              }}
+            >
+              ✕
+            </button>
+          </div>
+          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-primary)', lineHeight: '1.5', textAlign: 'left' }}>
+            {toast.message}
+          </p>
+        </div>
+      )}
+
       <style>{`
         @keyframes palette-scale {
           from { transform: scale(0.95); opacity: 0; }
@@ -343,7 +449,7 @@ export default function CommandPalette({ currentTheme, onChangeTheme }) {
         }
         @media (max-width: 480px) {
           .command-palette-trigger {
-            display: none !important; /* Hide floating launcher button on tiny viewports */
+            display: none !important;
           }
         }
       `}</style>

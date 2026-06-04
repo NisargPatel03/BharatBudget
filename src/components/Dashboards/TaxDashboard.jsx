@@ -785,8 +785,8 @@ export default function TaxDashboard({ masterData }) {
                 width: '36px',
                 height: '18px',
                 borderRadius: '9px',
-                background: compareMode ? 'var(--emerald)' : 'rgba(255,255,255,0.05)',
-                border: '1px solid var(--border-glass-active)',
+                background: compareMode ? 'var(--saffron)' : 'rgba(128,128,128,0.2)',
+                border: '1.2px solid var(--text-secondary)',
                 position: 'relative',
                 cursor: 'pointer',
                 padding: 0,
@@ -797,13 +797,13 @@ export default function TaxDashboard({ masterData }) {
               title="Toggle multi-year historical trend comparisons"
             >
               <div style={{
-                width: '12px',
-                height: '12px',
+                width: '10px',
+                height: '10px',
                 borderRadius: '50%',
-                background: '#fff',
+                background: compareMode ? '#fff' : 'var(--text-secondary)',
                 position: 'absolute',
-                top: '2px',
-                left: compareMode ? '21px' : '2px',
+                top: '3px',
+                left: compareMode ? '21px' : '3px',
                 transition: 'left 0.2s'
               }} />
             </button>
@@ -908,14 +908,23 @@ export default function TaxDashboard({ masterData }) {
             0% { transform: scale(1); box-shadow: 0 0 10px rgba(14, 165, 233, 0.4); }
             100% { transform: scale(1.06); box-shadow: 0 0 25px rgba(14, 165, 233, 0.8); }
           }
+          @media (max-width: 991px) {
+            .pipeline-grid {
+              grid-template-columns: 1fr !important;
+              gap: 20px !important;
+            }
+            .pipeline-svg {
+              display: none !important;
+            }
+          }
         `}</style>
-        <div style={{
+        <div className="pipeline-grid" style={{
           display: 'grid',
           gridTemplateColumns: '1.2fr 0.6fr 1.2fr',
           gap: '28px',
           alignItems: 'stretch',
           marginTop: '10px'
-        }} className="flex-responsive-stack">
+        }}>
           
           {/* Column 1: Tax Inflow Sources */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -968,7 +977,7 @@ export default function TaxDashboard({ masterData }) {
             position: 'relative'
           }}>
             {/* SVG Connecting Flow Pipelines */}
-            <svg style={{ position: 'absolute', left: '-28px', top: '50%', transform: 'translateY(-50%)', width: '28px', height: '140px', pointerEvents: 'none', overflow: 'visible' }}>
+            <svg className="pipeline-svg" style={{ position: 'absolute', left: '-28px', top: '50%', transform: 'translateY(-50%)', width: '28px', height: '140px', pointerEvents: 'none', overflow: 'visible' }}>
               <path d="M 0,20 L 14,20 Q 28,20 28,70" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
               <path d="M 0,70 L 28,70" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
               <path d="M 0,120 L 14,120 Q 28,120 28,70" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
@@ -981,7 +990,7 @@ export default function TaxDashboard({ masterData }) {
               )}
             </svg>
  
-            <svg style={{ position: 'absolute', right: '-28px', top: '50%', transform: 'translateY(-50%)', width: '28px', height: '140px', pointerEvents: 'none', overflow: 'visible' }}>
+            <svg className="pipeline-svg" style={{ position: 'absolute', right: '-28px', top: '50%', transform: 'translateY(-50%)', width: '28px', height: '140px', pointerEvents: 'none', overflow: 'visible' }}>
               <path d="M 0,70 Q 0,20 14,20 L 28,20" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
               <path d="M 0,70 L 28,70" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
               <path d="M 0,70 Q 0,120 14,120 L 28,120" fill="none" stroke="var(--border-glass-active)" strokeWidth="1.5" />
