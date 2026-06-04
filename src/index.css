@@ -562,7 +562,7 @@ body {
 
 /* High-Contrast Single Page Print Layout for Scorecard */
 @media print {
-  /* Completely hide all other application elements from the document flow */
+  /* Hide all application views, sidebars, headers, and modal actions */
   #root > div > aside,
   #root > div > main > header,
   #root > div > main > div:not(.animate-fade-in),
@@ -572,11 +572,14 @@ body {
   .dashboard-grid,
   .glass-panel,
   .hamburger-btn,
-  .animate-fade-in {
+  .animate-fade-in,
+  .report-modal-header,
+  .report-modal-actions,
+  button {
     display: none !important;
   }
 
-  /* Reset all global layout containers to simple block rendering with 0 margins */
+  /* Reset layout constraints for plain white background page styling */
   html, body, #root, #root > div, #root > div > main {
     background: #ffffff !important;
     color: #000000 !important;
@@ -588,10 +591,9 @@ body {
     display: block !important;
   }
 
-  /* Reset the fixed print modal backdrop container to be static and transparent */
-  div[style*="position: fixed"] {
+  /* Convert modal fixed backdrop to transparent static flow */
+  .report-modal-overlay {
     position: static !important;
-    inset: auto !important;
     background: #ffffff !important;
     backdrop-filter: none !important;
     display: block !important;
@@ -599,53 +601,57 @@ body {
     margin: 0 !important;
     width: 100% !important;
     height: auto !important;
-    z-index: auto !important;
     box-shadow: none !important;
   }
 
-  /* Reset the inner modal dialog card background and border styles */
-  div[style*="background: rgb(13, 17, 23)"],
-  div[style*="background: #0d1117"],
-  div[style*="background:#0d1117"] {
+  /* Strip card border-radius, background colors and shadow grids */
+  .report-modal-card {
     background: #ffffff !important;
     color: #000000 !important;
     border: none !important;
     box-shadow: none !important;
     width: 100% !important;
     max-width: 100% !important;
-    padding: 20px !important;
+    padding: 0 !important;
     margin: 0 !important;
+    display: block !important;
   }
 
-  /* Completely isolate the scorecard print block inside the card */
+  /* Expand print block content to occupy full page without scrolling or overflow */
   #printable-area {
     display: block !important;
     color: #000000 !important;
     background: #ffffff !important;
-    padding: 0 !important;
+    padding: 10px 0 !important;
     margin: 0 !important;
     width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
     border: none !important;
     box-shadow: none !important;
-    font-family: monospace !important;
+    font-family: 'Outfit', monospace !important;
   }
 
-  /* Force all print-specific typographic and border contrast rules */
+  /* Clean contrast overrides for child components */
   #printable-area * {
     color: #000000 !important;
     background: transparent !important;
-    border-color: #000000 !important;
+    border-color: #cbd5e1 !important; /* light slate borders */
     box-shadow: none !important;
     text-shadow: none !important;
   }
 
-  /* Hide close button and the bottom trigger button bar */
-  button,
-  .modal-close-btn,
-  div[style*="border-top: 2px dashed"],
-  div[style*="border-top: 2px dashed"] * {
-    display: none !important;
-    visibility: hidden !important;
+  /* Force Grid columns to render side-by-side in rows instead of stacking */
+  #printable-area .indicators-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  #printable-area .metadata-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
   }
 }
 

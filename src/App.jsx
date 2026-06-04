@@ -575,7 +575,7 @@ export default function App() {
       </div>
 
       {reportModalOpen && (
-        <div style={{
+        <div className="report-modal-overlay" style={{
           position: 'fixed',
           inset: 0,
           background: 'rgba(0, 0, 0, 0.75)',
@@ -586,7 +586,7 @@ export default function App() {
           zIndex: 9999,
           padding: '20px'
         }}>
-          <div style={{
+          <div className="report-modal-card" style={{
             background: 'var(--bg-secondary)',
             border: '1px solid var(--border-glass-active)',
             borderRadius: '16px',
@@ -598,7 +598,7 @@ export default function App() {
             overflow: 'hidden'
           }}>
             {/* Modal Header */}
-            <div style={{ padding: '18px 24px', borderBottom: '1px solid var(--border-glass)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="report-modal-header" style={{ padding: '18px 24px', borderBottom: '1px solid var(--border-glass)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', margin: 0, color: 'var(--text-primary)' }}>
                 <Printer size={18} color="var(--saffron)" />
                 Executive Report Preview
@@ -623,7 +623,7 @@ export default function App() {
               </div>
 
               {/* General Metadata Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '11px', borderBottom: '1px dashed var(--border-glass)', paddingBottom: '14px' }}>
+              <div className="metadata-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '11px', borderBottom: '1px dashed var(--border-glass)', paddingBottom: '14px' }}>
                 <div>
                   <span style={{ color: 'var(--text-secondary)', display: 'block' }}>REPORT TYPE</span>
                   <strong style={{ color: 'var(--text-primary)' }}>Sovereign Executive Summary</strong>
@@ -647,7 +647,7 @@ export default function App() {
                 <h4 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--saffron)', marginBottom: '8px', textTransform: 'uppercase' }}>
                   Fiscal Baseline Indicators
                 </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+                <div className="indicators-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                   {[
                     { label: 'Outlay Target', val: '₹53.5L Cr' },
                     { label: 'Revenue Base', val: '₹30.1L Cr' },
@@ -708,7 +708,7 @@ export default function App() {
             </div>
 
             {/* Modal Actions */}
-            <div style={{ padding: '16px 24px', borderTop: '1px solid var(--border-glass)', background: 'var(--bg-secondary)', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <div className="report-modal-actions" style={{ padding: '16px 24px', borderTop: '1px solid var(--border-glass)', background: 'var(--bg-secondary)', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button 
                 onClick={() => setReportModalOpen(false)}
                 style={{
