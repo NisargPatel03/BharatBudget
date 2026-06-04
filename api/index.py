@@ -492,7 +492,8 @@ async def chat_with_budget(payload: ChatRequest):
             citations.append({
                 "source": chunk["source"],
                 "page": chunk["page"],
-                "type": chunk["type"]
+                "type": chunk["type"],
+                "text": chunk["text"]
             })
             
         answer = f"Based on the Union Budget ledger documentation, here is what I found:\n\n"

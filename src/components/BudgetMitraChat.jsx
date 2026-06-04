@@ -117,151 +117,50 @@ function searchLocalCorpus(query) {
     answer += `Additional relevant budget disclosures:\n• **${secondMatch.source}**: "${secondMatch.text.substring(0, 140)}..."\n`;
   }
 
-  const citations = [{ source: bestMatch.source, page: bestMatch.page, type: bestMatch.type }];
+  const citations = [{ source: bestMatch.source, page: bestMatch.page, type: bestMatch.type, text: bestMatch.text }];
   if (secondMatch && secondHighestScore > 0.01) {
-    citations.push({ source: secondMatch.source, page: secondMatch.page, type: secondMatch.type });
+    citations.push({ source: secondMatch.source, page: secondMatch.page, type: secondMatch.type, text: secondMatch.text });
   }
 
   return { answer, citations };
 }
 
-const parsePossibleTableRow = (line) => {
-  const trimmed = line.trim();
-  const numbers = trimmed.match(/-?\d+(?:\.\d+)?/g);
-  if (numbers && numbers.length >= 3) {
-    const firstNumIdx = trimmed.search(/-?\d+(?:\.\d+)?/);
-    if (firstNumIdx > 0) {
-      const label = trimmed.substring(0, firstNumIdx).trim();
-      if (label && isNaN(label) && !label.includes(':') && !label.includes('Page')) {
-        return { label, values: numbers };
-      }
-    }
-  }
-  return null;
-};
-
 const renderFormattedText = (text) => {
   if (!text) return null;
   const lines = text.split('\n');
-  const renderedElements = [];
-  let currentTableRows = [];
-
-  const flushTable = (key) => {
-    if (currentTableRows.length === 0) return;
-    
-    renderedElements.push(
-      <div key={key} style={{
-        overflowX: 'auto',
-        margin: '12px 0',
-        borderRadius: '8px',
-        border: '1px solid var(--border-glass-active)',
-        background: 'rgba(10, 15, 25, 0.6)',
-        boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-        maxWidth: '100%'
-      }}>
-        <table style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          fontSize: '11px',
-          color: 'var(--text-secondary)',
-          textAlign: 'right',
-          minWidth: '450px'
-        }}>
-          <tbody>
-            {currentTableRows.map((row, rIdx) => (
-              <tr key={rIdx} style={{
-                borderBottom: rIdx === currentTableRows.length - 1 ? 'none' : '1px solid var(--border-glass)',
-                background: rIdx % 2 === 0 ? 'rgba(255,255,255,0.01)' : 'transparent'
-              }}>
-                <td style={{
-                  padding: '8px 12px',
-                  fontWeight: '600',
-                  color: 'var(--text-primary)',
-                  textAlign: 'left',
-                  borderRight: '1px solid var(--border-glass)',
-                  minWidth: '100px',
-                  position: 'sticky',
-                  left: 0,
-                  background: 'rgba(15, 23, 42, 0.95)',
-                  backdropFilter: 'blur(5px)',
-                  zIndex: 2
-                }}>
-                  {row.label}
-                </td>
-                {row.values.map((val, cIdx) => {
-                  const numVal = parseFloat(val);
-                  return (
-                    <td key={cIdx} style={{
-                      padding: '8px 12px',
-                      fontFamily: 'monospace',
-                      color: numVal < 0 ? '#f87171' : '#34d399',
-                      fontWeight: '500'
-                    }}>
-                      {numVal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-    currentTableRows = [];
-  };
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const parsedRow = parsePossibleTableRow(line);
-    
-    if (parsedRow) {
-      currentTableRows.push(parsedRow);
-    } else {
-      if (currentTableRows.length > 0) {
-        flushTable(`table-${i}`);
+  return lines.map((line, lIdx) => {
+    const parts = line.split('**');
+    const formattedLine = parts.map((part, pIdx) => {
+      if (pIdx % 2 === 1) {
+        return <strong key={pIdx} style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{part}</strong>;
       }
-      
-      const parts = line.split('**');
-      const formattedLine = parts.map((part, pIdx) => {
+      return part;
+    });
+
+    if (line.trim().startsWith('•')) {
+      const listContent = line.replace(/^\s*•\s*/, '');
+      const listParts = listContent.split('**');
+      const formattedListLine = listParts.map((part, pIdx) => {
         if (pIdx % 2 === 1) {
           return <strong key={pIdx} style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{part}</strong>;
         }
         return part;
       });
 
-      if (line.trim().startsWith('•')) {
-        const listContent = line.replace(/^\s*•\s*/, '');
-        const listParts = listContent.split('**');
-        const formattedListLine = listParts.map((part, pIdx) => {
-          if (pIdx % 2 === 1) {
-            return <strong key={pIdx} style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{part}</strong>;
-          }
-          return part;
-        });
-
-        renderedElements.push(
-          <div key={`li-${i}`} style={{ margin: '6px 0 6px 12px', display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
-            <span style={{ color: 'var(--saffron)', fontWeight: 'bold' }}>•</span>
-            <span style={{ flex: 1 }}>{formattedListLine}</span>
-          </div>
-        );
-      } else if (line.trim()) {
-        renderedElements.push(
-          <p key={`p-${i}`} style={{ margin: '0 0 10px 0', minHeight: '6px' }}>
-            {formattedLine}
-          </p>
-        );
-      } else {
-        renderedElements.push(<div key={`empty-${i}`} style={{ minHeight: '6px' }} />);
-      }
+      return (
+        <div key={lIdx} style={{ margin: '6px 0 6px 12px', display: 'flex', gap: '6px', alignItems: 'flex-start', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+          <span style={{ color: 'var(--saffron)', fontWeight: 'bold' }}>•</span>
+          <span style={{ flex: 1 }}>{formattedListLine}</span>
+        </div>
+      );
     }
-  }
 
-  if (currentTableRows.length > 0) {
-    flushTable(`table-final`);
-  }
-
-  return renderedElements;
+    return (
+      <p key={lIdx} style={{ margin: line.trim() ? '0 0 10px 0' : '0', minHeight: '6px', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+        {formattedLine}
+      </p>
+    );
+  });
 };
 
 const translateToHindi = (text) => {
@@ -459,7 +358,7 @@ export default function BudgetMitraChat() {
       return;
     }
     const matchedDoc = LOCAL_CORPUS.find(doc => doc.source.toLowerCase() === activeCitation.source.toLowerCase()) || {
-      text: "Government budget ledger reference text chunk containing specific allocation insights matching " + activeCitation.source + ". Under progressive capital outlays, interest payouts compose the base sovereign debt structure.",
+      text: activeCitation.text || ("Government budget ledger reference text chunk containing specific allocation insights matching " + activeCitation.source + ". Under progressive capital outlays, interest payouts compose the base sovereign debt structure."),
       source: activeCitation.source,
       page: activeCitation.page || 1,
       type: activeCitation.type || "Document"
@@ -824,7 +723,8 @@ export default function BudgetMitraChat() {
                       lineHeight: '1.5',
                       border: m.sender === 'user' ? 'none' : '1px solid var(--border-glass-active)',
                       boxShadow: m.sender === 'user' ? '0 3px 10px rgba(251,146,60,0.2)' : 'none',
-                      whiteSpace: 'pre-line'
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word'
                     }}
                   >
                     {m.sender === 'user' ? m.text : renderFormattedText(speechVoice === 'hi-IN' ? translateToHindi(m.text) : m.text)}
@@ -1158,7 +1058,7 @@ export default function BudgetMitraChat() {
                   <span style={{ display: 'block', fontSize: '8px', color: '#8b7355', marginTop: '2px' }}>SOURCE ID: {citationDocument.type.toUpperCase()}-REF-{citationDocument.page}</span>
                 </div>
                 
-                <p style={{ margin: 0, whiteSpace: 'pre-wrap', textAlign: 'justify' }}>
+                <p style={{ margin: 0, whiteSpace: 'pre-wrap', textAlign: 'justify', wordBreak: 'break-word' }}>
                   {citationDocument.text}
                 </p>
                 
