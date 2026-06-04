@@ -75,6 +75,9 @@ export default function CommandPalette({ currentTheme, onChangeTheme }) {
     { id: 'go-audit', label: 'Go to CAG Audit Objections', category: 'Navigation', icon: Command, action: () => setActiveTab('audit') },
     { id: 'go-tax', label: 'Go to Tax Inflow Receipts', category: 'Navigation', icon: Command, action: () => setActiveTab('tax') },
     { id: 'go-simulator', label: 'Go to AI Fiscal Simulator', category: 'Navigation', icon: Command, action: () => setActiveTab('simulator') },
+    { id: 'go-welfare', label: 'Go to Citizen Welfare Calculator', category: 'Navigation', icon: Command, action: () => setActiveTab('welfare') },
+    { id: 'go-speech', label: 'Go to Speech Thematic Analyzer', category: 'Navigation', icon: Command, action: () => setActiveTab('speech') },
+    { id: 'go-trends', label: 'Go to Budget Historical Trends', category: 'Navigation', icon: Command, action: () => setActiveTab('trends') },
     { id: 'go-admin', label: 'Go to Admin Portal', category: 'Navigation', icon: Command, action: () => setActiveTab('admin') }
   ];
 

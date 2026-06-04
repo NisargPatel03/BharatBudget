@@ -1,14 +1,14 @@
-# 🇮🇳 BharatBudget: Interactive Union Budget Command Center
+# 🇮🇳 BharatBudget: Sovereign Union Budget Command Center
 
-`BharatBudget` is a premium, state-of-the-art public finance command center and interactive visualization portal. It decodes complex Indian Union Budget data—compiled directly from official Ministry of Finance and Comptroller & Auditor General (CAG) ledger papers—into an intuitive, highly responsive, and beautiful dark-themed dashboard.
+`BharatBudget` is a premium, state-of-the-art public finance command center, simulation sandbox, and interactive visualization portal. It decodes complex Indian Union Budget data—compiled directly from official Ministry of Finance publications, Comptroller & Auditor General (CAG) ledger sheets, and parliamentary records—into an intuitive, highly responsive, and beautiful dark-themed dashboard.
 
-Designed with rich aesthetics (vibrant color palettes, glassmorphism, subtle micro-animations), the platform empowers researchers, journalists, and citizens to track national expenditures, state-level tax devolutions, welfare DBT entries, and historical liabilities with ease.
+Designed with rich aesthetics (vibrant color palettes, glassmorphism, subtle micro-animations), the platform empowers researchers, journalists, and citizens to track national expenditures, state-level tax devolutions, welfare DBT entries, historical liabilities, and macroeconomic stress tests with ease.
 
 ---
 
-## 🎨 Core Dashboard Visualizations
+## 🎨 Twelve Dedicated, High-Fidelity Dashboards
 
-The command center is structured into twelve dedicated, high-fidelity views:
+The command center is structured into twelve dedicated, modular views, accessible via the main sidebar or the global command menu:
 
 ### 1. Home Overview (`OverviewDashboard`)
 * **Live Outlay Indicators**: Displays dynamic Union expenditure balances, nominal GDP, and central sovereign liabilities.
@@ -40,17 +40,17 @@ The command center is structured into twelve dedicated, high-fidelity views:
 * **Burn Rate Spline Curve**: Charts actual monthly national spending against a baseline, highlighting fiscal pacing.
 
 ### 8. Macroeconomic Shock Simulator (`SimulatorDashboard`)
-* **Dynamic Stress-Testing Presets**: Simulates scenarios like *Oil Price Surge*, *Monsoon Failure*, and *Global Recession* with real-time math-driven shifts in CPI inflation, domestic spending, and GDP variables.
-* **Fiscal Impact Modeling**: Updates indicators on state tax receipts and federal deficit ratios reactively.
+* **Stress-Testing Scenarios**: Simulates scenarios like *Oil Price Surge*, *Monsoon Failure*, and *Global Recession* with real-time math-driven shifts in CPI inflation, domestic spending, and GDP variables.
+* **Real-time Recharts Feedback**: Instantly charts modified fiscal deficit targets and tax collection trends against baseline parameters.
 
 ### 9. Citizen Welfare Eligibility Calculator (`CitizenDashboard`)
-* **Profile-Driven Recommendation Engine**: Matches direct benefit transfer (DBT) schemes (e.g. PM-KISAN, PM Awas Yojana) based on demographic indicators (age, occupation, income brackets).
+* **Welfare Scheme Profiler**: Matches demographic profiles (age, occupation, income brackets) to recommended direct benefit schemes in real-time.
 * **Direct Tax Savings Projection**: Evaluates potential savings under custom financial profiles automatically.
 
 ### 10. Speech Thematic Analyzer (`SpeechDashboard`)
-* **Interactive SVG Word Cloud**: Mines high-frequency vocabulary from Union Budget speech addresses, linking keyword tags directly to filtered transcripts.
+* **Interactive Word Cloud**: Mines high-frequency vocabulary from Union Budget speech addresses, linking keyword tags directly to filtered transcripts.
 * **Thematic Distribution & Action Exporter**: Charts speech topics (CapEx, Infrastructure, Welfare, Green Transition) in Recharts, supporting vector/raster file export (PNG/SVG).
-* **Smart Search Indexing**: Features synonym mapping (`capex`, `infra`, `solar`) with visual highlights synced to the charts.
+* **Smart Search Indexing & Synonyms**: Features synonym mapping (`capex` ──► `infrastructure`, `solar` ──► `green energy`) with visual highlights synced to the charts.
 
 ### 11. Historical Budget Trend Tracker (`TrendsDashboard`)
 * **Decadal Ministry Outlay Series**: Tracks outlays across major ministries (Defence, Road Transport, Railways) over a 10-year span (2018–2027).
@@ -68,19 +68,35 @@ To ensure production-grade scalability and performance, the portal implements mo
 
 ```text
        [ Unified Zustand Store ] <─────── Global State (Timeline / Tabs)
-                   │
-                   ▼
-  [ App.jsx React Suspense Boundary ]
-                   │
-    ┌──────────────┼──────────────┬──────────────┐ (Dynamic Chunks)
-    ▼              ▼              ▼              ▼
-[Overview]     [Scheme]        [Tax]        [State]
- (11.2 kB)      (8.8 kB)      (6.6 kB)     (195.0 kB)
+                    │
+                    ▼
+   [ App.jsx React Suspense Boundary ]
+                    │
+     ┌──────────────┼──────────────┬──────────────┐ (Dynamic Chunks)
+     ▼              ▼              ▼              ▼
+ [Overview]     [Scheme]        [Tax]        [State]
+  (11.2 kB)      (8.8 kB)      (6.6 kB)     (195.0 kB)
 ```
 
 * **Central State Store (Zustand)**: Eliminates prop-drilling by managing active tabs, mobile sidebar states, and the global selected year timeline inside a unified Zustand store.
 * **Dynamic Code-Splitting (`React.lazy` + `Suspense`)**: Heavy dashboards are split into separate dynamic JS chunks, shrinking the initial core application payload from **870+ kB** down to just **238 kB** (a **~73%** reduction).
 * **High-Performance Vector Visualizations**: Rendered using optimized SVG maps and responsive Recharts modules that adapt perfectly across desktop, tablet, and mobile viewports.
+
+---
+
+## 🤖 Budget Mitra AI (Offline RAG Assistant)
+* **Local RAG Matcher**: Features a tokenized offline fallback retrieval engine running on client browsers when API endpoints are unreachable.
+* **Text-to-Speech Narrator**: Integrated voice synthesized playback supporting English, Hindi, and Gujarati speech models.
+* **Glossary Tooltip Integration**: Scans chats for complex economic glossary terminology, presenting interactive hover cards explaining concepts like *Fiscal Deficit*, *CapEx*, or *Direct Devolution*.
+
+---
+
+## ⌨️ Global Navigation & Command Palette (`Ctrl+K`)
+Pressing `Ctrl+K` opens a glassmorphic global Command Palette that lets users:
+* **Jump to Dashboards**: Navigate directly to any of the 12 dashboards instantly.
+* **Manipulate Timeline**: Quickly swap target budget years (`2024-25`, `2025-26 BE`, `2025-26 RE`, `2026-27 BE`).
+* **Switch Themes**: Toggle color schemes in real-time (*Midnight Sovereign*, *Imperial Ashoka*, *Vedic Forest*, *Digital India*, *Clay & Slate*).
+* **Search Financial Glossary**: Look up economic definitions, triggering glassmorphic toast notification cards on selection.
 
 ---
 
