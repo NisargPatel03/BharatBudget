@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, Search, Sparkles, MessageSquare, ArrowRight } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import ChartContainer from '../ChartContainer';
 
 export default function SpeechDashboard() {
@@ -66,6 +66,40 @@ export default function SpeechDashboard() {
     return false;
   });
 
+  const getSelectedWordOrSearchQueryWord = () => {
+    if (selectedWord) return selectedWord.toLowerCase();
+    if (!searchQuery) return null;
+    const query = searchQuery.toLowerCase().trim();
+
+    const matched = wordCloudWords.find(w => {
+      const text = w.text.toLowerCase();
+      if (text.includes(query) || query.includes(text)) return true;
+      if (query === 'capex' && text === 'infrastructure') return true;
+      if (query === 'infra' && text === 'infrastructure') return true;
+      if (query === 'dbt' && text === 'direct transfer') return true;
+      if (query === 'solar' && text === 'green transition') return true;
+      if (query === 'tax' && text === 'tax slabs') return true;
+      return false;
+    });
+    return matched ? matched.text.toLowerCase() : null;
+  };
+
+  const activeHighlightedWord = getSelectedWordOrSearchQueryWord();
+
+  const getActiveBarIndex = () => {
+    const term = activeHighlightedWord || searchQuery.toLowerCase().trim();
+    if (!term) return -1;
+
+    if (term.includes('infra') || term.includes('capex') || term.includes('capital')) return 0;
+    if (term.includes('welfare') || term.includes('dbt') || term.includes('direct') || term.includes('transfer')) return 1;
+    if (term.includes('agri') || term.includes('farmer')) return 2;
+    if (term.includes('green') || term.includes('solar') || term.includes('urja')) return 3;
+    if (term.includes('defenc') || term.includes('defense')) return 4;
+    return -1;
+  };
+
+  const activeBarIndex = getActiveBarIndex();
+
   const handleWordClick = (word) => {
     setSelectedWord(word.text === selectedWord ? null : word.text);
     setSearchQuery('');
@@ -96,7 +130,8 @@ export default function SpeechDashboard() {
           textAlign: 'center'
         }}>
           {wordCloudWords.map((word, idx) => {
-            const isSelected = selectedWord === word.text;
+            const isWordSelected = activeHighlightedWord === word.text.toLowerCase();
+            const hasAnySelection = activeHighlightedWord !== null;
             return (
               <span
                 key={idx}
@@ -106,9 +141,9 @@ export default function SpeechDashboard() {
                   color: word.color,
                   fontWeight: 800,
                   cursor: 'pointer',
-                  opacity: selectedWord && !isSelected ? 0.35 : 1,
-                  transform: isSelected ? 'scale(1.15)' : 'none',
-                  textShadow: isSelected ? `0 0 12px ${word.color}` : 'none',
+                  opacity: hasAnySelection && !isWordSelected ? 0.35 : 1,
+                  transform: isWordSelected ? 'scale(1.15)' : 'none',
+                  textShadow: isWordSelected ? `0 0 12px ${word.color}` : 'none',
                   transition: 'all 0.25s',
                   display: 'inline-block',
                   userSelect: 'none'
@@ -136,7 +171,18 @@ export default function SpeechDashboard() {
                 contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-glass)', borderRadius: '8px' }}
                 formatter={(value) => [`${value}%`]}
               />
-              <Bar dataKey="percentage" fill="var(--saffron)" radius={[0, 4, 4, 0]} barSize={12} />
+              <Bar dataKey="percentage" radius={[0, 4, 4, 0]} barSize={12}>
+                {focusAreasData.map((entry, index) => {
+                  const isHighlighted = activeBarIndex === index || activeBarIndex === -1;
+                  return (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={isHighlighted ? 'var(--saffron)' : 'rgba(255, 107, 0, 0.15)'}
+                      style={{ transition: 'all 0.3s' }}
+                    />
+                  );
+                })}
+              </Bar>
             </BarChart>
           </ChartContainer>
         </div>
