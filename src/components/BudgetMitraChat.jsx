@@ -63,6 +63,30 @@ const LOCAL_CORPUS = [
     source: "CAG Audit Discrepancies",
     page: 5,
     type: "audit"
+  },
+  {
+    text: "The Macroeconomic Shock Simulator provides stress-testing parameters: Monsoon Failure increases agrarian inflation by 1.8%; Oil Price Surge to $120 per barrel spikes CPI by 2.4% and widens the deficit by 0.35%; and Global Recession reduces tax inflows and dampens domestic CapEx growth.",
+    source: "Macroeconomic Simulator",
+    page: 1,
+    type: "simulator"
+  },
+  {
+    text: "The Citizen Welfare eligibility calculator maps direct benefit transfer (DBT) schemes (such as PM-KISAN, PM Awas Yojana, and PM Garib Kalyan Anna Yojana) by matching demographic profile indicators (age, occupation, income) in real-time.",
+    source: "Welfare Calculator",
+    page: 1,
+    type: "welfare"
+  },
+  {
+    text: "Historical Trend analysis tracks decadal outlays of ministries and schemes from 2018 to 2027. It computes Compound Annual Growth Rates (CAGR) automatically: the Ministry of Defence outlay grows at an 8.46% CAGR, and Road Transport outlays expand at a 16.32% CAGR.",
+    source: "Historical Trends",
+    page: 1,
+    type: "trends"
+  },
+  {
+    text: "The Speech Thematic Analyzer mines Union Budget addresses for word frequencies and allocates thematic shares: Infrastructure (28%), Welfare (23%), Agriculture (17%), Green Energy (16%), and Defense (16%).",
+    source: "Speech Analysis",
+    page: 1,
+    type: "speech"
   }
 ];
 

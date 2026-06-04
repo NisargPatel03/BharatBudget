@@ -8,7 +8,7 @@ Designed with rich aesthetics (vibrant color palettes, glassmorphism, subtle mic
 
 ## 🎨 Core Dashboard Visualizations
 
-The command center is structured into seven dedicated, high-fidelity views:
+The command center is structured into twelve dedicated, high-fidelity views:
 
 ### 1. Home Overview (`OverviewDashboard`)
 * **Live Outlay Indicators**: Displays dynamic Union expenditure balances, nominal GDP, and central sovereign liabilities.
@@ -38,6 +38,27 @@ The command center is structured into seven dedicated, high-fidelity views:
 
 ### 7. Monthly Burn Matrix (`MonthlyDashboard`)
 * **Burn Rate Spline Curve**: Charts actual monthly national spending against a baseline, highlighting fiscal pacing.
+
+### 8. Macroeconomic Shock Simulator (`SimulatorDashboard`)
+* **Dynamic Stress-Testing Presets**: Simulates scenarios like *Oil Price Surge*, *Monsoon Failure*, and *Global Recession* with real-time math-driven shifts in CPI inflation, domestic spending, and GDP variables.
+* **Fiscal Impact Modeling**: Updates indicators on state tax receipts and federal deficit ratios reactively.
+
+### 9. Citizen Welfare Eligibility Calculator (`CitizenDashboard`)
+* **Profile-Driven Recommendation Engine**: Matches direct benefit transfer (DBT) schemes (e.g. PM-KISAN, PM Awas Yojana) based on demographic indicators (age, occupation, income brackets).
+* **Direct Tax Savings Projection**: Evaluates potential savings under custom financial profiles automatically.
+
+### 10. Speech Thematic Analyzer (`SpeechDashboard`)
+* **Interactive SVG Word Cloud**: Mines high-frequency vocabulary from Union Budget speech addresses, linking keyword tags directly to filtered transcripts.
+* **Thematic Distribution & Action Exporter**: Charts speech topics (CapEx, Infrastructure, Welfare, Green Transition) in Recharts, supporting vector/raster file export (PNG/SVG).
+* **Smart Search Indexing**: Features synonym mapping (`capex`, `infra`, `solar`) with visual highlights synced to the charts.
+
+### 11. Historical Budget Trend Tracker (`TrendsDashboard`)
+* **Decadal Ministry Outlay Series**: Tracks outlays across major ministries (Defence, Road Transport, Railways) over a 10-year span (2018–2027).
+* **Automated CAGR Scorecard**: Dynamically calculates and renders Compound Annual Growth Rates using compound interest formulas.
+
+### 12. Executive PDF Exporter
+* **High-Contrast Print Ledger**: Renders a clean, high-contrast, paper-optimized Union Budget report previewing baseline stats and departmental shares.
+* **Robust Print Media Engine**: Employs `@media print` CSS classes preventing scroll cutoffs, ensuring horizontal grid rendering on physical printouts or PDF saves.
 
 ---
 
