@@ -1104,11 +1104,15 @@ export default function BudgetMitraChat() {
           from { opacity: 0; transform: translateX(30px); }
           to { opacity: 1; transform: translateX(0); }
         }
+        @keyframes slide-up-drawer {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
         @keyframes siri-wave {
           from { stroke-dashoffset: 300; }
           to { stroke-dashoffset: 0; }
         }
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
           .budget-mitra-panel {
             width: calc(100% - 32px) !important;
             right: 16px !important;
@@ -1117,7 +1121,15 @@ export default function BudgetMitraChat() {
             max-height: 520px !important;
           }
           .rag-document-drawer {
-            display: none !important; /* Hide slide drawer on compact screens */
+            display: flex !important;
+            right: 16px !important;
+            left: 16px !important;
+            bottom: 16px !important;
+            width: calc(100% - 32px) !important;
+            height: 70% !important;
+            max-height: 520px !important;
+            z-index: 1002 !important;
+            animation: slide-up-drawer 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
           }
         }
       `}</style>
