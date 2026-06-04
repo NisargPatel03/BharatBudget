@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sliders, Cpu, Info, RefreshCw, AlertTriangle, TrendingUp, TrendingDown, Landmark } from 'lucide-react';
+import { Sliders, Cpu, Info, RefreshCw, AlertTriangle, TrendingUp, TrendingDown, Landmark, Zap, CloudLightning, Globe } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import ChartContainer from '../ChartContainer';
 
@@ -14,6 +14,7 @@ export default function SimulatorDashboard() {
   const [corpTaxRate, setCorpTaxRate] = useState(22); // Default 22%
   const [capexShift, setCapexShift] = useState(0); // Default 0% change
   const [schemeShift, setSchemeShift] = useState(0); // Default 0% change
+  const [activeShock, setActiveShock] = useState('none'); // 'none', 'oil_spike', 'monsoon_deficit', 'global_slowdown'
 
   // 1. Economic Forecasting Multiplier & Elasticity Mathematics
   // GST Elasticity (base 18%, compliance declines as rates become excessively high - Laffer Effect)
@@ -28,17 +29,28 @@ export default function SimulatorDashboard() {
   const constantTaxRevenue = BASE_TAX_REVENUE * 0.25;
 
   // Total Tax Revenue
-  const totalProjectedRevenue = projectedGstRevenue + projectedCorpRevenue + constantTaxRevenue;
+  const taxComplianceMultiplier = activeShock === 'global_slowdown' ? 0.85 : 1.0;
+  const totalProjectedRevenue = (projectedGstRevenue + projectedCorpRevenue + constantTaxRevenue) * taxComplianceMultiplier;
 
   // Spend multipliers: CapEx shift creates a 1.5x GDP multiplier, Scheme outlays create a 0.8x GDP multiplier
   const capexChangeAmount = (BASE_SPENDING * 0.23) * (capexShift / 100);
   const schemeChangeAmount = (BASE_SPENDING * 0.33) * (schemeShift / 100);
 
-  const totalProjectedSpending = BASE_SPENDING + capexChangeAmount + schemeChangeAmount;
+  // Welfare outlays and subsidy boosts due to economic shocks
+  const welfareShockModifier = activeShock === 'monsoon_deficit' ? (BASE_SPENDING * 0.05) : 0;
+  const subsidyShockModifier = activeShock === 'oil_spike' ? (BASE_SPENDING * 0.03) : 0;
 
-  // Nominal GDP adjustments based on strategic expenditure multipliers
+  const totalProjectedSpending = BASE_SPENDING + capexChangeAmount + schemeChangeAmount + welfareShockModifier + subsidyShockModifier;
+
+  // Nominal GDP adjustments based on strategic expenditure multipliers and macroeconomic shocks
   const gdpShift = (capexChangeAmount * 1.5) + (schemeChangeAmount * 0.8);
-  const projectedGdp = BASE_NOMINAL_GDP + gdpShift;
+  
+  let shockGdpMultiplier = 0;
+  if (activeShock === 'oil_spike') shockGdpMultiplier = -0.005;
+  if (activeShock === 'monsoon_deficit') shockGdpMultiplier = -0.008;
+  if (activeShock === 'global_slowdown') shockGdpMultiplier = -0.012;
+
+  const projectedGdp = (BASE_NOMINAL_GDP + gdpShift) * (1 + shockGdpMultiplier);
 
   // Fiscal Deficit ratio computation
   const deficitAmount = Math.max(0, totalProjectedSpending - totalProjectedRevenue);
@@ -71,11 +83,20 @@ export default function SimulatorDashboard() {
       ratingColor = "var(--crimson)";
     }
 
-    const inflation = 4.1 + (gstRate - 18) * 0.15 + (schemeShift / 10) * 0.15 - (capexShift / 20) * 0.08;
-    const jobGrowth = (capexShift * 0.22) + (schemeShift * 0.12) - (corpTaxRate - 22) * 0.35;
+    let shockInflation = 0;
+    if (activeShock === 'oil_spike') shockInflation = 1.8;
+    if (activeShock === 'monsoon_deficit') shockInflation = 2.2;
+    const inflation = 4.1 + (gstRate - 18) * 0.15 + (schemeShift / 10) * 0.15 - (capexShift / 20) * 0.08 + shockInflation;
+    const jobGrowth = (capexShift * 0.22) + (schemeShift * 0.12) - (corpTaxRate - 22) * 0.35 + (activeShock !== 'none' ? -1.5 : 0);
 
     let memo = "Optimal balanced fiscal policy. Standard policy parameters are well aligned with sovereign growth targets.";
-    if (gstRate > 22) {
+    if (activeShock === 'oil_spike') {
+      memo = "OIL SHOCK WARNING: Rising global crude oil prices have raised energy costs, boosting consumer CPI inflation and raising subsidy burdens. Recommend boosting clean energy transitions to hedge dependencies.";
+    } else if (activeShock === 'monsoon_deficit') {
+      memo = "MONSOON CRISIS: Failure of seasonal monsoon has triggered agricultural output limits, pushing up food inflation and necessitating emergency welfare DBT outlays to rural communities.";
+    } else if (activeShock === 'global_slowdown') {
+      memo = "RECESSION SHOCK: Global export contraction has lowered domestic business revenues and reduced corporate tax collections. Recommend fiscal expansion via CapEx projects to stimulate domestic demand.";
+    } else if (gstRate > 22) {
       memo = "High GST rates are suppressing consumer compliance and retail demand. Lowering GST slabs would improve volume turnover.";
     } else if (corpTaxRate > 28) {
       memo = "Excessive corporate taxation suppresses capital investment and corporate risk-taking. Lower the rate closer to 22% to trigger commercial capital injections.";
@@ -95,6 +116,7 @@ export default function SimulatorDashboard() {
     setCorpTaxRate(22);
     setCapexShift(0);
     setSchemeShift(0);
+    setActiveShock('none');
   };
 
   // Generate 5-Year forecast projections based on parameters
@@ -232,6 +254,87 @@ export default function SimulatorDashboard() {
             <span>Reduction: -50%</span>
             <span>Fiscal multiplier: 0.8x</span>
             <span>Expansion: +50%</span>
+          </div>
+        </div>
+
+        {/* Macroeconomic Shock Simulator */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', borderTop: '1px dashed var(--border-glass)', paddingTop: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Zap size={16} color="var(--saffron)" />
+            <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Macroeconomic Stress Testing</span>
+          </div>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+            Simulate the impact of adverse geopolitical or climate scenarios on domestic balance sheets.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+            <button
+              onClick={() => setActiveShock(activeShock === 'oil_spike' ? 'none' : 'oil_spike')}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 6px',
+                background: activeShock === 'oil_spike' ? 'rgba(239, 68, 68, 0.15)' : 'var(--bg-secondary)',
+                border: '1px solid',
+                borderColor: activeShock === 'oil_spike' ? 'var(--crimson)' : 'var(--border-glass)',
+                borderRadius: '8px',
+                color: activeShock === 'oil_spike' ? '#fff' : 'var(--text-secondary)',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                fontSize: '10.5px',
+                fontWeight: 600
+              }}
+            >
+              <Zap size={14} color={activeShock === 'oil_spike' ? 'var(--crimson)' : 'var(--text-muted)'} />
+              <span>Oil Price Surge</span>
+            </button>
+
+            <button
+              onClick={() => setActiveShock(activeShock === 'monsoon_deficit' ? 'none' : 'monsoon_deficit')}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 6px',
+                background: activeShock === 'monsoon_deficit' ? 'rgba(245, 158, 11, 0.15)' : 'var(--bg-secondary)',
+                border: '1px solid',
+                borderColor: activeShock === 'monsoon_deficit' ? 'var(--saffron)' : 'var(--border-glass)',
+                borderRadius: '8px',
+                color: activeShock === 'monsoon_deficit' ? '#fff' : 'var(--text-secondary)',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                fontSize: '10.5px',
+                fontWeight: 600
+              }}
+            >
+              <CloudLightning size={14} color={activeShock === 'monsoon_deficit' ? 'var(--saffron)' : 'var(--text-muted)'} />
+              <span>Monsoon Failure</span>
+            </button>
+
+            <button
+              onClick={() => setActiveShock(activeShock === 'global_slowdown' ? 'none' : 'global_slowdown')}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 6px',
+                background: activeShock === 'global_slowdown' ? 'rgba(59, 130, 246, 0.15)' : 'var(--bg-secondary)',
+                border: '1px solid',
+                borderColor: activeShock === 'global_slowdown' ? 'var(--ashoka-blue)' : 'var(--border-glass)',
+                borderRadius: '8px',
+                color: activeShock === 'global_slowdown' ? '#fff' : 'var(--text-secondary)',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                fontSize: '10.5px',
+                fontWeight: 600
+              }}
+            >
+              <Globe size={14} color={activeShock === 'global_slowdown' ? 'var(--ashoka-blue)' : 'var(--text-muted)'} />
+              <span>Global Recession</span>
+            </button>
           </div>
         </div>
       </div>
